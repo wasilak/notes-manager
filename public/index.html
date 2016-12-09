@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title ng-bind="page.title"></title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/" />
+
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/bower_components/components-font-awesome/css/font-awesome.min.css" media="screen" title="no title" charset="utf-8">
+
+    <link rel="stylesheet" href="/bower_components/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="/bower_components/codemirror/theme/pastel-on-dark.css">
+
+    <link rel="stylesheet" href="/bower_components/highlightjs/styles/github.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+
+    <div ui-view></div>
+
+    <script src="/bower_components/marked/marked.min.js"></script>
+    <script src="/bower_components/highlightjs/highlight.pack.min.js"></script>
+
+    <script src="/bower_components/codemirror/lib/codemirror.js"></script>
+    <script src="/bower_components/codemirror/mode/markdown/markdown.js"></script>
+    <script src="/bower_components/codemirror/mode/javascript/javascript.js"></script>
+    <script src="/bower_components/codemirror/addon/edit/closebrackets.js"></script>
+    <script src="/bower_components/codemirror/addon/edit/matchbrackets.js"></script>
+    <script src="/bower_components/codemirror/addon/edit/matchtags.js"></script>
+
+    <script src="/bower_components/angular/angular.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/bower_components/angular-sanitize/angular-sanitize.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/bower_components/angular-animate/angular-animate.min.js" charset="utf-8"></script>
+    <script src="/bower_components/angular-sanitize/angular-sanitize.min.js" charset="utf-8"></script>
+    <script src="/bower_components/angular-ui-router/release/angular-ui-router.min.js" charset="utf-8"></script>
+
+    <script src="/app/app.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/app/constants.js" charset="utf-8"></script>
+    <script src="/app/router.js" charset="utf-8"></script>
+
+    <script src="/app/controllers/list.js" charset="utf-8"></script>
+    <script src="/app/controllers/note.js" charset="utf-8"></script>
+    <script src="/app/controllers/noteRendered.js" charset="utf-8"></script>
+
+    <script src="/app/directives/codemirror.js" charset="utf-8"></script>
+
+    <script src="/app/services/api.js" charset="utf-8"></script>
+
+  </body>
+</html>

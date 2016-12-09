@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col-sm-12">
+      <p><a ui-sref="parent.list()">notes list</a></p>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <input type="text" name="search" placeholder="Type to filter notes...">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <p ng-repeat="note in vm.list">
+            <a ui-sref="parent.list.note({uuid: note.id})">{{ note.title }}</a>
+          </p>
+        </div>
+        <div class="col-sm-6">
+          <div ui-view="content"></div>
+        </div>
+      </div>
+    </div>
+</div>
