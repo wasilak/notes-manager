@@ -1,22 +1,24 @@
-<div class="row">
-  <div class="col-sm-12">
-      <p><a ui-sref="parent.list()">notes list</a></p>
+<div class="row" ng-cloak>
+  <div class="col-sm-4">
+
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-12">
+            <input type="text" ng-model="listFilter" class="form-control" name="search" placeholder="Type to filter notes...">
+          </div>
+        </div>
+      </form>
 
       <div class="row">
         <div class="col-sm-12">
-          <input type="text" name="search" placeholder="Type to filter notes...">
+          <div class="list-group">
+            <a ng-repeat="note in vm.list | filter:listFilter" class="list-group-item" ng-class="note.id == vm.note.id ? 'active' : ''" ui-sref="parent.list.note({uuid: note.id})">{{ note.title }}</a>
+          </div>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="col-sm-6">
-          <p ng-repeat="note in vm.list">
-            <a ui-sref="parent.list.note({uuid: note.id})">{{ note.title }}</a>
-          </p>
-        </div>
-        <div class="col-sm-6">
-          <div ui-view="content"></div>
-        </div>
+        
       </div>
     </div>
+  <div class="col-sm-8">
+    <div ui-view="content"></div>
+  </div>
 </div>

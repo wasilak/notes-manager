@@ -27,14 +27,6 @@ const db = lowdb('db.json');
 
 db.defaults({ notes: [] }).value();
 
-let noteObject = {
-  id: null,
-  content: '',
-  title: '',
-  created: '',
-  updated: ''
-};
-
 let appPort = 0;
 if (process.env.QPP_PORT) {
     appPort = process.env.QPP_PORT;
@@ -55,23 +47,6 @@ app.get('/api/list', (req, res) => {
 
   let notes = db.get('notes');
 
-  // cloning object
-  // let newNote = Object.assign({}, noteObject);
-  // newNote.content = 'dkjsahdasgfuysdgfuyds';
-  // newNote.id = uuidV1();
-
-  // let date = {
-  //   created: Math.floor(Date.now() / 1000),
-  //   updated: Math.floor(Date.now() / 1000)
-  // };
-
-  // newNote.created = date.created;
-  // newNote.updated = date.updated;
-
-  // console.log(noteObject, newNote);
-
-  // notes.push(newNote).value();
-
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(notes));
 });
@@ -85,6 +60,39 @@ app.get('/api/note/:uuid', (req, res) => {
     res.send(JSON.stringify(note));
 });
 
+// new note
+app.post('/api/note/new', (req, res) => {
+  let uuid = req.params.uuid;
+  let note = req.body.note;
+  let notes = db.get('notes');
+
+  // cloning object
+  let newNote = Object.assign({}, note);
+  newNote.id = uuidV1();
+
+  let curDate = Math.floor(Date.now() / 1000);
+
+  newNote.created = curDate;
+  newNote.updated = curDate;
+
+  notes.push(newNote).value();
+
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify(newNote));
+});
+
+// delete note
+app.post('/api/note/delete', (req, res) => {
+  let uuid = req.body.uuid;
+  let notes = db.get('notes');
+
+  notes.remove({ id: uuid }).value();
+
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({uuid: uuid}));
+});
+
+// update note
 app.post('/api/note/:uuid', (req, res) => {
   let uuid = req.params.uuid;
   let note = req.body.note;
@@ -99,6 +107,7 @@ app.post('/api/note/:uuid', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(note));
 });
+
 
 // catching all routes with single page AngularJS app.
 // AngularJS will take care of the routing.

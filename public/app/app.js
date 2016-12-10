@@ -1,7 +1,7 @@
 /* jslint node: true */
 "use strict";
 
-var app = angular.module("app", ['ui.router', 'ngSanitize'])
+var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications'])
 
 .config([function() {
   marked.setOptions({
@@ -26,5 +26,9 @@ var app = angular.module("app", ['ui.router', 'ngSanitize'])
 .config(["$locationProvider", function($locationProvider) {
   $locationProvider.html5Mode(true);
 }])
+
+.run(function($rootScope) {
+  $rootScope.notifications = [];
+})
 ;
 

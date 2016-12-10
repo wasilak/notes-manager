@@ -1,7 +1,7 @@
 /* jslint node: true */
 "use strict";
 
-function NoteCtrl($rootScope, $scope, $stateParams, ApiService) {
+function NoteCtrl($rootScope, $scope, $stateParams, ApiService, $state) {
   var vm = this;
 
   vm.uuid = $stateParams.uuid;
@@ -12,17 +12,13 @@ function NoteCtrl($rootScope, $scope, $stateParams, ApiService) {
 
   ApiService.getNote(vm.uuid).then(function(result) {
     vm.note = result;
+    vm.note.edit = true;
+    $rootScope.$broadcast('currentNote', vm.note);
   });
 
   $scope.$watch('vm.note.content', function(current, original) {
     vm.outputText = marked(current);
   });
-
-  vm.saveNote = function() {
-    ApiService.saveNote(vm.note).then(function(result) {
-       // so,e kind of message, i.e. growl
-    });
-  };
 }
 
 NoteCtrl.resolve = {

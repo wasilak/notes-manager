@@ -4,7 +4,13 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
     // base parent state
     .state('parent', {
       abstract: true,
-      template: '<ui-view/>'
+      template: '<ui-view/>',
+      views: {
+        'menu': {
+          templateUrl: 'app/views/menu.html',
+          controller: 'MenuCtrl as vm'
+        }
+      }
     })
     .state('parent.list', {
       url: '/',
@@ -18,6 +24,19 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
         }
       },
       resolve: ListCtrl.resolve
+    })
+    .state('parent.new', {
+      url: '/note/new',
+      data: {
+        title: 'New note',
+      },
+      views: {
+        '@': {
+          templateUrl: 'app/views/note.html',
+          controller: 'NewCtrl as vm'
+        }
+      },
+      resolve: NewCtrl.resolve
     })
     .state('parent.note', {
       url: '/note/:uuid',

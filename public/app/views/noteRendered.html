@@ -1,17 +1,12 @@
-<div class="row">
+<div class="row" ng-cloak>
   <div class="col-sm-12">
-      <h1>{{ vm.note.title }}</h1>
 
-      <div class="row">
-        <div class="col-sm-12">
-          <a ui-sref="parent.note({uuid: vm.note.id})">edit</a>
-        </div>
-      </div>
+    <p class="lead"><strong>{{ vm.note.title }}</strong> <small>{{ vm.note.updated * 1000 | date : 'yyyy-MM-dd @HH:mm:ss' }}</small></p>
 
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="outputText" ng-bind-html="vm.outputText"></div>
-        </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="outputText" ng-bind-html="vm.outputText"></div>
       </div>
     </div>
+  </div>
 </div>

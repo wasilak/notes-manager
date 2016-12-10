@@ -13,6 +13,7 @@ function NoteRenderedCtrl($rootScope, $scope, $stateParams, ApiService) {
   ApiService.getNote(vm.uuid).then(function(result) {
     vm.note = result;
     vm.outputText = marked(result.content);
+    $rootScope.$broadcast('currentNote', vm.note);
   });
 }
 

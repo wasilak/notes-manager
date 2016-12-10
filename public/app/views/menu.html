@@ -1,0 +1,47 @@
+<nav class="navbar navbar-default navbar-fixed-top" ng-cloak>
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#topNavbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" ui-sref="parent.list()" ui-sref-opts="{reload: true}">Notes</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="topNavbar">
+      <ul class="nav navbar-nav">
+        <li class="">
+          <a ui-sref="parent.list()" ui-sref-opts="{reload: true}">List</a>
+        </li>
+        <li class="active">
+          <a ui-sref="parent.new()">New</a>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-show="vm.note && vm.note.edit">
+          <a ui-sref="parent.list.note({uuid: vm.note.id})" class="bg-info">cancel</a>
+        </li>
+        <li ng-show="vm.note && !vm.note.id">
+          <a ui-sref="parent.list.note({uuid: vm.note.id})" class="bg-info">cancel</a>
+        </li>
+        <li ng-show="vm.note && vm.note.edit">
+          <a ng-click="vm.saveNote()" href="javascript:void(0)" class="bg-success">save</a>
+        </li>
+        <li ng-show="vm.note && vm.note.id && !vm.note.edit">
+          <a ui-sref="parent.note({uuid: vm.note.id})" class="bg-success">edit</a>
+        </li>
+        <li ng-show="vm.note && !vm.note.id">
+          <a ng-click="vm.createNote()" href="javascript:void(0)" class="bg-success">create</a>
+        </li>
+        <li ng-show="vm.note && vm.note.id">
+          <a ng-click="vm.deleteNote()" href="javascript:void(0)" class="bg-danger">delete</a>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>

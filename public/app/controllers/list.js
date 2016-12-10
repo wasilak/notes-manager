@@ -6,6 +6,12 @@ function ListCtrl($rootScope, $scope, ApiService) {
 
   vm.list = [];
 
+  vm.note = null;
+
+  $rootScope.$on('currentNote', function(event, note) {
+    vm.note = note;
+  });
+
   ApiService.getList().then(function(result) {
     vm.list = result;
   });

@@ -1,3 +1,27 @@
+body {
+  padding-top: 70px;
+}
+
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
+}
+
+.note-header {
+  padding: 20px;
+}
+
+growl-notifications {
+  position: fixed;
+  top: 60px;
+  right: 2px;
+  z-index: 99999;
+}
+
+growl-notifications growl-notification {
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 15px 30px;
+  display: block;
+  border-radius: 5px;
+  margin-top: 15px;
 }

@@ -1,21 +1,22 @@
-<div class="row">
+<div class="row" ng-cloak>
   <div class="col-sm-12">
-      <div class="well">
-        <p>
-          note {{ vm.note.title }} <a ui-sref="parent.list()">list</a>
-        </p>
-        <button type="button" class="btn btn-primary" ng-click="vm.saveNote()">save</button>
 
-      </div>
-
-      <div class="row">
-        <div class="col-sm-6">
-          <code-editor syntax="markdown" theme="pastel-on-dark" ng-model="vm.note.content"></code-editor>
-        </div>
-        <div class="col-sm-6">
-          <div class="outputText" ng-bind-html="vm.outputText"></div>
+    <form class="form-horizontal">
+      <div class="form-group">
+        <div class="col-sm-12">
+          <input type="text" ng-model="vm.note.title" class="form-control" placeholder="Enter note title here...">
         </div>
       </div>
+    </form>
 
+    <div class="row">
+      <div class="col-sm-6">
+        <code-editor syntax="markdown" theme="pastel-on-dark" ng-model="vm.note.content"></code-editor>
+      </div>
+      <div class="col-sm-6">
+        <div class="outputText" ng-bind-html="vm.outputText"></div>
+      </div>
     </div>
+
+  </div>
 </div>
