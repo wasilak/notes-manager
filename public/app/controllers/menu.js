@@ -19,9 +19,19 @@ function MenuCtrl($rootScope, $scope, ApiService, $state) {
     });
   };
 
+  vm.cancel = function(uuid) {
+    vm.note = null;
+    $rootScope.$broadcast('currentNote', vm.note);
+
+    if (uuid) {
+      $state.go('parent.list.note', {uuid: uuid});
+    } else {
+      $state.go('parent.list', {}, {reload: true});
+    }
+  };
+
   vm.createNote = function() {
     ApiService.createNote(vm.note).then(function(result) {
-      // some kind of message, i.e. growl
       vm.note = result;
       $rootScope.notifications.push('Note created');
       $state.go('parent.list.note', {uuid: vm.note.id});
@@ -30,7 +40,6 @@ function MenuCtrl($rootScope, $scope, ApiService, $state) {
 
   vm.deleteNote = function() {
     ApiService.deleteNote(vm.note.id).then(function(result) {
-      // some kind of message, i.e. growl
 
       var confirmed = confirm("Are you sure?");
 
