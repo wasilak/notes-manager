@@ -7,16 +7,19 @@ var codeMirror = function($timeout){
     scope: {
       syntax: "@",
       theme: "@",
+      lineNumbers: "=",
+      autoCloseBrackets: "=",
+      matchBrackets: "=",
       ngModel: "="
     },
     template: '<div class="code-editor"></div>',
-    link: function(scope, element, attrs, ngModelCtrl, transclude){
+    link: function(scope, element, attrs, ngModelCtrl, transclude) {
       var editor = CodeMirror(element[0], {
         mode: scope.syntax || "javascript",
         theme: scope.theme || "default",
         autoCloseBrackets: scope.autoCloseBrackets || true,
         matchBrackets: scope.matchBrackets || true,
-        lineNumbers: true
+        lineNumbers: scope.lineNumbers === true ? true : false 
       });
 
       if(ngModelCtrl) {
