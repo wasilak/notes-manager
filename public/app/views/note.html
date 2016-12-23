@@ -1,19 +1,19 @@
-<div class="row" ng-cloak>
+<div class="row">
   <div class="col-sm-12">
 
     <form class="form-horizontal">
       <div class="form-group">
-        <div class="col-sm-12">
+        <div class="col-sm-12" ng-cloak>
           <input type="text" ng-model="vm.note.title" class="form-control" placeholder="Enter note title here...">
         </div>
       </div>
     </form>
 
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-6" ng-cloak>
         <code-editor syntax="markdown" ng-model="vm.note.content" class="bordered" line-numbers="false"></code-editor>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-6" ng-cloak>
         <div class="outputText bordered" ng-bind-html="vm.outputText"></div>
       </div>
     </div>

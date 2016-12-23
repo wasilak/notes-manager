@@ -1,4 +1,4 @@
-<div class="row" ng-cloak>
+<div class="row">
   <div class="col-sm-4">
 
       <form class="form-horizontal">
@@ -11,7 +11,7 @@
 
       <div class="row">
         <div class="col-sm-12">
-          <div class="list-group">
+          <div class="list-group" ng-cloak>
             <a ng-repeat="note in vm.list | filter:listFilter | orderBy:'updated':true" class="list-group-item" ng-class="note.id == vm.note.id ? 'active' : ''" ui-sref="parent.list.note({uuid: note.id})">{{ note.title }}</a>
           </div>
         </div>

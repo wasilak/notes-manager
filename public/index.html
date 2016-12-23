@@ -23,9 +23,9 @@
 
 </head>
 <body>
-    <growl-notifications></growl-notifications>
+    <growl-notifications></growl-notifications ng-cloak>
 
-    <div ng-repeat="(id, notification) in notifications track by id">
+    <div ng-repeat="(id, notification) in notifications track by id" ng-cloak>
         <growl-notification ttl="2000">
             {{notification}}
         </growl-notification>
