@@ -1,11 +1,11 @@
-<div class="row" ng-cloak>
+<div class="row">
   <div class="col-sm-12">
 
-    <p class="lead"><strong>{{ vm.note.title }}</strong> <small>{{ vm.note.updated * 1000 | date : 'yyyy-MM-dd @HH:mm:ss' }}</small></p>
+    <p class="lead" ng-cloak><strong>{{ vm.note.title }}</strong> <small>{{ vm.note.updated * 1000 | date : 'yyyy-MM-dd @HH:mm:ss' }}</small></p>
 
     <div class="row">
       <div class="col-sm-12">
-        <div class="outputText" ng-bind-html="vm.outputText"></div>
+        <div class="outputText" ng-cloak ng-bind-html="vm.outputText"></div>
       </div>
     </div>
   </div>

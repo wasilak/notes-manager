@@ -1,0 +1,8 @@
+{
+  // global variables
+  "globals": {
+    "angular"   : false,
+    "marked"   : false,
+    "hljs"   : false
+    }
+}

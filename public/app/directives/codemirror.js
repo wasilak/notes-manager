@@ -19,7 +19,10 @@ var codeMirror = function($timeout){
         theme: scope.theme || "default",
         autoCloseBrackets: scope.autoCloseBrackets || true,
         matchBrackets: scope.matchBrackets || true,
-        lineNumbers: scope.lineNumbers === true ? true : false 
+        lineNumbers: scope.lineNumbers === true ? true : false,
+        extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"},
+        lineWrapping: true,
+        continueLineComment: true
       });
 
       if(ngModelCtrl) {
