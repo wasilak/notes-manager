@@ -16,10 +16,12 @@
     "bower": "^1.4.1",
     "express": "^4.x",
     "hashids": "^1.0.1",
+    "http-auth": "^3.1.1",
     "lowdb": "^0.14.0",
     "map-stream": "*",
     "mongoose": "^4.0.5",
     "morgan": "^1.5.3",
+    "sha1": "^1.1.1",
     "uuid": "^3.0.1"
   },
   "devDependencies": {

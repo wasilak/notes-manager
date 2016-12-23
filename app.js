@@ -13,7 +13,9 @@ const morgan = require('morgan');
 const path = require('path');
 const lowdb = require('lowdb');
 const uuidV1 = require('uuid/v1');
-
+const auth = require('http-auth');
+const db = lowdb('db.json');
+const sha1 = require('sha1');
 const bodyParser = require('body-parser');
 
 let app = express();
@@ -23,7 +25,18 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-const db = lowdb('db.json');
+let basicAuth = auth.basic({
+      realm: "Notes Manager"
+    }, function (username, password, callback) { // Custom authentication method.
+      let users = db.get('users').value();
+
+      let user = users.filter((item) => {
+        return item.username == username && item.password == sha1(password);
+      })[0];
+
+      callback(user);
+    }
+);
 
 db.defaults({ notes: [] }).value();
 
@@ -43,25 +56,33 @@ app.use(morgan('dev'));
 // path to static assets (CSS etc.)
 app.use(express.static('public'));
 
-app.get('/api/list', (req, res) => {
+app.get('/api/list', auth.connect(basicAuth), (req, res) => {
+
+  console.log(req.user);
 
   let notes = db.get('notes');
 
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(notes));
+  res.send(JSON.stringify({
+    user: req.user,
+    data: notes
+  }));
 });
 
-app.get('/api/note/:uuid', (req, res) => {
+app.get('/api/note/:uuid', auth.connect(basicAuth), (req, res) => {
 
     let uuid = req.params.uuid;
     let note = db.get('notes').find({ id: uuid }).value();
 
     res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(note));
+    res.send(JSON.stringify({
+      user: req.user,
+      data: note
+    }));
 });
 
 // new note
-app.post('/api/note/new', (req, res) => {
+app.post('/api/note/new', auth.connect(basicAuth), (req, res) => {
   let uuid = req.params.uuid;
   let note = req.body.note;
   let notes = db.get('notes');
@@ -78,22 +99,28 @@ app.post('/api/note/new', (req, res) => {
   notes.push(newNote).value();
 
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(newNote));
+  res.send(JSON.stringify({
+    user: req.user,
+    data: newNote
+  }));
 });
 
 // delete note
-app.post('/api/note/delete', (req, res) => {
+app.post('/api/note/delete', auth.connect(basicAuth), (req, res) => {
   let uuid = req.body.uuid;
   let notes = db.get('notes');
 
   notes.remove({ id: uuid }).value();
 
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({uuid: uuid}));
+  res.send(JSON.stringify({
+    user: req.user,
+    data: uuid
+  }));
 });
 
 // update note
-app.post('/api/note/:uuid', (req, res) => {
+app.post('/api/note/:uuid', auth.connect(basicAuth), (req, res) => {
   let uuid = req.params.uuid;
   let note = req.body.note;
   let notes = db.get('notes');
@@ -105,13 +132,16 @@ app.post('/api/note/:uuid', (req, res) => {
   }).value();
 
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(note));
+  res.send(JSON.stringify({
+    user: req.user,
+    data: note
+  }));
 });
 
 
 // catching all routes with single page AngularJS app.
 // AngularJS will take care of the routing.
-app.get('*', (req, res) => {
+app.get('*', auth.connect(basicAuth), (req, res) => {
      res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 

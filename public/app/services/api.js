@@ -10,7 +10,8 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         params: {}
       })
       .then(function(response) {
-        return response.data;
+        $rootScope.$broadcast('currentUser', response.data.user);
+        return response.data.data;
       },
       function(response) {
         console.error('Getting note failed!');
@@ -34,7 +35,8 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         params: {}
       })
       .then(function(response) {
-        return response.data;
+        $rootScope.$broadcast('currentUser', response.data.user);
+        return response.data.data;
       },
       function(response) {
         console.error('Getting notes list failed!');
@@ -60,7 +62,8 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         }
       })
       .then(function(response) {
-        return response.data;
+        $rootScope.$broadcast('currentUser', response.data.user);
+        return response.data.data;
       },
       function(response) {
         console.error('Saving note failed!');
@@ -86,7 +89,8 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         }
       })
       .then(function(response) {
-        return response.data;
+        $rootScope.$broadcast('currentUser', response.data.user);
+        return response.data.data;
       },
       function(response) {
         console.error('Creating note failed!');
@@ -112,7 +116,8 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         }
       })
       .then(function(response) {
-        return response.data;
+        $rootScope.$broadcast('currentUser', response.data.user);
+        return response.data.data;
       },
       function(response) {
         console.error('Creating note failed!');

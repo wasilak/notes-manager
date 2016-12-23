@@ -29,5 +29,6 @@ var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications'
 
 .run(function($rootScope) {
   $rootScope.notifications = [];
+  $rootScope.user = false;
 })
 ;

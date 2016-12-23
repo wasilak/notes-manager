@@ -51,6 +51,10 @@ function MenuCtrl($rootScope, $scope, ApiService, $state) {
       }
     });
   };
+
+  $rootScope.$on('currentUser', function(event, user) {
+    vm.user = user;
+  });
 }
 
 MenuCtrl.resolve = {
