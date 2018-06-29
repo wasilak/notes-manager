@@ -5,7 +5,10 @@
   "repository": "https://git.wasil.org/wasilak/notes-manager.git",
   "license": "MIT",
   "main": "app.js",
-  "scripts": {},
+  "scripts": {
+    "dev": "nodemon app.js",
+    "prod": "node app.js"
+  },
   "dependencies": {
     "angular": "~1.6.0",
     "angular-animate": "~1.6.0",
