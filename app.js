@@ -11,12 +11,15 @@
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
-const lowdb = require('lowdb');
 const uuidV1 = require('uuid/v1');
 const auth = require('http-auth');
-const db = lowdb('db.json');
 const sha1 = require('sha1');
 const bodyParser = require('body-parser');
+
+const lowdb = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync')
+const adapter = new FileSync('db.json')
+const db = lowdb(adapter)
 
 let app = express();
 
@@ -54,6 +57,7 @@ app.set('port', appPort);
 app.use(morgan('dev'));
 
 // path to static assets (CSS etc.)
+app.use('/node_modules', express.static(__dirname + '/node_modules/'));
 app.use(express.static('public'));
 
 app.get('/api/list', auth.connect(basicAuth), (req, res) => {
