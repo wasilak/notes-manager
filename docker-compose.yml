@@ -1,25 +1,46 @@
-version: '2.1'
-
+version: "2.4"
 services:
-
   app:
     build: .
-    depends_on:
-      - pgsql
-    links:
-      - pgsql
-    ports:
-      - 8000:8000
-    restart: always
-  pgsql:
-    image: postgres:alpine
-    environment:
-      POSTGRES_PASSWORD: snipt
-      POSTGRES_USER: snipt
-      POSTGRES_DB: snipt
-      POSTGRES_DB_SCHEMA: snipt
-    ports:
-      - 5432:5432
     volumes:
-      - ./db:/var/lib/postgresql/data
-    restart: always
+      - ./:/app
+    ports:
+      - 5000:5000
+    environment:
+      ELASTICSEARCH: elasticsearch:9200
+    networks:
+      - esnet
+    depends_on:
+      - elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - esnet
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:6.3.0
+  #   environment:
+  #     # SERVER_NAME: kibana.example.org
+  #     ELASTICSEARCH_URL: http://elasticsearch:9200
+  #   ports:
+  #       - 5601:5601
+  #   volumes:
+  #     - ./data/kibana:/usr/share/kibana/data
+  #   networks:
+  #     - esnet
+
+networks:
+  esnet:

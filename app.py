@@ -5,7 +5,7 @@ import re
 import os
 from datetime import datetime
 
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, send_from_directory
 from elasticsearch import Elasticsearch
 
 
@@ -41,6 +41,11 @@ def highlight_string_in_field(item, filter, highlight_start="<em>", highlight_en
     print(item)
 
     return item
+
+
+@app.route('/static/node_modules/<path:filename>')
+def base_static(filename):
+    return send_from_directory(app.root_path + '/node_modules/', filename)
 
 
 @app.route('/', defaults={'path': ''}, methods=['GET'])
