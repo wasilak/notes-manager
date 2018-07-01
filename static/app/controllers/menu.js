@@ -34,27 +34,23 @@ function MenuCtrl($rootScope, $scope, ApiService, $state) {
     ApiService.createNote(vm.note).then(function(result) {
       vm.note = result;
       $rootScope.notifications.push('Note created');
-      $state.go('parent.list.note', {uuid: vm.note.id});
+      $rootScope.$broadcast('currentNote', vm.note);
+      $state.go('parent.list.note', {uuid: vm.note.id}, {reload: true});
     });
   };
 
   vm.deleteNote = function() {
-    ApiService.deleteNote(vm.note.id).then(function(result) {
+    var confirmed = confirm("Are you sure?");
 
-      var confirmed = confirm("Are you sure?");
-
-      if (confirmed) {
-        vm.note = null;
-        $rootScope.$broadcast('currentNote', vm.note);
-        $rootScope.notifications.push('Note deleted');
-        $state.go('parent.list', {}, {reload: true});
-      }
-    });
+    if (confirmed) {
+      ApiService.deleteNote(vm.note.id).then(function(result) {
+          vm.note = null;
+          $rootScope.$broadcast('currentNote', vm.note);
+          $rootScope.notifications.push('Note deleted');
+          $state.go('parent.list', {}, {reload: true});
+      });
+    }
   };
-
-  $rootScope.$on('currentUser', function(event, user) {
-    vm.user = user;
-  });
 }
 
 MenuCtrl.resolve = {

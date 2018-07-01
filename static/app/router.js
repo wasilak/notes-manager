@@ -7,7 +7,7 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
       template: '<ui-view/>',
       views: {
         'menu': {
-          templateUrl: 'app/views/menu.html',
+          templateUrl: '/static/app/views/menu.html',
           controller: 'MenuCtrl as vm'
         }
       }
@@ -19,7 +19,7 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
       },
       views: {
         '@': {
-          templateUrl: 'app/views/list.html',
+          templateUrl: '/static/app/views/list.html',
           controller: 'ListCtrl as vm'
         }
       },
@@ -32,7 +32,7 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
       },
       views: {
         '@': {
-          templateUrl: 'app/views/note.html',
+          templateUrl: '/static/app/views/note.html',
           controller: 'NewCtrl as vm'
         }
       },
@@ -45,7 +45,7 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
       },
       views: {
         '@': {
-          templateUrl: 'app/views/note.html',
+          templateUrl: '/static/app/views/note.html',
           controller: 'NoteCtrl as vm'
         }
       },
@@ -58,7 +58,7 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
       },
       views: {
         'content@parent.list': {
-          templateUrl: 'app/views/noteRendered.html',
+          templateUrl: '/static/app/views/noteRendered.html',
           controller: 'NoteRenderedCtrl as vm'
         }
       },

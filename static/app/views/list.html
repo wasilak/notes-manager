@@ -4,7 +4,7 @@
       <form class="form-horizontal">
         <div class="form-group">
           <div class="col-sm-12">
-            <input type="text" ng-model="listFilter" class="form-control" name="search" placeholder="Type to filter notes...">
+            <input type="text" ng-model="vm.listFilter" class="form-control" ng-change="vm.search()" name="search" placeholder="Type to filter notes...">
           </div>
         </div>
       </form>
@@ -12,7 +12,7 @@
       <div class="row">
         <div class="col-sm-12">
           <div class="list-group" ng-cloak>
-            <a ng-repeat="note in vm.list | filter:listFilter | orderBy:'updated':true" class="list-group-item" ng-class="note.id == vm.note.id ? 'active' : ''" ui-sref="parent.list.note({uuid: note.id})">{{ note.title }}</a>
+            <a ng-repeat="note in vm.list" class="list-group-item" ng-class="note.id == vm.note.id ? 'active' : ''" ui-sref="parent.list.note({uuid: note.id})">{{ note.title }} <abbr class="pull-right" title="{{ note._explanation }}">score: {{ note._score }}</abbr></a>
           </div>
         </div>
         

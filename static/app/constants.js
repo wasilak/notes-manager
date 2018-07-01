@@ -5,7 +5,7 @@ angular.module("app").constant("APP_SETTINGS", {
   urls: {
     note: "/api/note/{{uuid}}",
     new: "/api/note/new",
-    delete: "/api/note/delete",
-    list: "/api/list"
+    delete: "/api/note/delete/{{uuid}}",
+    list: "/api/list/{{filter}}"
   }
 });

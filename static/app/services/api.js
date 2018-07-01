@@ -10,7 +10,6 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         params: {}
       })
       .then(function(response) {
-        $rootScope.$broadcast('currentUser', response.data.user);
         return response.data.data;
       },
       function(response) {
@@ -24,9 +23,13 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
     );
   };
 
-  var getList = function() {
+  var getList = function(filter) {
 
-    var url = API.urls.list;
+    if (!filter) {
+      filter = "";
+    }
+
+    var url = API.urls.list.replace("{{filter}}", filter);
 
     return $http({
         cache: false,
@@ -35,7 +38,6 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         params: {}
       })
       .then(function(response) {
-        $rootScope.$broadcast('currentUser', response.data.user);
         return response.data.data;
       },
       function(response) {
@@ -62,7 +64,6 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         }
       })
       .then(function(response) {
-        $rootScope.$broadcast('currentUser', response.data.user);
         return response.data.data;
       },
       function(response) {
@@ -89,7 +90,6 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         }
       })
       .then(function(response) {
-        $rootScope.$broadcast('currentUser', response.data.user);
         return response.data.data;
       },
       function(response) {
@@ -105,18 +105,15 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
 
   var deleteNote = function(uuid) {
 
-    var url = API.urls.delete;
+    var url = API.urls.delete.replace("{{uuid}}", uuid);
 
     return $http({
         cache: false,
         url: url,
-        method: 'POST',
-        data: {
-          uuid: uuid
-        }
+        method: 'DELETE',
+        data: {}
       })
       .then(function(response) {
-        $rootScope.$broadcast('currentUser', response.data.user);
         return response.data.data;
       },
       function(response) {

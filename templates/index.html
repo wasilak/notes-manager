@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title ng-bind="page.title"></title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/" />
+
+    <link rel="icon" href="/note-icon.png">
+
+    <link rel="stylesheet" href="{{url_for('static', filename='node_modules/bootstrap/dist/css/bootstrap.min.css')}}" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="{{url_for('static', filename='node_modules/font-awesome/css/font-awesome.min.css')}}" media="screen" title="no title" charset="utf-8">
+
+    <link rel="stylesheet" href="{{url_for('static', filename='node_modules/codemirror/lib/codemirror.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='node_modules/codemirror/theme/pastel-on-dark.css')}}">
+
+    <link rel="stylesheet" href="{{url_for('static', filename='node_modules/highlightjs/styles/github.css')}}">
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+
+</head>
+<body>
+    {% raw %}
+    <growl-notifications></growl-notifications ng-cloak>
+
+    <div ng-repeat="(id, notification) in notifications track by id" ng-cloak>
+        <growl-notification ttl="2000">
+            {{notification}}
+        </growl-notification>
+    </div>
+
+    <div ui-view="menu"></div>
+    <div class="container-fluid" ui-view=></div>
+
+    {% endraw %}
+
+    <script src="{{url_for('static', filename='node_modules/jquery/dist/jquery.min.js')}}"></script>
+    <script src="{{url_for('static', filename='node_modules/marked/marked.min.js')}}"></script>
+    <script src="{{url_for('static', filename='node_modules/highlightjs/highlight.pack.min.js')}}"></script>
+    <script src="{{url_for('static', filename='node_modules/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+
+    <script src="{{url_for('static', filename='node_modules/codemirror/lib/codemirror.js')}}"></script>
+    <scrip  src="{{url_for('static', filename='node_modulesrror/mode/markdown/markdown.js')}}"></script>
+    <script src="{{url_for('static', filename='node_modules/codemirror/mode/javascript/javascript.js')}}"></script>
+    <script src="{{url_for('static', filename='node_modules/codemirror/addon/edit/closebrackets.js')}}"></script>
+    <script src="{{url_for('static', filename='node_modules/codemirror/addon/edit/matchbrackets.js')}}"></script>
+    <script src="{{url_for('static', filename='node_modules/codemirror/addon/edit/matchtags.js')}}"></script>
+    <script src="{{url_for('static', filename='node_modules/codemirror/addon/edit/continuelist.js')}}"></script>
+    <script src="{{url_for('static', filename='node_modules/codemirror/addon/fold/foldcode.js')}}"></script>
+    <script src="{{url_for('static', filename='node_modules/codemirror/addon/comment/continuecomment.js')}}"></script>
+
+    <script src="{{url_for('static', filename='node_modules/angular/angular.min.js')}}" type="text/javascript" charset="utf-8"></script>
+    <script src="{{url_for('static', filename='node_modules/angular-sanitize/angular-sanitize.min.js')}}" type="text/javascript" charset="utf-8"></script>
+    <script src="{{url_for('static', filename='node_modules/angular-animate/angular-animate.min.js')}}" charset="utf-8"></script>
+    <script src="{{url_for('static', filename='node_modules/@uirouter/angularjs/release/angular-ui-router.min.js')}}" charset="utf-8"></script>
+    <script src="{{url_for('static', filename='node_modules/angular-growl-notifications/dist/angular-growl-notifications.min.js')}}"></script>
+
+    <script src="{{url_for('static', filename='app/app.js')}}" type="text/javascript" charset="utf-8"></script>
+    <script src="{{url_for('static', filename='app/constants.js')}}" charset="utf-8"></script>
+    <script src="{{url_for('static', filename='app/router.js')}}" charset="utf-8"></script>
+
+    <script src="{{url_for('static', filename='app/controllers/list.js')}}" charset="utf-8"></script>
+    <script src="{{url_for('static', filename='app/controllers/note.js')}}" charset="utf-8"></script>
+    <script src="{{url_for('static', filename='app/controllers/noteRendered.js')}}" charset="utf-8"></script>
+    <script src="{{url_for('static', filename='app/controllers/menu.js')}}" charset="utf-8"></script>
+    <script src="{{url_for('static', filename='app/controllers/new.js')}}" charset="utf-8"></script>
+
+    <script src="{{url_for('static', filename='app/directives/codemirror.js')}}" charset="utf-8"></script>
+
+    <script src="{{url_for('static', filename='app/services/api.js')}}" charset="utf-8"></script>
+
+  </body>
+</html>
