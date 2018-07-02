@@ -1,46 +1,22 @@
 import uuid
 import json
-import time
-import re
 import os
 from datetime import datetime
 
 from flask import Flask, render_template, jsonify, request, send_from_directory
-from elasticsearch import Elasticsearch
 
 
 app = Flask(__name__)
 
-es = Elasticsearch(hosts=[os.getenv("ELASTICSEARCH", "elasticsearch:9200")])
+db_provider = os.getenv("DB_PROVIDER", "file")
 
-try:
-    es_health = es.cluster.health()
-except Exception as e:
-    print(e)
-    exit(1)
+if db_provider == "elasticsearch":
+    from db_providers.elastic import Db
 
-print(es_health)
+elif db_provider == "file":
+    from db_providers.file import Db
 
-
-def parse_item(item):
-    parsed_item = item["_source"]
-
-    if "_score" in item:
-        parsed_item["_score"] = item["_score"]
-
-    if "_explanation" in item:
-        parsed_item["_explanation"] = item["_explanation"]
-
-    return parsed_item
-
-
-def highlight_string_in_field(item, filter, highlight_start="<em>", highlight_end="</em>"):
-    p = re.compile("(%s)" % (filter), re.IGNORECASE)
-    print(item)
-    item = p.sub('%s\\1%s' % (highlight_start, highlight_end), item)
-    print(item)
-
-    return item
+db = Db()
 
 
 @app.route('/static/node_modules/<path:filename>')
@@ -58,36 +34,14 @@ def index(path):
 @app.route('/api/list/', defaults={'filter': ''}, methods=['GET'])
 def api_list(filter):
 
-    if len(filter) > 0:
-        filter_terms = filter.split()
+    items = db.list(filter)
 
-        filter_query = []
-        for term in filter_terms:
-            filter_query.append("(content: *%s* OR title: *%s*)" % (term, term))
-
-        filter_query = (" OR ").join(filter_query)
-        res = es.search(index="notes", doc_type='doc', size=10000, q=filter_query, explain=True)
-    else:
-        res = es.search(index="notes", doc_type='doc', size=10000, explain=True)
-
-    parsed_items = []
-
-    for item in res["hits"]["hits"]:
-        parsed_item = parse_item(item)
-
-        # if len(filter) > 0:
-        #     parsed_item["content"] = highlight_string_in_field(parsed_item["content"], filter, "*", "*")
-        #     parsed_item["title"] = highlight_string_in_field(parsed_item["title"], filter)
-
-        parsed_items.append(parsed_item)
-
-    return jsonify({"data": parsed_items})
+    return jsonify({"data": items})
 
 
 @app.route('/api/note/<uuid>', methods=['GET'])
 def api_note(uuid):
-    res = es.get(index="notes", doc_type='doc', id=uuid)
-    return jsonify({"data": parse_item(res)})
+    return jsonify({"data": db.get(uuid)})
 
 
 @app.route('/api/note/<uuid>', methods=['POST'])
@@ -101,18 +55,14 @@ def api_note_update(uuid):
 
     del updated_note["edit"]
 
-    es.index(index="notes", doc_type='doc', id=updated_note["id"], body=updated_note)
-    time.sleep(1)
+    db.update(updated_note["id"], updated_note)
 
     return jsonify({"data": updated_note})
 
 
 @app.route('/api/note/delete/<uuid>', methods=['DELETE'])
 def api_note_delete(uuid):
-    note = es.get(index="notes", doc_type='doc', id=uuid)
-    es.delete(index="notes", doc_type='doc', id=uuid)
-    time.sleep(1)
-    return jsonify({"data": parse_item(note)})
+    return jsonify({"data": db.delete(uuid)})
 
 
 @app.route('/api/note/new', methods=['POST'])
@@ -126,7 +76,6 @@ def api_note_new():
     new_note["created"] = seconds
     new_note["updated"] = seconds
 
-    es.index(index="notes", doc_type='doc', id=new_note["id"], body=new_note)
-    time.sleep(1)
+    db.create(new_note["id"], new_note)
 
     return jsonify({"data": new_note})

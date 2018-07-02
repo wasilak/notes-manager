@@ -1,3 +1,4 @@
 Flask
 python-dotenv
 elasticsearch>=6.0.0,<7.0.0
+tinydb
