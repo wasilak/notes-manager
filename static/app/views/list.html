@@ -4,7 +4,7 @@
       <form class="form-horizontal">
         <div class="form-group">
           <div class="col-sm-12">
-            <input type="text" ng-model="vm.listFilter" class="form-control" ng-change="vm.search()" name="search" placeholder="Type to filter notes...">
+            <input type="text" autocomplete="off" ng-model="vm.listFilter" ng-model-options="{ debounce: 500 }" class="form-control" ng-change="vm.search()" name="search" placeholder="Type to filter notes...">
           </div>
         </div>
       </form>
