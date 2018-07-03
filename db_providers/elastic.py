@@ -33,7 +33,16 @@ class Db:
 
         return item
 
-    def list(self, filter):
+    def list(self, filter, sort):
+
+        search_params = {
+            "index": "notes",
+            "doc_type": 'doc',
+            "size": 10000,
+            "explain": True,
+            "track_scores": True
+        }
+
         if len(filter) > 0:
             filter_terms = filter.split()
 
@@ -42,9 +51,13 @@ class Db:
                 filter_query.append("(content: *%s* OR title: *%s*)" % (term, term))
 
             filter_query = (" OR ").join(filter_query)
-            res = self.es.search(index="notes", doc_type='doc', size=10000, q=filter_query, explain=True)
-        else:
-            res = self.es.search(index="notes", doc_type='doc', size=10000, explain=True)
+
+            search_params["q"] = filter_query
+
+        if len(sort) > 0:
+            search_params["sort"] = sort
+
+        res = self.es.search(**search_params)
 
         parsed_items = []
 

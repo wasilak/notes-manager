@@ -6,19 +6,21 @@ function ListCtrl($rootScope, $scope, ApiService) {
 
   vm.list = [];
 
-  ApiService.getList().then(function(result) {
-    vm.list = result;
-  });
-
   $rootScope.$on('currentNote', function(event, note) {
     vm.note = note;
   });
 
   vm.search = function() {
-    ApiService.getList(vm.listFilter).then(function(result) {
+    ApiService.getList(vm.listFilter, vm.sort).then(function(result) {
        vm.list = result;
     });
   };
+
+  vm.setSort = function() {
+    vm.search();
+  };
+
+  vm.search();
 }
 
 ListCtrl.resolve = {

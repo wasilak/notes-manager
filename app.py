@@ -33,10 +33,8 @@ def index(path):
 @app.route('/api/list/<filter>', methods=['GET'])
 @app.route('/api/list/', defaults={'filter': ''}, methods=['GET'])
 def api_list(filter):
-
-    items = db.list(filter)
-
-    return jsonify({"data": items})
+    sort = request.args.get('sort', default="", type=str)
+    return jsonify({"data": db.list(filter, sort)})
 
 
 @app.route('/api/note/<uuid>', methods=['GET'])

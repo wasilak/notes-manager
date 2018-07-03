@@ -1,10 +1,27 @@
-<div class="row">
+<div class="row" id="list">
   <div class="col-sm-4">
 
       <form class="form-horizontal">
         <div class="form-group">
           <div class="col-sm-12">
-            <input type="text" autocomplete="off" ng-model="vm.listFilter" ng-model-options="{ debounce: 500 }" class="form-control" ng-change="vm.search()" name="search" placeholder="Type to filter notes...">
+            <input type="text" autocomplete="off" 
+              ng-model="vm.listFilter" 
+              ng-model-options="{ debounce: 500 }"
+              class="form-control"
+              ng-change="vm.search()"
+              name="search"
+              placeholder="Type to filter notes..."
+            >
+            sort by:
+            <label class="radio-inline">
+              <input type="radio" ng-checked="true" ng-model="vm.sort" ng-change="vm.setSort()" name="sortOptions" value=""> score
+            </label>
+            <label class="radio-inline">
+              <input type="radio" ng-model="vm.sort" ng-change="vm.setSort()" name="sortOptions" value="updated:desc"> updated:desc
+            </label>
+            <label class="radio-inline">
+              <input type="radio" ng-model="vm.sort" ng-change="vm.setSort()" name="sortOptions" value="updated:asc"> updated:asc
+            </label>
           </div>
         </div>
       </form>
@@ -12,7 +29,11 @@
       <div class="row">
         <div class="col-sm-12">
           <div class="list-group" ng-cloak>
-            <a ng-repeat="note in vm.list" class="list-group-item" ng-class="note.id == vm.note.id ? 'active' : ''" ui-sref="parent.list.note({uuid: note.id})">{{ note.title }} <abbr ng-if="note._score" class="pull-right" title="{{ note._explanation }}">score: {{ note._score }}</abbr></a>
+            <a ng-repeat="note in vm.list" 
+              class="list-group-item"
+              ng-class="note.id == vm.note.id ? 'active' : ''"
+              ui-sref="parent.list.note({uuid: note.id})">{{ note.title }} <span ng-if="note._score" class="pull-right" title="{{ note._explanation }}">score: {{ note._score }}</span>
+            </a>
           </div>
         </div>
         

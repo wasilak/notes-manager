@@ -23,10 +23,14 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
     );
   };
 
-  var getList = function(filter) {
+  var getList = function(filter, sort) {
 
     if (!filter) {
       filter = "";
+    }
+
+    if (!sort) {
+      sort = "";
     }
 
     var url = API.urls.list.replace("{{filter}}", filter);
@@ -35,7 +39,9 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         cache: false,
         url: url,
         method: 'GET',
-        params: {}
+        params: {
+          sort: sort
+        }
       })
       .then(function(response) {
         return response.data.data;
