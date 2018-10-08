@@ -40,7 +40,8 @@ class Db:
             "doc_type": 'doc',
             "size": 10000,
             "explain": True,
-            "track_scores": True
+            "track_scores": True,
+            "sort": "updated:desc"
         }
 
         if len(filter) > 0:
