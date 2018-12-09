@@ -82,11 +82,11 @@ class Db:
 
     def update(self, id, data):
         self.es.index(index="notes", doc_type='doc', id=id, body=data)
-        time.sleep(1)
+        time.sleep(1)  # time needed for Elasticsearch to commit change
 
     def delete(self, id):
         note = self.es.get(index="notes", doc_type='doc', id=id)
         self.es.delete(index="notes", doc_type='doc', id=id)
-        time.sleep(1)
+        time.sleep(1)  # time needed for Elasticsearch to commit change
 
         return self.parse_item(note)
