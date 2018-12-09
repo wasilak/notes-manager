@@ -3,61 +3,70 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
   $stateProvider
     // base parent state
     .state('parent', {
-      abstract: true,
-      template: '<ui-view/>',
+      // abstract: true,
       views: {
-        'menu': {
+        '': {
+          templateUrl: '/static/app/views/layout.html'
+        },
+        'menu@parent': {
           templateUrl: '/static/app/views/menu.html',
           controller: 'MenuCtrl as vm'
         }
       }
     })
-    .state('parent.list', {
+    .state('list', {
+      parent: 'parent',
       url: '/',
       data: {
         title: 'List',
       },
       views: {
-        '@': {
+        '': {
+          template: '<div ui-view="list"></div>',
+        },
+        'list@parent': {
           templateUrl: '/static/app/views/list.html',
           controller: 'ListCtrl as vm'
         }
       },
       resolve: ListCtrl.resolve
     })
-    .state('parent.new', {
+    .state('new', {
+      parent: 'parent',
       url: '/note/new',
       data: {
         title: 'New note',
       },
       views: {
-        '@': {
+        'note@parent': {
           templateUrl: '/static/app/views/note.html',
           controller: 'NewCtrl as vm'
         }
       },
       resolve: NewCtrl.resolve
     })
-    .state('parent.note', {
+    .state('note', {
+      parent: 'parent',
       url: '/note/:uuid',
       data: {
         title: 'Note',
       },
       views: {
-        '@': {
+        'note@parent': {
           templateUrl: '/static/app/views/note.html',
           controller: 'NoteCtrl as vm'
         }
       },
       resolve: NoteCtrl.resolve
     })
-    .state('parent.list.note', {
+    .state('list.note', {
+      parent: 'list',
       url: 'list/:uuid',
       data: {
         title: 'List :: Note',
       },
       views: {
-        'content@parent.list': {
+        'content@list': {
           templateUrl: '/static/app/views/noteRendered.html',
           controller: 'NoteRenderedCtrl as vm'
         }

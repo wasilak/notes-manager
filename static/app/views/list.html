@@ -32,7 +32,7 @@
             <a ng-repeat="note in vm.list" 
               class="list-group-item"
               ng-class="note.id == vm.note.id ? 'active' : ''"
-              ui-sref="parent.list.note({uuid: note.id})">{{ note.title }} <span ng-if="note._score" class="pull-right" title="{{ note._explanation }}">score: {{ note._score }}</span>
+              ui-sref="list.note({uuid: note.id})">{{ note.title }} <span ng-if="note._score" class="pull-right" title="{{ note._explanation }}">score: {{ note._score }}</span>
             </a>
           </div>
         </div>

@@ -15,7 +15,7 @@ function MenuCtrl($rootScope, $scope, ApiService, $state) {
       // some kind of message, i.e. growl
       vm.note = result;
       $rootScope.notifications.push('Note saved');
-      $state.go('parent.list.note', {uuid: vm.note.id});
+      $state.go('list.note', {uuid: vm.note.id});
     });
   };
 
@@ -24,9 +24,9 @@ function MenuCtrl($rootScope, $scope, ApiService, $state) {
     $rootScope.$broadcast('currentNote', vm.note);
 
     if (uuid) {
-      $state.go('parent.list.note', {uuid: uuid});
+      $state.go('list.note', {uuid: uuid});
     } else {
-      $state.go('parent.list', {}, {reload: true});
+      $state.go('list', {}, {reload: true});
     }
   };
 
@@ -35,7 +35,7 @@ function MenuCtrl($rootScope, $scope, ApiService, $state) {
       vm.note = result;
       $rootScope.notifications.push('Note created');
       $rootScope.$broadcast('currentNote', vm.note);
-      $state.go('parent.list.note', {uuid: vm.note.id}, {reload: true});
+      $state.go('list.note', {uuid: vm.note.id}, {reload: true});
     });
   };
 
@@ -47,7 +47,7 @@ function MenuCtrl($rootScope, $scope, ApiService, $state) {
           vm.note = null;
           $rootScope.$broadcast('currentNote', vm.note);
           $rootScope.notifications.push('Note deleted');
-          $state.go('parent.list', {}, {reload: true});
+          $state.go('list', {}, {reload: true});
       });
     }
   };

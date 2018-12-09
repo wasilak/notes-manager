@@ -45,5 +45,5 @@ growl-notifications growl-notification {
 }
 
 .sticky_col {
-  position: fixed;
+  /*position: fixed;*/
 }
