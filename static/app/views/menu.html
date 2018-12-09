@@ -1,47 +1,33 @@
-<nav class="navbar navbar-default navbar-fixed-top" ng-cloak>
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header" ng-cloak>
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#topNavbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
+<nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" ng-cloak>
       <a class="navbar-brand" ui-sref="parent.list()" ui-sref-opts="{reload: true}">Notes Manager</a>
-    </div>
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#topNavbar" aria-expanded="false">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="topNavbar">
-      <ul class="nav navbar-nav">
-        <li class="">
-          <a ui-sref="parent.list()" ui-sref-opts="{reload: true}">List</a>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item" >
+          <a  class="nav-link" ui-sref="parent.list()" ui-sref-opts="{reload: true}">list</a>
         </li>
-        <li class="active">
-          <a ui-sref="parent.new()">New</a>
+        <li class="nav-item">
+          <a class="nav-link" ui-sref="parent.new()">new</a>
         </li>
       </ul>
 
-      <ul class="nav navbar-nav navbar-right">
-        <li ng-show="vm.note && vm.note.edit">
-          <a ng-click="vm.cancel(vm.note.id)" href="javascript:void(0)" class="bg-info">cancel</a>
-        </li>
-        <li ng-show="vm.note && !vm.note.id">
-          <a ng-click="vm.cancel()" href="javascript:void(0)" class="bg-info">cancel</a>
-        </li>
-        <li ng-show="vm.note && vm.note.edit">
-          <a ng-click="vm.saveNote()" href="javascript:void(0)" class="bg-success">save</a>
-        </li>
-        <li ng-show="vm.note && vm.note.id && !vm.note.edit">
-          <a ui-sref="parent.note({uuid: vm.note.id})" class="bg-success">edit</a>
-        </li>
-        <li ng-show="vm.note && !vm.note.id">
-          <a ng-click="vm.createNote()" href="javascript:void(0)" class="bg-success">create</a>
-        </li>
-        <li ng-show="vm.note && vm.note.id">
-          <a ng-click="vm.deleteNote()" href="javascript:void(0)" class="bg-danger">delete</a>
+      <ul ng-show="vm.note" class="navbar-nav navbar-right">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            actions
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a ng-show="vm.note.edit" ng-click="vm.cancel(vm.note.id)" href="" class="dropdown-item" class1="bg-info">cancel</a>
+              <a ng-show="!vm.note.id" ng-click="vm.cancel()" href="" class="dropdown-item" class1="bg-info">cancel</a>
+              <a ng-show="vm.note.edit" ng-click="vm.saveNote()" href="" class="dropdown-item" class1="bg-success">save</a>
+              <a ng-show="vm.note.id && !vm.note.edit" ui-sref="parent.note({uuid: vm.note.id})" class="dropdown-item" class1="bg-success">edit</a>
+              <a ng-show="!vm.note.id" ng-click="vm.createNote()" href="" class="dropdown-item" class1="bg-success">create</a>
+              <a ng-show="vm.note.id" ng-click="vm.deleteNote()" href="" class="dropdown-item" class1="bg-danger">delete</a>
+          </div>
         </li>
       </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+    </div>
 </nav>

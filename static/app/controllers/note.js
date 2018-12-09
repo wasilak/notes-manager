@@ -4,12 +4,6 @@
 function NoteCtrl($scope, $stateParams, note) {
   var vm = this;
 
-  vm.uuid = $stateParams.uuid;
-
-  vm.note = {
-    content: ''
-  };
-
   vm.note = note;
 
   $scope.$watch('vm.note.content', function(current, original) {

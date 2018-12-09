@@ -3,6 +3,7 @@
   "globals": {
     "angular"   : false,
     "marked"   : false,
-    "hljs"   : false
+    "hljs"   : false,
+    "browser"       : true,
     }
 }

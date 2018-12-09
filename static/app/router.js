@@ -4,9 +4,9 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
     // base parent state
     .state('parent', {
       abstract: true,
+      template: '<ui-view/>',
       views: {
         'menu': {
-          template: '<ui-view/>',
           templateUrl: '/static/app/views/menu.html',
           controller: 'MenuCtrl as vm'
         }
