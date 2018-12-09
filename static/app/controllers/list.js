@@ -1,7 +1,7 @@
 /* jslint node: true */
 "use strict";
 
-function ListCtrl($rootScope, $scope, ApiService) {
+function ListCtrl($rootScope, ApiService) {
   var vm = this;
 
   vm.list = [];
@@ -25,9 +25,7 @@ function ListCtrl($rootScope, $scope, ApiService) {
 
 ListCtrl.resolve = {
   notes: function($stateParams, ApiService, $rootScope) {
-    return ApiService.getList().then(function(result) {
-      return result;
-    });
+    return ApiService.getList();
   }
 };
 

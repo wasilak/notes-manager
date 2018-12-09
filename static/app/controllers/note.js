@@ -1,10 +1,12 @@
 /* jslint node: true */
 "use strict";
 
-function NoteCtrl($scope, $stateParams, note) {
+function NoteCtrl($scope, $rootScope, note) {
   var vm = this;
 
   vm.note = note;
+  note.edit = true;
+  $rootScope.$broadcast('currentNote', note);
 
   $scope.$watch('vm.note.content', function(current, original) {
     vm.outputText = marked(current);
@@ -13,15 +15,7 @@ function NoteCtrl($scope, $stateParams, note) {
 
 NoteCtrl.resolve = {
   note: function($stateParams, ApiService, $rootScope) {
-    let uuid = $stateParams.uuid;
-
-    return ApiService.getNote(uuid).then(function(result) {
-      let note = result;
-      note.edit = true;
-      $rootScope.$broadcast('currentNote', note);
-
-      return note;
-    });
+    return ApiService.getNote($stateParams.uuid);
   }
 };
 

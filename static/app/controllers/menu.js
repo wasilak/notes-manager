@@ -1,7 +1,7 @@
 /* jslint node: true */
 "use strict";
 
-function MenuCtrl($rootScope, $scope, ApiService, $state) {
+function MenuCtrl($rootScope, ApiService, $state) {
   var vm = this;
 
   vm.note = null;
@@ -21,7 +21,6 @@ function MenuCtrl($rootScope, $scope, ApiService, $state) {
 
   vm.cancel = function(uuid) {
     vm.note = null;
-    $rootScope.$broadcast('currentNote', vm.note);
 
     if (uuid) {
       $state.go('list.note', {uuid: uuid});
@@ -34,7 +33,6 @@ function MenuCtrl($rootScope, $scope, ApiService, $state) {
     ApiService.createNote(vm.note).then(function(result) {
       vm.note = result;
       $rootScope.notifications.push('Note created');
-      $rootScope.$broadcast('currentNote', vm.note);
       $state.go('list.note', {uuid: vm.note.id}, {reload: true});
     });
   };
@@ -45,7 +43,6 @@ function MenuCtrl($rootScope, $scope, ApiService, $state) {
     if (confirmed) {
       ApiService.deleteNote(vm.note.id).then(function(result) {
           vm.note = null;
-          $rootScope.$broadcast('currentNote', vm.note);
           $rootScope.notifications.push('Note deleted');
           $state.go('list', {}, {reload: true});
       });
