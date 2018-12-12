@@ -11,10 +11,17 @@
 
     <div class="row">
       <div class="col-sm-6" ng-cloak>
-        <code-editor syntax="markdown" ng-model="vm.note.content" class="bordered" line-numbers="false"></code-editor>
+        <code-editor syntax="markdown" ng-model="vm.note.content" ng-model-options="{ debounce: 250 }" class="bordered" line-numbers="false"></code-editor>
       </div>
       <div class="col-sm-6 outputText" ng-cloak>
         <div class="outputText bordered" ng-bind-html="vm.outputText"></div>
+      </div>
+    </div>
+    <div class="row" ng-show="vm.errorMessage">
+      <div class="col-sm-6" ng-cloak>
+        <div class="alert alert-warning" role="alert">
+          <span ng-bind-html="vm.errorMessage"></span>
+        </div>
       </div>
     </div>
 

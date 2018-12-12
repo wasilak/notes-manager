@@ -9,7 +9,12 @@ function NoteCtrl($scope, $rootScope, note) {
   $rootScope.$broadcast('currentNote', note);
 
   $scope.$watch('vm.note.content', function(current, original) {
-    vm.outputText = marked(current);
+    vm.errorMessage = false;
+    try {
+      vm.outputText = marked(current);
+    } catch (err) {
+      vm.errorMessage = err.message.split('\n')[0];
+    }
   });
 }
 

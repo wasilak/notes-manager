@@ -1,5 +1,4 @@
 import os
-import time
 import re
 from elasticsearch import Elasticsearch
 
@@ -81,12 +80,10 @@ class Db:
         self.update(id, data)
 
     def update(self, id, data):
-        self.es.index(index="notes", doc_type='doc', id=id, body=data)
-        time.sleep(1)  # time needed for Elasticsearch to commit change
+        self.es.index(index="notes", doc_type='doc', id=id, body=data, refresh="wait_for")
 
     def delete(self, id):
         note = self.es.get(index="notes", doc_type='doc', id=id)
-        self.es.delete(index="notes", doc_type='doc', id=id)
-        time.sleep(1)  # time needed for Elasticsearch to commit change
+        self.es.delete(index="notes", doc_type='doc', id=id, refresh="wait_for")
 
         return self.parse_item(note)
