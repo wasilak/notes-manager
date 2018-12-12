@@ -38,7 +38,7 @@
           <div class="list-group" ng-cloak>
             <a ng-repeat="note in vm.list.response" 
               class="list-group-item"
-              ng-class="note.id == vm.note.response.id ? 'active' : ''"
+              ui-sref-active="active"
               ui-sref="list.note({uuid: note.id})">{{ note.title }} <span ng-if="note._score" class="pull-right" title="{{ note._explanation }}">score: {{ note._score }}</span>
             </a>
           </div>
