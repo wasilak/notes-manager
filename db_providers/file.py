@@ -3,7 +3,7 @@ from tinydb import TinyDB, Query
 
 class Db:
 
-    def __init__(self):
+    def setup(self):
         self.tinydb = TinyDB('./db.json')
         self.table = self.tinydb.table('notes', cache_size=0)
         self.Note = Query()

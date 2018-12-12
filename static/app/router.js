@@ -3,7 +3,6 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
   $stateProvider
     // base parent state
     .state('parent', {
-      // abstract: true,
       views: {
         '': {
           templateUrl: '/static/app/views/layout.html'

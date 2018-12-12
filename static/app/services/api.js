@@ -10,14 +10,18 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         params: {}
       })
       .then(function(response) {
-        return response.data.data;
+        return {
+          response: response.data.data,
+          success: true
+        }
       },
       function(response) {
         console.error('Getting note failed!');
-        console.error(response);
         return {
           success: false,
-          error: response
+          error: response.data.error,
+          status: response.status,
+          statusText: response.statusText
         };
       }
     );
@@ -44,14 +48,19 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         }
       })
       .then(function(response) {
-        return response.data.data;
+        return {
+          response: response.data.data,
+          success: true
+        }
       },
       function(response) {
         console.error('Getting notes list failed!');
-        console.error(response);
+        console.log(response.data);
         return {
           success: false,
-          error: response
+          error: response.data.error,
+          status: response.status,
+          statusText: response.statusText
         };
       }
     );
@@ -59,25 +68,29 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
 
   var saveNote = function(note) {
 
-    var url = API.urls.note.replace("{{uuid}}", note.id);
+    var url = API.urls.note.replace("{{uuid}}", note.response.id);
 
     return $http({
         cache: false,
         url: url,
         method: 'POST',
         data: {
-          note: note
+          note: note.response
         }
       })
       .then(function(response) {
-        return response.data.data;
+        return {
+          response: response.data.data,
+          success: true
+        }
       },
       function(response) {
         console.error('Saving note failed!');
-        console.error(response);
         return {
           success: false,
-          error: response
+          error: response.data.error,
+          status: response.status,
+          statusText: response.statusText
         };
       }
     );
@@ -92,18 +105,22 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         url: url,
         method: 'POST',
         data: {
-          note: note
+          note: note.response
         }
       })
       .then(function(response) {
-        return response.data.data;
+        return {
+          response: response.data.data,
+          success: true
+        }
       },
       function(response) {
         console.error('Creating note failed!');
-        console.error(response);
         return {
           success: false,
-          error: response
+          error: response.data.error,
+          status: response.status,
+          statusText: response.statusText
         };
       }
     );
@@ -120,14 +137,18 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         data: {}
       })
       .then(function(response) {
-        return response.data.data;
+        return {
+          response: response.data.data,
+          success: true
+        }
       },
       function(response) {
         console.error('Creating note failed!');
-        console.error(response);
         return {
           success: false,
-          error: response
+          error: response.data.error,
+          status: response.status,
+          statusText: response.statusText
         };
       }
     );

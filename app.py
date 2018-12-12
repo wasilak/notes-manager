@@ -19,6 +19,27 @@ elif db_provider == "file":
 db = Db()
 
 
+# @app.before_request
+# def before_request():
+def connection():
+    # try:
+    #     db.setup()
+    # except Exception as e:
+    #     print(e)
+    #     return True, str(e)
+    # return False, ""
+
+    try:
+        db.setup()
+    except Exception as e:
+        return str(e)
+
+    return False
+
+
+db_conn_err = connection()
+
+
 @app.route('/static/node_modules/<path:filename>')
 def base_static(filename):
     return send_from_directory(app.root_path + '/node_modules/', filename)
@@ -33,12 +54,32 @@ def index(path):
 @app.route('/api/list/<filter>', methods=['GET'])
 @app.route('/api/list/', defaults={'filter': ''}, methods=['GET'])
 def api_list(filter):
+    # conn_err, conn_msg = connection()
+
+    # if conn_err:
+    #     return jsonify({"error": conn_msg}), 503
+
+    if db_conn_err:
+        db_conn_err_persisting = connection()
+        if db_conn_err_persisting:
+            return jsonify({"error": db_conn_err_persisting}), 503
+
     sort = request.args.get('sort', default="", type=str)
     return jsonify({"data": db.list(filter, sort)})
 
 
 @app.route('/api/note/<uuid>', methods=['GET'])
 def api_note(uuid):
+    # conn_err, conn_msg = connection()
+
+    # if conn_err:
+    #     return jsonify({"error": conn_msg}), 503
+
+    if db_conn_err:
+        db_conn_err_persisting = connection()
+        if db_conn_err_persisting:
+            return jsonify({"error": db_conn_err_persisting}), 503
+
     return jsonify({"data": db.get(uuid)})
 
 
@@ -50,8 +91,6 @@ def api_note_update(uuid):
 
     updated_note = json.loads(request.data)["note"]
     updated_note["updated"] = seconds
-
-    del updated_note["edit"]
 
     db.update(updated_note["id"], updated_note)
 

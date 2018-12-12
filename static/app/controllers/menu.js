@@ -15,7 +15,7 @@ function MenuCtrl($rootScope, ApiService, $state) {
       // some kind of message, i.e. growl
       vm.note = result;
       $rootScope.notifications.push('Note saved');
-      $state.go('list.note', {uuid: vm.note.id});
+      $state.go('list.note', {uuid: vm.note.response.id});
     });
   };
 
@@ -33,7 +33,7 @@ function MenuCtrl($rootScope, ApiService, $state) {
     ApiService.createNote(vm.note).then(function(result) {
       vm.note = result;
       $rootScope.notifications.push('Note created');
-      $state.go('list.note', {uuid: vm.note.id}, {reload: true});
+      $state.go('list.note', {uuid: vm.note.response.id}, {reload: true});
     });
   };
 
@@ -41,7 +41,7 @@ function MenuCtrl($rootScope, ApiService, $state) {
     var confirmed = confirm("Are you sure?");
 
     if (confirmed) {
-      ApiService.deleteNote(vm.note.id).then(function(result) {
+      ApiService.deleteNote(vm.note.response.id).then(function(result) {
           vm.note = null;
           $rootScope.notifications.push('Note deleted');
           $state.go('list', {}, {reload: true});

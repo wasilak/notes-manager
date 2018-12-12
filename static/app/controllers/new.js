@@ -5,15 +5,18 @@ function NewCtrl($rootScope, $scope) {
   var vm = this;
 
   vm.note = {
-    id: null,
-    content: '',
-    title: '',
-    created: '',
-    updated: ''
+    success: true,
+    response: {
+      id: null,
+      content: '',
+      title: '',
+      created: '',
+      updated: ''
+    }
   };
 
   $scope.$watch('vm.note', function(current, original) {
-    vm.outputText = marked(current.content);
+    vm.outputText = marked(current.response.content);
     $rootScope.$broadcast('currentNote', current);
   }, true);
 }

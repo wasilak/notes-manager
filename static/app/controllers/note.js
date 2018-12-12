@@ -8,12 +8,16 @@ function NoteCtrl($scope, $rootScope, note) {
   note.edit = true;
   $rootScope.$broadcast('currentNote', note);
 
-  $scope.$watch('vm.note.content', function(current, original) {
+  $scope.$watch('vm.note.response.content', function(current, original) {
+    if (!vm.note.success) {
+      return;
+    }
+
     vm.errorMessage = false;
     try {
       vm.outputText = marked(current);
     } catch (err) {
-      vm.errorMessage = err.message.split('\n')[0];
+      vm.errorMessage = err.message;
     }
   });
 }

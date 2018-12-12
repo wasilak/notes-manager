@@ -1,17 +1,21 @@
 <div class="row">
   <div class="col-sm-12">
 
-    <form class="form-horizontal">
+    <div class="alert alert-danger" role="alert" ng-if="!vm.note.success">
+      <p>{{vm.note.error}}</p>
+    </div>
+
+    <form class="form-horizontal" ng-if="vm.note.success">
       <div class="form-group">
         <div class="col-sm-12" ng-cloak>
-          <input type="text" ng-model="vm.note.title" class="form-control" placeholder="Enter note title here...">
+          <input type="text" ng-model="vm.note.response.title" class="form-control" placeholder="Enter note title here...">
         </div>
       </div>
     </form>
 
-    <div class="row">
+    <div class="row" ng-if="vm.note.success">
       <div class="col-sm-6" ng-cloak>
-        <code-editor syntax="markdown" ng-model="vm.note.content" ng-model-options="{ debounce: 250 }" class="bordered" line-numbers="false"></code-editor>
+        <code-editor syntax="markdown" ng-model="vm.note.response.content" ng-model-options="{ debounce: 250 }" class="bordered" line-numbers="false"></code-editor>
       </div>
       <div class="col-sm-6 outputText" ng-cloak>
         <div class="outputText bordered" ng-bind-html="vm.outputText"></div>

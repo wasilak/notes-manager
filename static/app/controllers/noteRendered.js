@@ -8,7 +8,7 @@ function NoteRenderedCtrl($rootScope, $stateParams, note) {
   vm.note = note;
   $rootScope.$broadcast('currentNote', note);
 
-  vm.outputText = marked(vm.note.content);
+  vm.outputText = marked(vm.note.response.content);
 }
 
 NoteRenderedCtrl.resolve = {

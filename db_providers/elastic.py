@@ -5,13 +5,16 @@ from elasticsearch import Elasticsearch
 
 class Db:
 
-    def __init__(self):
-        try:
-            self.es = Elasticsearch(hosts=[os.getenv("ELASTICSEARCH", "elasticsearch:9200")])
-            print(self.es.cluster.health())
-        except Exception as e:
-            print(e)
-            exit(1)
+    def setup(self):
+        self.es = Elasticsearch(
+            hosts=[os.getenv("ELASTICSEARCH", "elasticsearch:9200")],
+            # sniff_on_start=False,
+            # sniff_on_connection_fail=False,
+            # sniffer_timeout=1,
+            # sniff_timeout=1,
+            max_retries=1
+        )
+        print(self.es.cluster.health())
 
     def parse_item(self, item):
         parsed_item = item["_source"]
@@ -40,7 +43,7 @@ class Db:
             "size": 10000,
             "explain": True,
             "track_scores": True,
-            "sort": "updated:desc"
+            "sort": ""
         }
 
         if len(filter) > 0:
