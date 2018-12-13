@@ -7,7 +7,10 @@ angular.module("app").component("note",
       var vm = this;
 
       vm.note = {
-        success: true
+        success: true,
+        response: {
+          content: ''
+        }
       };
 
       ApiService.getNote($stateParams.uuid).then(function(result) {
