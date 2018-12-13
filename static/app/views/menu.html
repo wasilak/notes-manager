@@ -14,18 +14,18 @@
         </li>
       </ul>
 
-      <ul ng-if="vm.note.success" class="navbar-nav navbar-right">
+      <ul ng-if="$ctrl.note.success" class="navbar-nav navbar-right">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             actions
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a ng-show="vm.note.edit" ng-click="vm.cancel(vm.note.response.id)" href="" class="dropdown-item" class1="bg-info">cancel</a>
-              <a ng-show="!vm.note.response.id" ng-click="vm.cancel()" href="" class="dropdown-item" class1="bg-info">cancel</a>
-              <a ng-show="vm.note.edit" ng-click="vm.saveNote()" href="" class="dropdown-item" class1="bg-success">save</a>
-              <a ng-show="vm.note.response.id && !vm.note.edit" ui-sref="note({uuid: vm.note.response.id})" class="dropdown-item" class1="bg-success">edit</a>
-              <a ng-show="!vm.note.response.id" ng-click="vm.createNote()" href="" class="dropdown-item" class1="bg-success">create</a>
-              <a ng-show="vm.note.response.id" ng-click="vm.deleteNote()" href="" class="dropdown-item" class1="bg-danger">delete</a>
+              <a ng-show="$ctrl.note.edit" ng-click="$ctrl.cancel($ctrl.note.response.id)" href="" class="dropdown-item" class1="bg-info">cancel</a>
+              <a ng-show="!$ctrl.note.response.id" ng-click="$ctrl.cancel()" href="" class="dropdown-item" class1="bg-info">cancel</a>
+              <a ng-show="$ctrl.note.edit" ng-click="$ctrl.saveNote()" href="" class="dropdown-item" class1="bg-success">save</a>
+              <a ng-show="$ctrl.note.response.id && !$ctrl.note.edit" ui-sref="note({uuid: $ctrl.note.response.id})" class="dropdown-item" class1="bg-success">edit</a>
+              <a ng-show="!$ctrl.note.response.id" ng-click="$ctrl.createNote()" href="" class="dropdown-item" class1="bg-success">create</a>
+              <a ng-show="$ctrl.note.response.id" ng-click="$ctrl.deleteNote()" href="" class="dropdown-item" class1="bg-danger">delete</a>
           </div>
         </li>
       </ul>

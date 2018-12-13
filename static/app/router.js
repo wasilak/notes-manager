@@ -8,8 +8,7 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
           templateUrl: '/static/app/views/layout.html'
         },
         'menu@parent': {
-          templateUrl: '/static/app/views/menu.html',
-          controller: 'MenuCtrl as vm'
+          component: 'menu'
         }
       }
     })
@@ -20,15 +19,10 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
         title: 'List',
       },
       views: {
-        '': {
-          template: '<div ui-view="list"></div>',
-        },
         'list@parent': {
-          templateUrl: '/static/app/views/list.html',
-          controller: 'ListCtrl as vm'
+          component: 'list'
         }
-      },
-      resolve: ListCtrl.resolve
+      }
     })
     .state('new', {
       parent: 'parent',
@@ -38,11 +32,9 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
       },
       views: {
         'note@parent': {
-          templateUrl: '/static/app/views/note.html',
-          controller: 'NewCtrl as vm'
+          component: 'new'
         }
-      },
-      resolve: NewCtrl.resolve
+      }
     })
     .state('note', {
       parent: 'parent',
@@ -52,13 +44,11 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
       },
       views: {
         'note@parent': {
-          templateUrl: '/static/app/views/note.html',
-          controller: 'NoteCtrl as vm'
+          component: 'note'
         }
-      },
-      resolve: NoteCtrl.resolve
+      }
     })
-    .state('list.note', {
+    .state('list_note', {
       parent: 'list',
       url: 'list/:uuid',
       data: {
@@ -66,11 +56,9 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
       },
       views: {
         'content@list': {
-          templateUrl: '/static/app/views/noteRendered.html',
-          controller: 'NoteRenderedCtrl as vm'
+          component: 'noteRendered'
         }
-      },
-      resolve: NoteRenderedCtrl.resolve
+      }
     })
     ;
 

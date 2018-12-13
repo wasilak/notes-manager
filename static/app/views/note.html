@@ -1,30 +1,30 @@
 <div class="row">
   <div class="col-sm-12">
 
-    <div class="alert alert-danger" role="alert" ng-if="!vm.note.success">
-      <p>{{vm.note.error}}</p>
+    <div class="alert alert-danger" role="alert" ng-if="!$ctrl.note.success">
+      <p>{{$ctrl.note.error}}</p>
     </div>
 
-    <form class="form-horizontal" ng-if="vm.note.success">
+    <form class="form-horizontal" ng-if="$ctrl.note.success">
       <div class="form-group">
         <div class="col-sm-12" ng-cloak>
-          <input type="text" ng-model="vm.note.response.title" class="form-control" placeholder="Enter note title here...">
+          <input type="text" ng-model="$ctrl.note.response.title" class="form-control" placeholder="Enter note title here...">
         </div>
       </div>
     </form>
 
-    <div class="row" ng-if="vm.note.success">
+    <div class="row" ng-if="$ctrl.note.success">
       <div class="col-sm-6" ng-cloak>
-        <code-editor syntax="markdown" ng-model="vm.note.response.content" ng-model-options="{ debounce: 250 }" class="bordered" line-numbers="false"></code-editor>
+        <code-editor syntax="markdown" ng-model="$ctrl.note.response.content" ng-model-options="{ debounce: 250 }" class="bordered" line-numbers="false"></code-editor>
       </div>
       <div class="col-sm-6 outputText" ng-cloak>
-        <div class="outputText bordered" ng-bind-html="vm.outputText"></div>
+        <div class="outputText bordered" ng-bind-html="$ctrl.outputText"></div>
       </div>
     </div>
-    <div class="row" ng-show="vm.errorMessage">
+    <div class="row" ng-if="$ctrl.note.success" ng-show="$ctrl.errorMessage">
       <div class="col-sm-6" ng-cloak>
         <div class="alert alert-warning" role="alert">
-          <span ng-bind-html="vm.errorMessage"></span>
+          <span ng-bind-html="$ctrl.errorMessage"></span>
         </div>
       </div>
     </div>

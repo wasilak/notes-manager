@@ -1,32 +1,32 @@
-<div class="alert alert-danger" role="alert" ng-if="!vm.list.success" ng-cloak>
-  <p>{{vm.list.error}}</p>
+<div class="alert alert-danger" role="alert" ng-if="!$ctrl.list.success" ng-cloak>
+  <p>{{$ctrl.list.error}}</p>
 </div>
 
-<div class="row" id="list" ng-if="vm.list.success && vm.list.response" ng-cloak>
+<div class="row" id="list" ng-if="$ctrl.list.success && $ctrl.list.response" ng-cloak>
   <div class="col-sm-4">
 
       <form>
         <div class="form-group row">
           <div class="col-sm-12">
             <input type="text" autocomplete="off" 
-              ng-model="vm.listFilter" 
+              ng-model="$ctrl.listFilter" 
               ng-model-options="{ debounce: 250 }"
               class="form-control"
-              ng-change="vm.search()"
+              ng-change="$ctrl.search()"
               name="search"
               placeholder="Type to filter notes..."
             >
             sort by:
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" ng-model="vm.sort" ng-change="vm.setSort()" id="sortOptions_score" value="">
+              <input class="form-check-input" type="radio" ng-model="$ctrl.sort" ng-change="$ctrl.setSort()" id="sortOptions_score" value="">
               <label class="form-check-label" for="sortOptions_score">score</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" ng-model="vm.sort" ng-change="vm.setSort()" id="sortOptions_updated_desc" value="updated:desc">
+              <input class="form-check-input" type="radio" ng-model="$ctrl.sort" ng-change="$ctrl.setSort()" id="sortOptions_updated_desc" value="updated:desc">
               <label class="form-check-label" for="sortOptions_updated_desc">updated:desc</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" ng-model="vm.sort" ng-change="vm.setSort()" id="sortOptions_updated_asc" value="updated:asc">
+              <input class="form-check-input" type="radio" ng-model="$ctrl.sort" ng-change="$ctrl.setSort()" id="sortOptions_updated_asc" value="updated:asc">
               <label class="form-check-label" for="sortOptions_updated_asc">updated:asc</label>
             </div>
           </div>
@@ -36,10 +36,10 @@
       <div class="row">
         <div class="col-sm-12">
           <div class="list-group" ng-cloak>
-            <a ng-repeat="note in vm.list.response" 
+            <a ng-repeat="note in $ctrl.list.response" 
               class="list-group-item"
               ui-sref-active="active"
-              ui-sref="list.note({uuid: note.id})">{{ note.title }} <span ng-if="note._score" class="pull-right" title="{{ note._explanation }}">score: {{ note._score }}</span>
+              ui-sref="list_note({uuid: note.id})">{{ note.title }} <span ng-if="note._score" class="pull-right" title="{{ note._explanation }}">score: {{ note._score }}</span>
             </a>
           </div>
         </div>

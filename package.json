@@ -10,7 +10,7 @@
     "prod": "node app.js"
   },
   "dependencies": {
-    "@uirouter/angularjs": "~0.3.2",
+    "@uirouter/angularjs": "~1.0.20",
     "angular": "~1.7.5",
     "angular-animate": "~1.7.5",
     "angular-growl-notifications": "^2.6.0",
