@@ -44,6 +44,18 @@ growl-notifications growl-notification {
   -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
-.sticky_col {
-  /*position: fixed;*/
+.scrollable-list {
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+@media (max-width: 576px) {
+  .scrollable-list {
+    max-height: 300px;
+  }
+}
+
+.scrollable-note {
+  max-height: 100%;
+  overflow-y: auto;
 }
