@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="{{url_for('static', filename='node_modules/codemirror/theme/pastel-on-dark.css')}}">
 
     <link rel="stylesheet" href="{{url_for('static', filename='node_modules/highlightjs/styles/github.css')}}">
+    
+    <link rel="stylesheet" href="{{url_for('static', filename='node_modules/angular-chips/dist/main.css')}}">
 
     <link rel="stylesheet" href="{{url_for('static', filename='css/theme.min.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
@@ -37,9 +39,10 @@
     {% endraw %}
 
     <script src="{{url_for('static', filename='node_modules/jquery/dist/jquery.min.js')}}"></script>
+    <script src="{{url_for('static', filename='node_modules/popper.js/dist/umd/popper.min.js')}}"></script>
+    <script src="{{url_for('static', filename='node_modules/bootstrap/dist/js/bootstrap.min.js')}}"></script>
     <script src="{{url_for('static', filename='node_modules/marked/marked.min.js')}}"></script>
     <script src="{{url_for('static', filename='node_modules/highlightjs/highlight.pack.min.js')}}"></script>
-    <script src="{{url_for('static', filename='node_modules/bootstrap/dist/js/bootstrap.min.js')}}"></script>
 
     <script src="{{url_for('static', filename='node_modules/codemirror/lib/codemirror.js')}}"></script>
     <script src="{{url_for('static', filename='node_modules/codemirror/mode/markdown/markdown.js')}}"></script>
@@ -70,6 +73,8 @@
     <script src="{{url_for('static', filename='app/directives/codemirror.js')}}" charset="utf-8"></script>
 
     <script src="{{url_for('static', filename='app/services/api.js')}}" charset="utf-8"></script>
+
+    <script src="{{url_for('static', filename='node_modules/angular-chips/dist/angular-chips.min.js')}}" charset="utf-8"></script>
 
   </body>
 </html>

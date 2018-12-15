@@ -1,7 +1,18 @@
 <div class="row">
   <div class="col-sm-12 scrollable-note">
-
+    
     <p ng-cloak><strong class="lead text-primary">{{ $ctrl.note.response.title }}</strong> <small><em>{{ $ctrl.note.response.updated * 1000 | date : 'yyyy-MM-dd @HH:mm:ss' }}</em></small></p>
+
+    <div class="row">
+      <div class="col-sm-12" ng-cloak>
+        <chips ng-model="$ctrl.note.response.tags">
+            <chip-tmpl>
+              <span class="badge badge-info">{{chip}}</span>
+            </chip-tmpl>
+            <input chip-control style="display: none;"></input>
+        </chips>
+      </div>
+    </div>
 
     <hr>
 

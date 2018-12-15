@@ -40,6 +40,12 @@
               class="list-group-item"
               ui-sref-active="active"
               ui-sref="list_note({uuid: note.id})">{{ note.title }} <span ng-if="note._score" class="pull-right" title="{{ note._explanation }}">score: {{ note._score }}</span>
+              <chips ng-model="note.tags">
+                <chip-tmpl>
+                  <span class="badge badge-info">{{chip}}</span>
+                </chip-tmpl>
+                <input chip-control style="display: none;"></input>
+              </chips>
             </a>
           </div>
         </div>

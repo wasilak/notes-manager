@@ -1,7 +1,7 @@
 /* jslint node: true */
 "use strict";
 
-var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications'])
+var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications', 'angular.chips'])
 
 .config([function() {
   marked.setOptions({

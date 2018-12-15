@@ -16,6 +16,22 @@
     </div>
 
     <div class="row" ng-if="$ctrl.note.success">
+      <div class="col-sm-12" ng-cloak>
+
+        <form class="form-horizontal" ng-if="$ctrl.note.success">
+          <div class="form-group">
+            <chips ng-model="$ctrl.note.response.tags">
+                <chip-tmpl>
+                  <span class="badge badge-info">{{chip}}<i class="fa fa-times-circle chipRemove" aria-hidden="true" remove-chip></i></span>
+                </chip-tmpl>
+                <input chip-control placeholder="Tags..."></input>
+            </chips>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="row" ng-if="$ctrl.note.success">
       <div class="col-sm-6" ng-cloak>
         <code-editor syntax="markdown" ng-model="$ctrl.note.response.content" ng-model-options="{ debounce: 250 }" class="bordered" line-numbers="false"></code-editor>
       </div>

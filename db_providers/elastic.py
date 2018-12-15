@@ -51,7 +51,7 @@ class Db:
 
             filter_query = []
             for term in filter_terms:
-                filter_query.append("(content: *%s* OR title: *%s*)" % (term, term))
+                filter_query.append("(content: *%s* OR title: *%s* OR tags: *%s*)" % (term, term, term))
 
             filter_query = (" OR ").join(filter_query)
 

@@ -59,3 +59,23 @@ growl-notifications growl-notification {
   max-height: 100%;
   overflow-y: auto;
 }
+
+chips {
+  display: inherit;
+  padding: 0;
+}
+
+chips > div > input {
+  height: inherit;
+  border: none;
+  font-size: inherit;
+}
+
+.chip-out-focus {
+  border-bottom: 0px;
+}
+
+.chipRemove {
+  padding-left: 2px;
+  cursor: pointer;
+}
