@@ -39,13 +39,18 @@
             <a ng-repeat="note in $ctrl.list.response" 
               class="list-group-item"
               ui-sref-active="active"
-              ui-sref="list_note({uuid: note.id})">{{ note.title }} <span ng-if="note._score" class="pull-right" title="{{ note._explanation }}">score: {{ note._score }}</span>
+              ui-sref="list_note({uuid: note.id})">{{ note.title }} <abbr class="pull-right" data-toggle="collapse" data-target="#collapse_{{note.id}}" ng-if="note._score" title="Score explanation">score: {{ note._score }}</abbr class="initialism">
               <chips ng-model="note.tags">
                 <chip-tmpl>
                   <span class="badge badge-info">{{chip}}</span>
                 </chip-tmpl>
                 <input chip-control style="display: none;"></input>
               </chips>
+              <div class="collapse" id="collapse_{{note.id}}">
+                <div class="card card-body">
+                  <pre>{{ note._explanation | json }}</pre>
+                </div>
+              </div>
             </a>
           </div>
         </div>
