@@ -3,21 +3,31 @@
 
 angular.module("app").component("note", 
   {
-    controller: function ($scope, $rootScope, $stateParams, ApiService) {
+    bindings: {
+      note: '<'
+    },
+    controller: function ($scope, $rootScope, $stateParams, ApiService, $state) {
       var vm = this;
 
-      vm.note = {
-        success: true,
-        response: {
-          content: ''
-        }
+      vm.saveNote = function() {
+        ApiService.saveNote(vm.note).then(function(result) {
+          // some kind of message, i.e. growl
+          vm.note = result;
+          $rootScope.notifications.push('Note saved');
+          $state.go('list_note', {uuid: vm.note.response.id});
+        });
       };
 
-      ApiService.getNote($stateParams.uuid).then(function(result) {
-        vm.note = result;
-        vm.note.edit = true;
-        $rootScope.$broadcast('currentNote', vm.note);
-      });
+      vm.deleteNote = function() {
+        var confirmed = confirm("Are you sure?");
+
+        if (confirmed) {
+          ApiService.deleteNote(vm.note.response.id).then(function(result) {
+              $rootScope.notifications.push('Note deleted');
+              $state.go('list', {}, {reload: true});
+          });
+        }
+      };
 
       $scope.$watch('$ctrl.note.response.content', function(current, original) {
         vm.errorMessage = false;

@@ -21,6 +21,9 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
       views: {
         'list@parent': {
           component: 'list'
+        },
+        'content@list': {
+          component: 'intro'
         }
       }
     })
@@ -42,6 +45,11 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
       data: {
         title: 'Note',
       },
+      resolve: {
+        note: function(ApiService, $transition$) {
+          return ApiService.getNote($transition$.params().uuid);
+        }
+      },
       views: {
         'note@parent': {
           component: 'note'
@@ -53,6 +61,11 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
       url: 'list/:uuid',
       data: {
         title: 'List :: Note',
+      },
+      resolve: {
+        note: function(ApiService, $transition$) {
+          return ApiService.getNote($transition$.params().uuid);
+        }
       },
       views: {
         'content@list': {

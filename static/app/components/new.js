@@ -3,7 +3,7 @@
 
 angular.module("app").component("new", 
   {
-    controller: function ($scope, $rootScope, $stateParams, ApiService) {
+    controller: function ($scope, $rootScope, $stateParams, ApiService, $state) {
       var vm = this;
 
       vm.note = {
@@ -15,6 +15,13 @@ angular.module("app").component("new",
           created: '',
           updated: ''
         }
+      };
+
+      vm.createNote = function() {
+        ApiService.createNote(vm.note).then(function(result) {
+          $rootScope.notifications.push('Note created');
+          $state.go('list_note', {uuid: result.response.id}, {reload: true});
+        });
       };
 
       $scope.$watch('$ctrl.note', function(current, original) {

@@ -65,7 +65,7 @@ def api_list(filter):
             return jsonify({"error": db_conn_err_persisting}), 503
 
     sort = request.args.get('sort', default="", type=str)
-    return jsonify({"data": db.list(filter, sort)})
+    return jsonify({"data": db.list(filter.lower(), sort)})
 
 
 @app.route('/api/note/<uuid>', methods=['GET'])

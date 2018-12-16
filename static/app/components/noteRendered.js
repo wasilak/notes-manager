@@ -3,21 +3,31 @@
 
 angular.module("app").component("noteRendered", 
   {
-    controller: function ($scope, $rootScope, $stateParams, ApiService) {
+    bindings: {
+      note: '<'
+    },
+    controller: function ($scope, $rootScope, $stateParams, ApiService, $state) {
       var vm = this;
 
-      vm.note = {
-        success: true
-      };
-
-      ApiService.getNote($stateParams.uuid).then(function(result) {
-        vm.note = result;
-        $rootScope.$broadcast('currentNote', vm.note);
-        vm.inputText = '';
-        $rootScope.$broadcast('currentNote', vm.note);
-
-        vm.outputText = marked(vm.note.response.content);
+      $scope.$watch('$ctrl.note.response.content', function(current, original) {
+        vm.errorMessage = false;
+        try {
+          vm.outputText = marked(current);
+        } catch (err) {
+          vm.errorMessage = err.message;
+        }
       });
+
+      vm.deleteNote = function() {
+        var confirmed = confirm("Are you sure?");
+
+        if (confirmed) {
+          ApiService.deleteNote(vm.note.response.id).then(function(result) {
+              $rootScope.notifications.push('Note deleted');
+              $state.go('list', {}, {reload: true});
+          });
+        }
+      };
 
     },
     templateUrl: "/static/app/views/noteRendered.html"

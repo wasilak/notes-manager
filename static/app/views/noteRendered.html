@@ -1,7 +1,22 @@
 <div class="row">
   <div class="col-sm-12 scrollable-note">
     
-    <p ng-cloak><strong class="lead text-primary">{{ $ctrl.note.response.title }}</strong> <small><em>{{ $ctrl.note.response.updated * 1000 | date : 'yyyy-MM-dd @HH:mm:ss' }}</em></small></p>
+    <div class="row">
+      <div class="col-sm">
+        <p ng-cloak><strong class="lead text-primary">{{ $ctrl.note.response.title }}</strong> <small><em>{{ $ctrl.note.response.updated * 1000 | date : 'yyyy-MM-dd @HH:mm:ss' }}</em></small></p>
+      </div>
+
+      <div class="col-sm-2" ng-cloak>
+        <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group">
+            <a ui-sref="note({uuid: $ctrl.note.response.id})" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
+          </div>
+          <div class="btn-group mr-2" role="group">
+            <button type="button" ng-click="$ctrl.deleteNote()" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="row">
       <div class="col-sm-12" ng-cloak>
