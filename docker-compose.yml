@@ -12,6 +12,7 @@ services:
       - esnet
     depends_on:
       - elasticsearch
+    restart: unless-stopped
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.2
     environment:
@@ -31,6 +32,7 @@ services:
       - 9200:9200
     networks:
       - esnet
+    restart: unless-stopped
   # kibana:
   #   image: docker.elastic.co/kibana/kibana-oss:6.3.0
   #   environment:
@@ -44,6 +46,7 @@ services:
   #     - esnet
   #   depends_on:
   #     - elasticsearch
+  #   restart: unless-stopped
 
 networks:
   esnet:
