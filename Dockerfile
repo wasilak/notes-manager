@@ -2,11 +2,16 @@ FROM python:3-alpine
 
 COPY . /app
 
-RUN apk add --update --no-cache nodejs nodejs-npm
+ENV FLASK_ENV=production
+ENV FLASK_RUN_PORT=5000
+ENV FLASK_DEBUG=False
+ENV FLASK_APP=app.py
+
+RUN apk add --update --no-cache yarn
 
 WORKDIR /app
 
-RUN npm install
+RUN yarn install
 
 RUN pip install -r requirements.txt
 

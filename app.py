@@ -19,16 +19,7 @@ elif db_provider == "file":
 db = Db()
 
 
-# @app.before_request
-# def before_request():
 def connection():
-    # try:
-    #     db.setup()
-    # except Exception as e:
-    #     print(e)
-    #     return True, str(e)
-    # return False, ""
-
     try:
         db.setup()
     except Exception as e:
@@ -54,10 +45,6 @@ def index(path):
 @app.route('/api/list/<filter>', methods=['GET'])
 @app.route('/api/list/', defaults={'filter': ''}, methods=['GET'])
 def api_list(filter):
-    # conn_err, conn_msg = connection()
-
-    # if conn_err:
-    #     return jsonify({"error": conn_msg}), 503
 
     if db_conn_err:
         db_conn_err_persisting = connection()
@@ -70,10 +57,6 @@ def api_list(filter):
 
 @app.route('/api/note/<uuid>', methods=['GET'])
 def api_note(uuid):
-    # conn_err, conn_msg = connection()
-
-    # if conn_err:
-    #     return jsonify({"error": conn_msg}), 503
 
     if db_conn_err:
         db_conn_err_persisting = connection()
