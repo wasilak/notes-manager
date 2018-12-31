@@ -27,8 +27,8 @@ angular.module("app").component("noteRendered",
 
         if (confirmed) {
           ApiService.deleteNote(vm.note.response.id).then(function(result) {
-              $rootScope.notifications.push('Note deleted');
               vm.loader = false;
+              $rootScope.notifications.push('Note deleted');
               $state.go('list', {}, {reload: true});
           });
         }
