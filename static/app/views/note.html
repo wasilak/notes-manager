@@ -1,6 +1,12 @@
 <div class="row">
   <div class="col-sm-12">
 
+    <div class="row overlay" ng-if="$ctrl.loader">
+      <div class="col-sm-12">
+        <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+      </div>
+    </div>
+
     <div class="alert alert-danger" role="alert" ng-if="!$ctrl.note.success">
       <p>{{$ctrl.note.error}}</p>
     </div>
@@ -47,12 +53,12 @@
       </div>
     </div>
 
-    <div class="row" ng-if="$ctrl.note.success">
+    <div class="row noteArea" ng-if="$ctrl.note.success">
       <div class="col-sm-6" ng-cloak>
         <code-editor syntax="markdown" ng-model="$ctrl.note.response.content" ng-model-options="{ debounce: 250 }" class="bordered" line-numbers="false"></code-editor>
       </div>
       <div class="col-sm-6 outputText" ng-cloak>
-        <div class="outputText bordered" ng-bind-html="$ctrl.outputText"></div>
+        <div class="outputText" ng-bind-html="$ctrl.outputText"></div>
       </div>
     </div>
     <div class="row" ng-if="$ctrl.note.success" ng-show="$ctrl.errorMessage">

@@ -27,7 +27,7 @@ growl-notifications growl-notification {
   padding: 15px 30px;
   display: block;
   border-radius: 5px;
-  margin-top: 15px;
+  margin-top: 60px;
 }
 
 .CodeMirror {
@@ -36,7 +36,7 @@ growl-notifications growl-notification {
 
 .bordered {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px dashed #ccc;
   border-radius: 4px;
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
@@ -60,26 +60,6 @@ growl-notifications growl-notification {
   overflow-y: auto;
 }
 
-chips {
-  display: inherit;
-  padding: 0;
-}
-
-chips > div > input {
-  height: inherit;
-  border: none;
-  font-size: inherit;
-}
-
-.chip-out-focus {
-  border-bottom: 0px;
-}
-
-.chipRemove {
-  padding-left: 2px;
-  cursor: pointer;
-}
-
 tags-input .host, tags-input .tags {
   height: auto;
 }
@@ -94,4 +74,36 @@ tags-input .tags .tag-item .remove-button:hover {
 
 .tagBadge {
   margin-right: 4px;
+}
+
+.overlay {
+  z-index: 9999;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.loader {
+  position: relative;
+  top: 50%;
+  left: 50%;
+}
+
+pre {
+  border-left: #545aca 2px solid;
+  padding: 10px;
+  background-color: rgba(100, 120, 255, 0.05);
+}
+
+pre code {
+  background-color: rgba(0,0,0, 0);
+}
+
+code {
+  background-color: rgba(100, 120, 255, 0.06);
+}
+
+.noteArea {
+  margin-top: 20px;
 }

@@ -2,6 +2,12 @@
   <p>{{$ctrl.list.error}}</p>
 </div>
 
+<div class="row overlay" ng-if="$ctrl.loader">
+  <div class="col-sm-12">
+    <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+  </div>
+</div>
+
 <div class="row" id="list" ng-if="$ctrl.list.success && $ctrl.list.response" ng-cloak>
   <div class="col-sm-4">
 
@@ -42,7 +48,7 @@
               ui-sref="list_note({uuid: note.id})">{{ note.title }} <abbr class="pull-right" data-toggle="collapse" data-target="#collapse_{{note.id}}" ng-if="note._score" title="Score explanation">score: {{ note._score }}</abbr class="initialism">
               
               <p><span ng-repeat="tag in note.tags" class="badge badge-info tagBadge">{{tag}}</span></p>
-              
+
               <div class="collapse" id="collapse_{{note.id}}">
                 <div class="card card-body w-100">
                   <pre>{{ note._explanation | json }}</pre>

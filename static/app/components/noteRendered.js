@@ -9,6 +9,8 @@ angular.module("app").component("noteRendered",
     controller: function ($scope, $rootScope, $stateParams, ApiService, $state) {
       var vm = this;
 
+      vm.loader = false;
+
       $scope.$watch('$ctrl.note.response.content', function(current, original) {
         vm.errorMessage = false;
         try {
@@ -21,9 +23,12 @@ angular.module("app").component("noteRendered",
       vm.deleteNote = function() {
         var confirmed = confirm("Are you sure?");
 
+        vm.loader = true;
+
         if (confirmed) {
           ApiService.deleteNote(vm.note.response.id).then(function(result) {
               $rootScope.notifications.push('Note deleted');
+              vm.loader = false;
               $state.go('list', {}, {reload: true});
           });
         }

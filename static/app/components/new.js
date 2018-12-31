@@ -6,6 +6,8 @@ angular.module("app").component("new",
     controller: function ($scope, $rootScope, $stateParams, ApiService, $state) {
       var vm = this;
 
+      vm.loader = false;
+
       vm.note = {
         success: true,
         response: {
@@ -18,8 +20,10 @@ angular.module("app").component("new",
       };
 
       vm.createNote = function() {
+        vm.loader = true;
         ApiService.createNote(vm.note).then(function(result) {
           $rootScope.notifications.push('Note created');
+          vm.loader = false;
           $state.go('list_note', {uuid: result.response.id}, {reload: true});
         });
       };

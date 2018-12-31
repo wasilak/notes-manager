@@ -10,11 +10,15 @@ angular.module("app").component("note",
     controller: function ($scope, $rootScope, $stateParams, ApiService, $state) {
       var vm = this;
 
+      vm.loader = false;
+
       vm.saveNote = function() {
+        vm.loader = true;
         ApiService.saveNote(vm.note).then(function(result) {
           // some kind of message, i.e. growl
           vm.note = result;
           $rootScope.notifications.push('Note saved');
+          vm.loader = false;
           $state.go('list_note', {uuid: vm.note.response.id});
         });
       };
@@ -23,8 +27,10 @@ angular.module("app").component("note",
         var confirmed = confirm("Are you sure?");
 
         if (confirmed) {
+          vm.loader = true;
           ApiService.deleteNote(vm.note.response.id).then(function(result) {
               $rootScope.notifications.push('Note deleted');
+              vm.loader = false;
               $state.go('list', {}, {reload: true});
           });
         }
