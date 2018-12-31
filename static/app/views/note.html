@@ -31,17 +31,19 @@
 
     <div class="row" ng-if="$ctrl.note.success">
       <div class="col-sm-12" ng-cloak>
-
-        <form class="form-horizontal" ng-if="$ctrl.note.success">
-          <div class="form-group">
-            <chips ng-model="$ctrl.note.response.tags">
-                <chip-tmpl>
-                  <span class="badge badge-info">{{chip}}<i class="fa fa-times-circle chipRemove" remove-chip></i></span>
-                </chip-tmpl>
-                <input chip-control placeholder="Tags..."></input>
-            </chips>
-          </div>
-        </form>
+        <tags-input 
+            ng-model="$ctrl.note.response.tags"
+            use-strings="true"
+            spellcheck="false"
+            >
+          <auto-complete 
+            source="$ctrl.loadItems()"
+            load-on-down-arrow="true"
+            select-first-match="false"
+            ng-if="$ctrl.note.success"
+            min-length="2"
+            ></auto-complete>
+        </tags-input>
       </div>
     </div>
 

@@ -20,12 +20,7 @@
 
     <div class="row">
       <div class="col-sm-12" ng-cloak>
-        <chips ng-model="$ctrl.note.response.tags">
-            <chip-tmpl>
-              <span class="badge badge-info">{{chip}}</span>
-            </chip-tmpl>
-            <input chip-control style="display: none;"></input>
-        </chips>
+        <span ng-repeat="tag in $ctrl.note.response.tags" class="badge badge-info tagBadge">{{tag}}</span>
       </div>
     </div>
 

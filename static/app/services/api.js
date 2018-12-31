@@ -154,12 +154,25 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
     );
   };
 
+  var getTags = function() {
+
+    var url = API.urls.tags;
+
+    return $http({
+        cache: false,
+        url: url,
+        method: 'GET',
+        params: {}
+      });
+  };
+
   return {
     getNote: getNote,
     saveNote: saveNote,
     createNote: createNote,
     deleteNote: deleteNote,
-    getList: getList
+    getList: getList,
+    getTags: getTags,
   };
 }
 

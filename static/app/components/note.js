@@ -1,4 +1,5 @@
 /* jslint node: true */
+/* jshint -W117 */
 "use strict";
 
 angular.module("app").component("note", 
@@ -27,6 +28,10 @@ angular.module("app").component("note",
               $state.go('list', {}, {reload: true});
           });
         }
+      };
+
+      vm.loadItems = function() {
+        return ApiService.getTags();
       };
 
       $scope.$watch('$ctrl.note.response.content', function(current, original) {

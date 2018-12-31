@@ -19,11 +19,6 @@ angular-animate@~1.7.5:
   resolved "https://registry.yarnpkg.com/angular-animate/-/angular-animate-1.7.5.tgz#1ffc6c2a9cdee227a2ba79cc6cd8f71ec44db5dc"
   integrity sha512-kU/fHIGf2a4a3bH7E1tzALTHk+QfoUSCK9fEcMFisd6ZWvNDwPzXWAilItqOC3EDiAXPmGHaNc9/aXiD9xrAxQ==
 
-angular-chips@^1.0.11:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/angular-chips/-/angular-chips-1.0.11.tgz#d3e205a3b75971151322719679a3c8ae5073f87a"
-  integrity sha1-0+IFo7dZcRUTInGWeaPIrlBz+Ho=
-
 angular-growl-notifications@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/angular-growl-notifications/-/angular-growl-notifications-2.6.0.tgz#213bdaf5ce2266028848b146b89a630b6dfba99d"
@@ -70,6 +65,11 @@ marked@^0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.5.2.tgz#3efdb27b1fd0ecec4f5aba362bddcd18120e5ba9"
   integrity sha512-fdZvBa7/vSQIZCi4uuwo2N3q+7jJURpMVCcbaX0S1Mg65WZ5ilXvC67MviJAsdjqqgD+CEq4RKo5AYGgINkVAA==
+
+ng-tags-input@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/ng-tags-input/-/ng-tags-input-3.2.0.tgz#91282de575130c8ab794797febf0972b0f3bba3e"
+  integrity sha1-kSgt5XUTDIq3lHl/6/CXKw87uj4=
 
 popper.js@^1.14.6:
   version "1.14.6"

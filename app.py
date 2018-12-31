@@ -99,3 +99,14 @@ def api_note_new():
     db.create(new_note["id"], new_note)
 
     return jsonify({"data": new_note})
+
+
+@app.route('/api/tags', methods=['GET'])
+def api_tags():
+
+    if db_conn_err:
+        db_conn_err_persisting = connection()
+        if db_conn_err_persisting:
+            return jsonify({"error": db_conn_err_persisting}), 503
+
+    return jsonify(db.tags())

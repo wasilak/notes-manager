@@ -79,3 +79,19 @@ chips > div > input {
   padding-left: 2px;
   cursor: pointer;
 }
+
+tags-input .host, tags-input .tags {
+  height: auto;
+}
+
+tags-input .tags .tag-item .remove-button {
+  color: #fff;
+}
+
+tags-input .tags .tag-item .remove-button:hover {
+ color: #fff; 
+}
+
+.tagBadge {
+  margin-right: 4px;
+}

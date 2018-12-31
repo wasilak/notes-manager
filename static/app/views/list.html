@@ -40,12 +40,9 @@
               class="list-group-item"
               ui-sref-active="active"
               ui-sref="list_note({uuid: note.id})">{{ note.title }} <abbr class="pull-right" data-toggle="collapse" data-target="#collapse_{{note.id}}" ng-if="note._score" title="Score explanation">score: {{ note._score }}</abbr class="initialism">
-              <chips ng-model="note.tags">
-                <chip-tmpl>
-                  <span class="badge badge-info">{{chip}}</span>
-                </chip-tmpl>
-                <input chip-control style="display: none;"></input>
-              </chips>
+              
+              <p><span ng-repeat="tag in note.tags" class="badge badge-info tagBadge">{{tag}}</span></p>
+              
               <div class="collapse" id="collapse_{{note.id}}">
                 <div class="card card-body w-100">
                   <pre>{{ note._explanation | json }}</pre>

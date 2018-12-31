@@ -1,6 +1,7 @@
 import os
 import re
 from elasticsearch import Elasticsearch
+from elasticsearch_dsl import Search, A
 
 
 class Db:
@@ -13,7 +14,7 @@ class Db:
             # sniffer_timeout=1,
             # sniff_timeout=1,
             max_retries=1
-        )
+        )        
         print(self.es.cluster.health())
 
     def parse_item(self, item):
@@ -92,3 +93,25 @@ class Db:
         self.es.delete(index="notes", doc_type='doc', id=id, refresh="wait_for")
 
         return self.parse_item(note)
+
+    def tags(self):
+        self.search = Search(using=self.es, index="notes")
+
+        query = {
+            "size": 0,
+            "aggs": {
+                "tags": {
+                    "terms": {
+                      "field": "tags.keyword",
+                      "order" : {
+                            "_key": "asc"
+                        }
+                    }
+                }  
+            }
+        }
+
+        self.search = Search.update_from_dict(self.search, query)
+        result = self.search.execute()
+
+        return list(map(lambda item: item.key, result.aggregations.tags))
