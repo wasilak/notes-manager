@@ -24,6 +24,10 @@ angular.module("app").component("new",
         });
       };
 
+      vm.loadItems = function() {
+        return ApiService.getTags();
+      };
+
       $scope.$watch('$ctrl.note', function(current, original) {
         vm.errorMessage = false;
         try {
