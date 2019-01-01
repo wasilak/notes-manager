@@ -41,8 +41,8 @@ angular.module("app").component("note",
         }
       };
 
-      vm.loadItems = function() {
-        return ApiService.getTags();
+      vm.loadItems = function(query) {
+        return ApiService.getTags(query);
       };
 
       $scope.$watch('$ctrl.note.response.content', function(current, original) {

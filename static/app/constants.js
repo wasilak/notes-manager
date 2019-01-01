@@ -7,6 +7,6 @@ angular.module("app").constant("APP_SETTINGS", {
     new: "/api/note/new",
     delete: "/api/note/delete/{{uuid}}",
     list: "/api/list/{{filter}}",
-    tags: "/api/tags"
+    tags: "/api/tags/{{query}}"
   }
 });

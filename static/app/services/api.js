@@ -13,7 +13,7 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         return {
           response: response.data.data,
           success: true
-        }
+        };
       },
       function(response) {
         console.error('Getting note failed!');
@@ -51,7 +51,7 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         return {
           response: response.data.data,
           success: true
-        }
+        };
       },
       function(response) {
         console.error('Getting notes list failed!');
@@ -82,7 +82,7 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         return {
           response: response.data.data,
           success: true
-        }
+        };
       },
       function(response) {
         console.error('Saving note failed!');
@@ -112,7 +112,7 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         return {
           response: response.data.data,
           success: true
-        }
+        };
       },
       function(response) {
         console.error('Creating note failed!');
@@ -140,7 +140,7 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         return {
           response: response.data.data,
           success: true
-        }
+        };
       },
       function(response) {
         console.error('Creating note failed!');
@@ -154,9 +154,9 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
     );
   };
 
-  var getTags = function() {
+  var getTags = function(query) {
 
-    var url = API.urls.tags;
+    var url = API.urls.tags.replace("{{query}}", query);
 
     return $http({
         cache: false,

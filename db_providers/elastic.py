@@ -105,7 +105,8 @@ class Db:
                         "field": "tags.keyword",
                         "order": {
                             "_key": "asc"
-                        }
+                        },
+                        "size": 500
                     }
                 }
             }

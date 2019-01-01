@@ -43,10 +43,11 @@
             spellcheck="false"
             >
           <auto-complete 
-            source="$ctrl.loadItems()"
+            source="$ctrl.loadItems($query)"
             load-on-down-arrow="true"
             select-first-match="false"
             ng-if="$ctrl.note.success"
+            max-results-to-show="500"
             min-length="2"
             ></auto-complete>
         </tags-input>

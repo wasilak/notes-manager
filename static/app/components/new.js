@@ -32,8 +32,8 @@ angular.module("app").component("new",
         return vm.note.response.content.length == 0 || vm.note.response.title.length == 0;
       };
 
-      vm.loadItems = function() {
-        return ApiService.getTags();
+      vm.loadItems = function(query) {
+        return ApiService.getTags(query);
       };
 
       $scope.$watch('$ctrl.note', function(current, original) {

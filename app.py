@@ -172,8 +172,9 @@ def api_note_new():
     return jsonify({"data": new_note})
 
 
-@app.route('/api/tags', methods=['GET'])
-def api_tags():
+@app.route('/api/tags/<query>', methods=['GET'])
+@app.route('/api/tags/', defaults={'query': ''}, methods=['GET'])
+def api_tags(query):
 
     if db_conn_err:
         db_conn_err_persisting = connection()
@@ -182,6 +183,10 @@ def api_tags():
 
     # list(set()) removes duplicates from list
     tags = list(set(list(map(lambda tag: string_decode(tag), db.tags()))))
+
+    # filtering tags
+    if len(query) > 0:
+        tags = list(filter(lambda tag: query.lower() in tag.lower(), tags))
 
     tags.sort()
 
