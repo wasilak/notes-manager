@@ -7,7 +7,7 @@ ENV FLASK_RUN_PORT=5000
 ENV FLASK_DEBUG=False
 ENV FLASK_APP=app.py
 
-RUN apk add --update --no-cache yarn
+RUN apk add --update --no-cache yarn gcc g++ make libffi-dev openssl-dev
 
 WORKDIR /app
 
