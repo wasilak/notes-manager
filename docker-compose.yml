@@ -14,7 +14,7 @@ services:
       - elasticsearch
     restart: unless-stopped
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.2
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.4
     environment:
       discovery.type: single-node
       cluster.name: notes-cluster
@@ -34,7 +34,7 @@ services:
       - esnet
     restart: unless-stopped
   # kibana:
-  #   image: docker.elastic.co/kibana/kibana-oss:6.3.0
+  #   image: docker.elastic.co/kibana/kibana-oss:6.5.4
   #   environment:
   #     SERVER_NAME: ${KIBANA_SERVER_NAME}
   #     ELASTICSEARCH_URL: ${KIBANA_ELASTICSEARCH_URL}
