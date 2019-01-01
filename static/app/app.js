@@ -4,8 +4,16 @@
 var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications', 'ngTagsInput'])
 
 .config([function() {
+  var renderer = new marked.Renderer();
+  
+  // opening links in new tab (default link renderer override)
+  renderer.link = function(href, title, text) {
+      var link = marked.Renderer.prototype.link.call(this, href, title, text);
+      return link.replace("<a","<a target='_blank' ");
+  };
+
   marked.setOptions({
-      renderer: new marked.Renderer(),
+      renderer: renderer,
       gfm: true,
       tables: true,
       breaks: true,
