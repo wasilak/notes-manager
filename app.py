@@ -143,6 +143,7 @@ def api_note_update(uuid):
 
     db.update(updated_note["id"], updated_note)
 
+    updated_note = note_decode(updated_note)
     return jsonify({"data": updated_note})
 
 
@@ -165,6 +166,8 @@ def api_note_new():
     new_note = note_encode(new_note)
 
     db.create(new_note["id"], new_note)
+
+    new_note = note_decode(new_note)
 
     return jsonify({"data": new_note})
 

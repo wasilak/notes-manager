@@ -28,6 +28,10 @@ angular.module("app").component("new",
         });
       };
 
+      vm.createButtonDisabled = function() {
+        return vm.note.response.content.length == 0 || vm.note.response.title.length == 0;
+      };
+
       vm.loadItems = function() {
         return ApiService.getTags();
       };

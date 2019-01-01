@@ -10,6 +10,7 @@ angular.module("app").component("note",
     controller: function ($scope, $rootScope, $stateParams, ApiService, $state) {
       var vm = this;
 
+      vm.noteOriginal = false;
       vm.loader = false;
 
       vm.saveNote = function() {
@@ -21,6 +22,10 @@ angular.module("app").component("note",
           vm.loader = false;
           $state.go('list_note', {uuid: vm.note.response.id});
         });
+      };
+
+      vm.saveButtonDisabled = function() {
+        return angular.equals(vm.note, vm.noteOriginal);
       };
 
       vm.deleteNote = function() {
@@ -43,6 +48,11 @@ angular.module("app").component("note",
       $scope.$watch('$ctrl.note.response.content', function(current, original) {
         vm.errorMessage = false;
         try {
+
+          // making a copy of original model in order to detect changes and to be able to enable/disable save button
+          if (!vm.noteOriginal) {
+            vm.noteOriginal = JSON.parse(JSON.stringify(vm.note));
+          }
           vm.outputText = marked(current);
         } catch (err) {
           vm.errorMessage = err.message;
