@@ -1,7 +1,7 @@
 import os
 import re
 from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Search, A
+from elasticsearch_dsl import Search
 
 
 class Db:
@@ -14,7 +14,7 @@ class Db:
             # sniffer_timeout=1,
             # sniff_timeout=1,
             max_retries=1
-        )        
+        )
         print(self.es.cluster.health())
 
     def parse_item(self, item):
@@ -102,12 +102,12 @@ class Db:
             "aggs": {
                 "tags": {
                     "terms": {
-                      "field": "tags.keyword",
-                      "order" : {
+                        "field": "tags.keyword",
+                        "order": {
                             "_key": "asc"
                         }
                     }
-                }  
+                }
             }
         }
 
