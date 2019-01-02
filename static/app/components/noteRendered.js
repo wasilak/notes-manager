@@ -1,4 +1,5 @@
 /* jslint node: true */
+/* jshint -W117 */
 "use strict";
 
 angular.module("app").component("noteRendered", 
