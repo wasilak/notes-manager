@@ -16,12 +16,14 @@
     "angular-growl-notifications": "^2.6.0",
     "angular-sanitize": "~1.7.5",
     "bootstrap": "^4.*",
+    "clipboard": "^2.0.4",
     "codemirror": "^5.42.0",
     "font-awesome": "^4.7.0",
     "highlightjs": "^9.12.0",
     "jquery": "^3.3.1",
     "marked": "^0.5.2",
     "ng-tags-input": "3.2.0",
+    "ngclipboard": "^2.0.0",
     "popper.js": "^1.14.6"
   },
   "devDependencies": {}

@@ -1,7 +1,7 @@
 /* jslint node: true */
 "use strict";
 
-var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications', 'ngTagsInput'])
+var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications', 'ngTagsInput', 'ngclipboard'])
 
 .config([function() {
   var renderer = new marked.Renderer();
