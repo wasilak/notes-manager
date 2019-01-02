@@ -2,8 +2,8 @@ version: "3.6"
 services:
   app:
     build: .
-    volumes:
-      - ./:/app
+    # volumes:
+    #   - ./:/app
     ports:
       - 5000:5000
     environment:
