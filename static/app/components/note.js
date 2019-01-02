@@ -45,15 +45,16 @@ angular.module("app").component("note",
         return ApiService.getTags(query);
       };
 
-      $scope.$watch('$ctrl.note.response.content', function(current, original) {
+      $scope.$watch('$ctrl.note.response', function(current, original) {
         vm.errorMessage = false;
+        $rootScope.$state.current.data.title = current.title + " [[edit]]";
         try {
 
           // making a copy of original model in order to detect changes and to be able to enable/disable save button
           if (!vm.noteOriginal) {
             vm.noteOriginal = JSON.parse(JSON.stringify(vm.note));
           }
-          vm.outputText = marked(current);
+          vm.outputText = marked(current.content);
         } catch (err) {
           vm.errorMessage = err.message;
         }

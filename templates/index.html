@@ -1,6 +1,8 @@
 <html ng-app="app">
 <head>
-    <title ng-bind="page.title"></title>
+    {% raw %}
+    <title>{{$state.current.data.title}} :: {{APP_SETTINGS.name}}</title>
+    {% endraw %}
 
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

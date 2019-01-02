@@ -12,10 +12,11 @@ angular.module("app").component("noteRendered",
 
       vm.loader = false;
 
-      $scope.$watch('$ctrl.note.response.content', function(current, original) {
+      $scope.$watch('$ctrl.note.response', function(current, original) {
+        $rootScope.$state.current.data.title = current.title;
         vm.errorMessage = false;
         try {
-          vm.outputText = marked(current);
+          vm.outputText = marked(current.content);
         } catch (err) {
           vm.errorMessage = err.message;
         }

@@ -42,9 +42,7 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
     .state('note', {
       parent: 'parent',
       url: '/note/:uuid',
-      data: {
-        title: 'Note',
-      },
+      data: {},
       resolve: {
         note: function(ApiService, $transition$) {
           return ApiService.getNote($transition$.params().uuid);
@@ -59,13 +57,12 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
     .state('list_note', {
       parent: 'list',
       url: 'list/:uuid',
-      data: {
-        title: 'List :: Note',
-      },
+      data: {},
       resolve: {
         note: function(ApiService, $transition$) {
           return ApiService.getNote($transition$.params().uuid);
         }
+
       },
       views: {
         'content@list': {
@@ -93,21 +90,11 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
 
 }
 
-function run($rootScope, APP_SETTINGS) {
-  var page = {
-    appName: APP_SETTINGS.name,
-    setTitle: function (title) {
-      this.title = APP_SETTINGS.name + ' :: ' + title;
-    }
-  };
-
-  function setTitle(event, state) {
-    page.setTitle(state && state.data ? state.data.title : '');
-  }
-
-  // exports
-  $rootScope.page = page;
-  $rootScope.$on('$stateChangeSuccess', setTitle);
+// binding state, param, constants, etc.to root scope
+function run($rootScope, $state, $stateParams, APP_SETTINGS) {
+  $rootScope.$state = $state;
+  $rootScope.$stateParams = $stateParams;
+  $rootScope.APP_SETTINGS = APP_SETTINGS;
 }
 
 angular
