@@ -16,17 +16,33 @@ angular.module("app").component("list",
         vm.note = note;
       });
 
-      vm.search = function() {
+      vm.updateList = function() {
         ApiService.getList(vm.listFilter, vm.sort).then(function(result) {
           vm.list = result;
         });
       };
 
       vm.setSort = function() {
+        vm.updateList();
+      };
+
+      vm.clearSearch = function() {
+        vm.listFilter = "";
         vm.search();
       };
 
-      vm.search();
+      vm.search = function() {
+        if (vm.listFilter == "") {
+          vm.sort = "updated:desc";
+        } else {
+          vm.sort = "";
+        }
+        vm.updateList();
+      };
+
+      vm.clearSearch();
+
+      vm.updateList();
     },
     templateUrl: "/static/app/views/list.html"
 });
