@@ -10,7 +10,7 @@
     <div class="row">
       <div class="col-sm">
         <p ng-cloak>
-          <i ng-class="$ctrl.note.response.encoded ? 'fa-lock' : 'fa-unlock'" class="fa text-muted" title="note encoded"></i>&nbsp;<a class="listNoteLink" ui-sref="list_note({uuid: $ctrl.note.response.id})"><strong class="lead text-primary">{{ $ctrl.note.response.title }}</strong></a>&nbsp;<small><em>{{ $ctrl.note.response.updated * 1000 | date : 'yyyy-MM-dd @HH:mm:ss' }}</em></small>
+          <a class="listNoteLink" ui-sref="list_note({uuid: $ctrl.note.response.id})"><strong class="lead text-primary">{{ $ctrl.note.response.title }}</strong></a>&nbsp;<small><em>{{ $ctrl.note.response.updated * 1000 | date : 'yyyy-MM-dd @HH:mm:ss' }}</em></small>
         </p>
       </div>
 
