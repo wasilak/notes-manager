@@ -10,6 +10,8 @@ angular.module("app").component("noteRendered",
     controller: function ($scope, $rootScope, $stateParams, ApiService, $state) {
       var vm = this;
 
+      vm.$state = $state;
+
       vm.loader = false;
 
       $scope.$watch('$ctrl.note.response', function(current, original) {
