@@ -33,20 +33,20 @@ services:
     networks:
       - esnet
     restart: unless-stopped
-  # kibana:
-  #   image: docker.elastic.co/kibana/kibana-oss:6.5.4
-  #   environment:
-  #     SERVER_NAME: ${KIBANA_SERVER_NAME}
-  #     ELASTICSEARCH_URL: ${KIBANA_ELASTICSEARCH_URL}
-  #   ports:
-  #       - 5601:5601
-  #   volumes:
-  #     - ./data/kibana:/usr/share/kibana/data
-  #   networks:
-  #     - esnet
-  #   depends_on:
-  #     - elasticsearch
-  #   restart: unless-stopped
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:6.5.4
+    environment:
+      SERVER_NAME: ${KIBANA_SERVER_NAME}
+      ELASTICSEARCH_URL: ${KIBANA_ELASTICSEARCH_URL}
+    ports:
+        - 5601:5601
+    volumes:
+      - ./data/kibana:/usr/share/kibana/data
+    networks:
+      - esnet
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
 
 networks:
   esnet:
