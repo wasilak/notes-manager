@@ -63,6 +63,7 @@ class Db:
 
             for term in filter_terms:
                 filter_string.append("(content: *%s* OR title: *%s*)" % (term, term))
+                filter_string.append("(content: %s OR title: %s)" % (term, term))
 
             filter_string = (" OR ").join(filter_string)
 

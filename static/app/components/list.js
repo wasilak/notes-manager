@@ -34,7 +34,7 @@ angular.module("app").component("list",
       };
 
       vm.search = function() {
-        if (vm.listFilter == "") {
+        if (vm.listFilter == "" && vm.tags.length == 0) {
           vm.sort = "updated:desc";
         } else {
           vm.sort = "";
@@ -47,7 +47,7 @@ angular.module("app").component("list",
       };
 
       $scope.$watch('$ctrl.tags', function(current, original) {
-        vm.updateList();
+        vm.search();
       });
 
       vm.clearSearch();
