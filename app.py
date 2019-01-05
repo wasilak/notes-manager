@@ -52,7 +52,12 @@ def api_list(filter):
 
     sort = request.args.get('sort', default="", type=str)
 
-    notes = db.list(filter.lower(), sort)
+    if request.args.get('tags', type=str):
+        tags = request.args.get('tags', type=str).strip().split(",")
+    else:
+        tags = []
+
+    notes = db.list(filter.lower(), sort, tags)
 
     return jsonify({"data": notes})
 

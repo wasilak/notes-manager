@@ -58,7 +58,7 @@ angular.module("app").component("note",
         } catch (err) {
           vm.errorMessage = err.message;
         }
-      });
+      }, true);
     },
     templateUrl: "/static/app/views/note.html"
   }

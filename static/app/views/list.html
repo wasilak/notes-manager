@@ -27,6 +27,25 @@
                 <button class="btn btn-outline-secondary" type="button" ng-click="$ctrl.clearSearch()">x</button>
               </div>
             </div>
+
+            <div class="row">
+              <div class="col-sm-12" ng-cloak>
+                <tags-input 
+                    ng-model="$ctrl.tags"
+                    use-strings="true"
+                    spellcheck="false"
+                    >
+                  <auto-complete 
+                    source="$ctrl.loadItems($query)"
+                    load-on-down-arrow="true"
+                    select-first-match="true"
+                    max-results-to-show="500"
+                    min-length="2"
+                    ></auto-complete>
+                </tags-input>
+              </div>
+            </div>
+
             sort by:
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" ng-model="$ctrl.sort" ng-change="$ctrl.setSort()" id="sortOptions_score" value="">

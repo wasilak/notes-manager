@@ -3,7 +3,7 @@
 
 angular.module("app").component("list", 
   {
-    controller: function ListCtrl($rootScope, ApiService) {
+    controller: function ListCtrl($rootScope, ApiService, $scope) {
       var vm = this;
 
       vm.list = {
@@ -12,12 +12,14 @@ angular.module("app").component("list",
 
       vm.sort = "updated:desc";
 
+      vm.tags = [];
+
       $rootScope.$on('currentNote', function(event, note) {
         vm.note = note;
       });
 
       vm.updateList = function() {
-        ApiService.getList(vm.listFilter, vm.sort).then(function(result) {
+        ApiService.getList(vm.listFilter, vm.sort, vm.tags).then(function(result) {
           vm.list = result;
         });
       };
@@ -39,6 +41,14 @@ angular.module("app").component("list",
         }
         vm.updateList();
       };
+
+      vm.loadItems = function(query) {
+        return ApiService.getTags(query);
+      };
+
+      $scope.$watch('$ctrl.tags', function(current, original) {
+        vm.updateList();
+      });
 
       vm.clearSearch();
 

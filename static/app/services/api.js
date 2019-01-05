@@ -27,7 +27,7 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
     );
   };
 
-  var getList = function(filter, sort) {
+  var getList = function(filter, sort, tags) {
 
     if (!filter) {
       filter = "";
@@ -37,6 +37,10 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
       sort = "";
     }
 
+    if (!tags) {
+      tags = [];
+    }
+
     var url = API.urls.list.replace("{{filter}}", filter);
 
     return $http({
@@ -44,7 +48,8 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         url: url,
         method: 'GET',
         params: {
-          sort: sort
+          sort: sort,
+          tags: tags.join(",")
         }
       })
       .then(function(response) {

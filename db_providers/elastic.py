@@ -36,7 +36,7 @@ class Db:
 
         return item
 
-    def list(self, filter, sort):
+    def list(self, filter, sort, tags=[]):
 
         search_params = {
             "index": "notes",
@@ -47,18 +47,33 @@ class Db:
             "sort": ""
         }
 
+        filter_query = []
+
+        print(len(tags))
+        print(tags)
+
+        if len(tags) > 0:
+            filter_query.append("(tags: (%s) )" % (" AND ".join(tags)))
+
+        filter_string = []
         if len(filter) > 0:
             filter_terms = filter.split()
 
-            filter_query = []
-            filter_query.append("(content.keyword: %s OR title.keyword: %s OR tags.keyword: %s)" % (filter, filter, filter))
+            # filter_string.append("(content.keyword: %s OR title.keyword: %s OR tags.keyword: %s)" % (filter, filter, filter))
 
             for term in filter_terms:
-                filter_query.append("(content: %s OR title: %s OR tags.keyword: %s)" % (term, term, term))
+                filter_string.append("(content: *%s* OR title: *%s*)" % (term, term))
 
-            filter_query = (" OR ").join(filter_query)
+            filter_string = (" OR ").join(filter_string)
 
+            filter_query.append(filter_string)
+
+        filter_query = (" AND ").join(filter_query)
+
+        if len(filter_query) > 0:
             search_params["q"] = filter_query
+
+        print(search_params)
 
         if len(sort) > 0:
             search_params["sort"] = sort
