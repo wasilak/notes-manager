@@ -35,6 +35,8 @@ angular.module("app").component("noteRendered",
               $rootScope.notifications.push('Note deleted');
               $state.go('list', {}, {reload: true});
           });
+        } else {
+          vm.loader = false;
         }
       };
 

@@ -38,6 +38,8 @@ angular.module("app").component("note",
               vm.loader = false;
               $state.go('list', {}, {reload: true});
           });
+        } else {
+          vm.loader = false;
         }
       };
 

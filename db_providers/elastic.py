@@ -49,9 +49,6 @@ class Db:
 
         filter_query = []
 
-        print(len(tags))
-        print(tags)
-
         if len(tags) > 0:
             filter_query.append("(tags: (%s) )" % (" AND ".join(tags)))
 
@@ -73,8 +70,6 @@ class Db:
 
         if len(filter_query) > 0:
             search_params["q"] = filter_query
-
-        print(search_params)
 
         if len(sort) > 0:
             search_params["sort"] = sort
