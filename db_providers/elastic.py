@@ -1,6 +1,6 @@
 import os
 import re
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch_dsl import Search
 
 
@@ -11,6 +11,7 @@ class Db:
             hosts=[os.getenv("ELASTICSEARCH", "elasticsearch:9200")],
             use_ssl=True if os.getenv("ELASTICSEARCH_USE_SSL", 0) == 1 else False,
             verify_certs=True if os.getenv("ELASTICSEARCH_VERIFY_CERTS", 0) == 1 else False,
+            connection_class=RequestsHttpConnection,
             # sniff_on_start=False,
             # sniff_on_connection_fail=False,
             # sniffer_timeout=1,
