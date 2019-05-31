@@ -1,5 +1,6 @@
 Flask
 python-dotenv
-elasticsearch>=6.0.0,<7.0.0
+elasticsearch
 tinydb
-elasticsearch-dsl>=6.0.0,<7.0.0
+elasticsearch-dsl
+requests

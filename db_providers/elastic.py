@@ -12,6 +12,7 @@ class Db:
             use_ssl=True if os.getenv("ELASTICSEARCH_USE_SSL", 0) == 1 else False,
             verify_certs=True if os.getenv("ELASTICSEARCH_VERIFY_CERTS", 0) == 1 else False,
             connection_class=RequestsHttpConnection,
+            http_auth=(os.getenv("ELASTICSEARCH_USER", 'user'), os.getenv("ELASTICSEARCH_PASS", 'pass')),
             # sniff_on_start=False,
             # sniff_on_connection_fail=False,
             # sniffer_timeout=1,
