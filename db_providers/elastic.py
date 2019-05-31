@@ -94,18 +94,18 @@ class Db:
         return parsed_items
 
     def get(self, id):
-        res = self.es.get(index="notes", doc_type='doc', id=id)
+        res = self.es.get(index="notes", id=id)
         return self.parse_item(res)
 
     def create(self, id, data):
         self.update(id, data)
 
     def update(self, id, data):
-        self.es.index(index="notes", doc_type='doc', id=id, body=data, refresh="wait_for")
+        self.es.index(index="notes", id=id, body=data, refresh="wait_for")
 
     def delete(self, id):
-        note = self.es.get(index="notes", doc_type='doc', id=id)
-        self.es.delete(index="notes", doc_type='doc', id=id, refresh="wait_for")
+        note = self.es.get(index="notes", id=id)
+        self.es.delete(index="notes", id=id, refresh="wait_for")
 
         return self.parse_item(note)
 
