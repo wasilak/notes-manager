@@ -44,7 +44,6 @@ class Db:
 
         search_params = {
             "index": "notes",
-            "doc_type": 'doc',
             "size": 10000,
             "explain": True,
             "track_scores": True,
