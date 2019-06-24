@@ -2,7 +2,7 @@
   "name": "notes-manager",
   "version": "0.1.0",
   "description": "notes-manager",
-  "repository": "https://git.wasil.org/wasilak/notes-manager.git",
+  "repository": "https://github.com/wasilak/notes-manager.git",
   "license": "MIT",
   "dependencies": {
     "@uirouter/angularjs": "^1.0.22",
