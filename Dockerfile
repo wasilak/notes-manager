@@ -13,6 +13,8 @@ WORKDIR /app
 
 RUN yarn install
 
+RUN pip install -U pip
+
 RUN pip install -r requirements.txt
 
 CMD ["flask", "run", "--host=0.0.0.0" ,"--with-threads", "--eager-loading"]
