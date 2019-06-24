@@ -5,6 +5,10 @@ from datetime import datetime
 from flask import Flask, render_template, jsonify, request, send_from_directory
 
 
+# getting info about app version from package.json
+with open("./package.json") as json_file:
+    package_json = json.load(json_file)
+
 app = Flask(__name__)
 
 db_provider = os.getenv("DB_PROVIDER", "file")
@@ -38,7 +42,7 @@ def base_static(filename):
 @app.route('/', defaults={'path': ''}, methods=['GET'])
 @app.route('/<path:path>', methods=['GET'])
 def index(path):
-    return render_template('index.html')
+    return render_template('index.html', app_version = package_json["version"])
 
 
 @app.route('/api/list/<filter>', methods=['GET'])
