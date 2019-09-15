@@ -8,8 +8,8 @@ var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications'
   
   // opening links in new tab (default link renderer override)
   renderer.link = function(href, title, text) {
-      var link = marked.Renderer.prototype.link.call(this, href, title, text);
-      return link.replace("<a","<a target='_blank' ");
+    var link = marked.Renderer.prototype.link.call(this, href, title, text);
+    return link.replace("<a","<a target='_blank' ");
   };
 
   marked.setOptions({
@@ -18,7 +18,7 @@ var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications'
       tables: true,
       breaks: true,
       pedantic: false,
-      sanitize: false, // if false -> allow plain old HTML ;)
+      sanitizer: DOMPurify.sanitize,
       smartLists: true,
       smartypants: false,
       highlight: function (code, lang) {

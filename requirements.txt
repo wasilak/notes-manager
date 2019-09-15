@@ -4,3 +4,5 @@ elasticsearch
 tinydb
 elasticsearch-dsl
 requests
+pymongo
+wget
