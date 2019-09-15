@@ -2,6 +2,7 @@ import json
 import os
 from datetime import datetime
 from flask import Flask, render_template, jsonify, request, send_from_directory
+import re
 import importlib
 
 
@@ -16,6 +17,12 @@ db_module = importlib.import_module("library.db_providers.%s" % db_provider)
 Db = db_module.Db
 db = Db()
 
+storage_provider = os.getenv("STORAGE_PROVIDER", "none")
+storage_module = importlib.import_module(
+    "library.storage_providers.%s" % storage_provider)
+Storage = storage_module.Storage
+storage = Storage()
+
 
 def connection():
     try:
@@ -27,6 +34,39 @@ def connection():
 
 
 db_conn_err = connection()
+
+
+def get_all_image_urls(content):
+    pattern = re.compile(r'(https?:[/|.|\w|\s|-]*\.(jpg|gif|png|jpeg))')
+    match = pattern.findall(content)
+
+    match = list(set(match))
+
+    result = []
+    for url in match:
+        result.append({
+            "original": {
+                "url": url[0],
+                "extension": url[1]
+            },
+            "replacement": "",
+        })
+
+    return result
+
+
+def replace_urls(content, image_urls):
+    for item in image_urls:
+        print(item["original"]["url"])
+        print(item["replacement"])
+        content = content.replace(item["original"]["url"], item["replacement"])
+
+    return content
+
+
+@app.route('/storage/<path:filename>')
+def storage_uri(filename):
+    return send_from_directory(app.root_path + '/storage/', filename)
 
 
 @app.route('/static/node_modules/<path:filename>')
@@ -83,6 +123,11 @@ def api_note_update(uuid):
     updated_note = json.loads(request.data)["note"]
     updated_note["updated"] = seconds
 
+    image_urls = get_all_image_urls(updated_note["content"])
+    storage.create_path(uuid)
+    storage.get_files(uuid, image_urls)
+    updated_note["content"] = replace_urls(updated_note["content"], image_urls)
+
     db.update(updated_note["id"], updated_note)
 
     return jsonify({"data": updated_note})
@@ -90,6 +135,7 @@ def api_note_update(uuid):
 
 @app.route('/api/note/delete/<uuid>', methods=['DELETE'])
 def api_note_delete(uuid):
+    storage.cleanup(uuid)
     return jsonify({"data": db.delete(uuid)})
 
 
@@ -104,6 +150,15 @@ def api_note_new():
     new_note["updated"] = seconds
 
     new_note = db.create(new_note["id"], new_note)
+
+    # note first has to be created, in  order to have it's ID/_id
+    # and afterwards images will have to be parsed and downloaded
+    # and note itself - updated.
+    image_urls = get_all_image_urls(new_note["content"])
+    storage.create_path(new_note["id"])
+    storage.get_files(new_note["id"], image_urls)
+    new_note["content"] = replace_urls(new_note["content"], image_urls)
+    db.update(new_note["id"], new_note)
 
     return jsonify({"data": new_note})
 
