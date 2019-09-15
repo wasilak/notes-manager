@@ -56,15 +56,16 @@ class Db:
         doc = self.db.notes.find_one({"_id": ObjectId(id)})
         return self.parse_item(doc)
 
-    def create(self, id, data):
+    def create(self, data):
+        if "id" in data:
+            del(data["id"])
         data["_id"] = ObjectId()
         self.db.notes.insert_one(data)
         return self.parse_item(data)
 
-    def update(self, id, data):
-        if "id" in data:
-            del(data["id"])
-        data["_id"] = ObjectId(id)
+    def update(self, data):
+        data["_id"] = ObjectId(data["id"])
+        del(data["id"])
         self.db.notes.replace_one({"_id": data["_id"]}, data)
 
         data = self.parse_item(data)

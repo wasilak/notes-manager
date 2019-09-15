@@ -33,6 +33,7 @@ angular.module("app").component("noteRendered",
           ApiService.deleteNote(vm.note.response.id).then(function(result) {
               vm.loader = false;
               $rootScope.notifications.push('Note deleted');
+              console.log('Note deleted');
               $state.go('list', {}, {reload: true});
           });
         } else {

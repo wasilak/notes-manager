@@ -97,13 +97,13 @@ class Db:
         res = self.es.get(index="notes", id=id)
         return self.parse_item(res)
 
-    def create(self, id, data):
+    def create(self, data):
         data["id"] = str(uuid.uuid4())
-        self.update(id, data)
-        return data["id"]
+        self.update(data)
+        return data
 
-    def update(self, id, data):
-        self.es.index(index="notes", id=id, body=data, refresh="wait_for")
+    def update(self, data):
+        self.es.index(index="notes", id=data["id"], body=data, refresh="wait_for")
 
     def delete(self, id):
         note = self.es.get(index="notes", id=id)

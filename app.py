@@ -123,12 +123,13 @@ def api_note_update(uuid):
     updated_note = json.loads(request.data)["note"]
     updated_note["updated"] = seconds
 
-    image_urls = get_all_image_urls(updated_note["content"])
-    storage.create_path(uuid)
-    storage.get_files(uuid, image_urls)
-    updated_note["content"] = replace_urls(updated_note["content"], image_urls)
+    if storage_provider != "none":
+        image_urls = get_all_image_urls(updated_note["content"])
+        storage.create_path(uuid)
+        storage.get_files(uuid, image_urls)
+        updated_note["content"] = replace_urls(updated_note["content"], image_urls)
 
-    db.update(updated_note["id"], updated_note)
+    db.update(updated_note)
 
     return jsonify({"data": updated_note})
 
@@ -149,16 +150,17 @@ def api_note_new():
     new_note["created"] = seconds
     new_note["updated"] = seconds
 
-    new_note = db.create(new_note["id"], new_note)
+    new_note = db.create(new_note)
 
-    # note first has to be created, in  order to have it's ID/_id
-    # and afterwards images will have to be parsed and downloaded
-    # and note itself - updated.
-    image_urls = get_all_image_urls(new_note["content"])
-    storage.create_path(new_note["id"])
-    storage.get_files(new_note["id"], image_urls)
-    new_note["content"] = replace_urls(new_note["content"], image_urls)
-    db.update(new_note["id"], new_note)
+    if storage_provider != "none":
+        # note first has to be created, in  order to have it's ID/_id
+        # and afterwards images will have to be parsed and downloaded
+        # and note itself - updated.
+        image_urls = get_all_image_urls(new_note["content"])
+        storage.create_path(new_note["id"])
+        storage.get_files(new_note["id"], image_urls)
+        new_note["content"] = replace_urls(new_note["content"], image_urls)
+        db.update(new_note)
 
     return jsonify({"data": new_note})
 
