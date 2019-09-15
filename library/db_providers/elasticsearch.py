@@ -1,5 +1,6 @@
 import os
 import re
+import uuid
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch_dsl import Search
 
@@ -97,7 +98,9 @@ class Db:
         return self.parse_item(res)
 
     def create(self, id, data):
+        data["id"] = str(uuid.uuid4())
         self.update(id, data)
+        return data["id"]
 
     def update(self, id, data):
         self.es.index(index="notes", id=id, body=data, refresh="wait_for")
