@@ -1,20 +1,19 @@
 FROM python:3-alpine
 
-COPY . /app
+RUN apk add --update --no-cache build-base dumb-init yarn
 
-ENV FLASK_ENV=production
-ENV FLASK_RUN_PORT=5000
-ENV FLASK_DEBUG=False
-ENV FLASK_APP=app.py
+COPY ./requirements.txt /requirements.txt
 
-RUN apk add --update --no-cache yarn
+RUN pip install -r requirements.txt
+
+COPY . /app/
 
 WORKDIR /app
 
 RUN yarn install
 
-RUN pip install -U pip
+EXPOSE 5000
 
-RUN pip install -r requirements.txt
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "uvicorn", "main:app", "--host=0.0.0.0", "--port=5000"]
 
-CMD ["flask", "run", "--host=0.0.0.0", "--eager-loading"]
+CMD ["--log-level=info"]

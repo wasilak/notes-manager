@@ -35,9 +35,7 @@ class Db:
 
     def highlight_string_in_field(self, item, filter, highlight_start="<em>", highlight_end="</em>"):
         p = re.compile("(%s)" % (filter), re.IGNORECASE)
-        print(item)
         item = p.sub('%s\\1%s' % (highlight_start, highlight_end), item)
-        print(item)
 
         return item
 

@@ -46,13 +46,15 @@ angular.module("app").component("list",
         return ApiService.getTags(query);
       };
 
+      
       $scope.$watch('$ctrl.tags', function(current, original) {
         vm.search();
       });
+      
+      vm.loadItems();
+      
+      vm.listFilter = "";
 
-      vm.clearSearch();
-
-      vm.updateList();
     },
     templateUrl: "/static/app/views/list.html"
 });

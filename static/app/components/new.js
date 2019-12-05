@@ -14,8 +14,9 @@ angular.module("app").component("new",
           id: null,
           content: '',
           title: '',
-          created: '',
-          updated: ''
+          created: null,
+          updated: null,
+          tags: []
         }
       };
 

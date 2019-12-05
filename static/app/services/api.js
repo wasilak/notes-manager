@@ -11,7 +11,7 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
       })
       .then(function(response) {
         return {
-          response: response.data.data,
+          response: response.data,
           success: true
         };
       },
@@ -29,6 +29,8 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
 
   var getList = function(filter, sort, tags) {
 
+    console.log("getList!");
+
     if (!filter) {
       filter = "";
     }
@@ -41,7 +43,7 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
       tags = [];
     }
 
-    var url = API.urls.list.replace("{{filter}}", filter);
+    var url = API.urls.list;
 
     return $http({
         cache: false,
@@ -49,12 +51,13 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         method: 'GET',
         params: {
           sort: sort,
+          filter: filter,
           tags: tags.join(",")
         }
       })
       .then(function(response) {
         return {
-          response: response.data.data,
+          response: response.data,
           success: true
         };
       },
@@ -79,13 +82,14 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         cache: false,
         url: url,
         method: 'POST',
-        data: {
-          note: note.response
-        }
+        headers: {
+          'Content-Type': "application/json"
+        },
+        data: note.response
       })
       .then(function(response) {
         return {
-          response: response.data.data,
+          response: response.data,
           success: true
         };
       },
@@ -108,14 +112,15 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
     return $http({
         cache: false,
         url: url,
-        method: 'POST',
-        data: {
-          note: note.response
-        }
+        method: 'PUT',
+        headers: {
+          'Content-Type': "application/json"
+        },
+        data: note.response
       })
       .then(function(response) {
         return {
-          response: response.data.data,
+          response: response.data,
           success: true
         };
       },
@@ -133,7 +138,7 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
 
   var deleteNote = function(uuid) {
 
-    var url = API.urls.delete.replace("{{uuid}}", uuid);
+    var url = API.urls.note.replace("{{uuid}}", uuid);
 
     return $http({
         cache: false,
@@ -143,7 +148,7 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
       })
       .then(function(response) {
         return {
-          response: response.data.data,
+          response: response,
           success: true
         };
       },
@@ -161,13 +166,15 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
 
   var getTags = function(query) {
 
-    var url = API.urls.tags.replace("{{query}}", query);
+    var url = API.urls.tags
 
     return $http({
         cache: false,
         url: url,
         method: 'GET',
-        params: {}
+        params: {
+          query: query
+        }
       });
   };
 

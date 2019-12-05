@@ -1,7 +1,7 @@
 {
   "name": "notes-manager",
-  "version": "0.1.7",
-  "description": "notes-manager",
+  "version": "0.1.8",
+  "description": "Notes managing app",
   "repository": "https://github.com/wasilak/notes-manager.git",
   "license": "MIT",
   "dependencies": {
