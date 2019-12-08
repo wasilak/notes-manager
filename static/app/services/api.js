@@ -29,8 +29,6 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
 
   var getList = function(filter, sort, tags) {
 
-    console.log("getList!");
-
     if (!filter) {
       filter = "";
     }
