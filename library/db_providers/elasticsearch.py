@@ -10,8 +10,8 @@ class Db:
     def setup(self):
         self.es = Elasticsearch(
             hosts=[os.getenv("ELASTICSEARCH", "elasticsearch:9200")],
-            use_ssl=True if os.getenv("ELASTICSEARCH_USE_SSL", 0) == 1 else False,
-            verify_certs=True if os.getenv("ELASTICSEARCH_VERIFY_CERTS", 0) == 1 else False,
+            use_ssl=True if os.getenv("ELASTICSEARCH_USE_SSL", "false").lower() == "true" else False,
+            verify_certs=True if os.getenv("ELASTICSEARCH_VERIFY_CERTS", "false").lower() == "true" else False,
             connection_class=RequestsHttpConnection,
             http_auth=(os.getenv("ELASTICSEARCH_USER", 'user'), os.getenv("ELASTICSEARCH_PASS", 'pass')),
             # sniff_on_start=False,
@@ -20,7 +20,8 @@ class Db:
             # sniff_timeout=1,
             max_retries=1
         )
-        print(self.es.cluster.health())
+
+        # print(self.es.cluster.health())
 
     def parse_item(self, item):
         parsed_item = item["_source"]
