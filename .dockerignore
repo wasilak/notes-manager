@@ -1,4 +1,5 @@
-data
-__pycache__
-node_modules
-.env
+app/data
+app/__pycache__
+app/node_modules
+app/.env
+.vscode

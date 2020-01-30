@@ -5,3 +5,4 @@ tinydb
 elasticsearch-dsl
 requests
 pymongo
+six

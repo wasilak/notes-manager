@@ -6,8 +6,6 @@
 # compiled output
 /dist
 /tmp
-/app/**/*.js
-/app/**/*.js.map
 
 # dependencies
 /node_modules
@@ -272,9 +270,9 @@ GitHub.sublime-settings
 
 # End of https://www.gitignore.io/api/node,macos,python,angular,sublimetext
 
-data
-db.json
+app/data
+app/db.json
 
 .tags
 
-storage/*
+app/storage/*
