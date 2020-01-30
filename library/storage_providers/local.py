@@ -1,8 +1,10 @@
 import os
-import wget
 import uuid
 import hashlib
 import shutil
+from starlette.staticfiles import StaticFiles
+import logging
+import requests
 
 
 class Storage():
@@ -10,9 +12,13 @@ class Storage():
     app_root = os.getcwd()
     storage_root = "%s/storage" % (app_root)
 
-    def setup(self):
+    def __init__(self, app):
         if not os.path.exists(self.storage_root):
             os.makedirs(self.storage_root, exist_ok=True)
+
+        app.mount("/storage", StaticFiles(directory="storage"), name="storage")
+
+        self.logger = logging.getLogger("api")
 
     def create_path(self, doc_uuid):
         directory = "%s/%s/images/tmp" % (self.storage_root, doc_uuid)
@@ -21,17 +27,26 @@ class Storage():
 
     def get_files(self, doc_uuid, image_urls):
         for item in image_urls:
-            local_path = self.get_file(doc_uuid, item["original"])
-            file_hash = self.hash_file(local_path)
-            replacement_path = "%s/%s/images/%s.%s" % (self.storage_root, doc_uuid, file_hash, item["original"]["extension"])
-            os.rename(local_path, replacement_path)
-            item["replacement"] = replacement_path.replace(self.app_root, "")
+            local_path, error = self.get_file(doc_uuid, item["original"])
+
+            if not error:
+                file_hash = self.hash_file(local_path)
+                replacement_path = "%s/%s/images/%s.%s" % (self.storage_root, doc_uuid, file_hash, item["original"]["extension"])
+                os.rename(local_path, replacement_path)
+                item["replacement"] = replacement_path.replace(self.app_root, "")
 
     def get_file(self, doc_uuid, image_url):
         local_path = "%s/%s/images/tmp/%s.%s" % (self.storage_root, doc_uuid, uuid.uuid4(), image_url["extension"])
-        wget.download(image_url["url"], local_path)
+        self.logger.info("%s => %s" % (image_url["url"], local_path))
+        try:
+            r = requests.get(image_url["url"])
+            with open(local_path, 'wb') as outfile:
+                outfile.write(r.content)
+        except Exception as e:
+            self.logger.exception(e)
+            return '', True
 
-        return local_path
+        return local_path, False
 
     def hash_file(self, filename):
         # make a hash object

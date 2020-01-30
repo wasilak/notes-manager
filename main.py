@@ -30,8 +30,6 @@ app.mount("/node_modules", StaticFiles(directory="node_modules"), name="node_mod
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-app.mount("/storage", StaticFiles(directory="storage"), name="storage")
-
 templates = Jinja2Templates(directory="templates")
 
 logger = logging.getLogger("api")
@@ -55,7 +53,7 @@ db = Db()
 storage_provider = os.getenv("STORAGE_PROVIDER", "none")
 storage_module = importlib.import_module("library.storage_providers.%s" % storage_provider)
 Storage = storage_module.Storage
-storage = Storage()
+storage = Storage(app)
 
 
 def connection():
@@ -174,8 +172,6 @@ async def api_note_new(item: Note, background_tasks: BackgroundTasks):
 
     note["created"] = seconds
     note["updated"] = seconds
-
-    logger.info(note)
 
     note = db.create(note)
 
