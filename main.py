@@ -71,7 +71,7 @@ db_conn_err = connection()
 
 
 def get_all_image_urls(content):
-    pattern = re.compile(r'(https?:[/|.|\w|\s|-]*\.(jpg|gif|png|jpeg))')
+    pattern = re.compile(r'(https?:[\/\.\w\s\-\*]*\.(jpg|gif|png|jpeg))')
     match = pattern.findall(content)
 
     match = list(set(match))
