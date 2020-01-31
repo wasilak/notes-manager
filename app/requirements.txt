@@ -6,3 +6,5 @@ elasticsearch-dsl
 requests
 pymongo
 six
+boto3
+botocore

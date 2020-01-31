@@ -7,7 +7,7 @@ import re
 import importlib
 
 from starlette.requests import Request
-from starlette.responses import Response
+from starlette.responses import Response, RedirectResponse
 from dotenv import load_dotenv
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
@@ -53,7 +53,15 @@ db = Db()
 storage_provider = os.getenv("STORAGE_PROVIDER", "none")
 storage_module = importlib.import_module("library.storage_providers.%s" % storage_provider)
 Storage = storage_module.Storage
-storage = Storage(app)
+storage = Storage()
+
+if "local" == storage_provider:
+    app.mount("/storage", StaticFiles(directory="storage"), name="storage")
+if "s3" == storage_provider:
+    @app.get("/storage/{path:path}")
+    async def storage_endpoint(request: Request, path: str = ''):
+        presigned_url = storage.get_object(path)
+        return RedirectResponse(url=presigned_url)
 
 
 def connection():
@@ -128,7 +136,6 @@ async def api_note(uuid: str, response: Response):
 
 def storage_get_files(note):
     image_urls = get_all_image_urls(note["content"])
-    storage.create_path(note["id"])
     storage.get_files(note["id"], image_urls)
     note["content"] = replace_urls(note["content"], image_urls)
     db.update(note)
