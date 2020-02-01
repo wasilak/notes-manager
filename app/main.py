@@ -212,6 +212,13 @@ async def api_tags(response: Response, query: str = ''):
     return tags
 
 
+@app.get("/health")
+async def health(request: Request):
+    return {
+        "status": "OK"
+    }
+
+
 @app.get("/{path:path}")
 async def index(request: Request, path: str = ''):
     return templates.TemplateResponse("index.html", {"request": request, "app_version": package_json["version"]})
