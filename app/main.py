@@ -46,12 +46,12 @@ class Note(BaseModel):
 
 
 db_provider = os.getenv("DB_PROVIDER", "file")
-db_module = importlib.import_module("library.db_providers.%s" % db_provider)
+db_module = importlib.import_module("library.providers.db.%s" % db_provider)
 Db = db_module.Db
 db = Db()
 
 storage_provider = os.getenv("STORAGE_PROVIDER", "none")
-storage_module = importlib.import_module("library.storage_providers.%s" % storage_provider)
+storage_module = importlib.import_module("library.providers.storage.%s" % storage_provider)
 Storage = storage_module.Storage
 storage = Storage()
 
