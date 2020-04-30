@@ -16,7 +16,7 @@
     "dompurify": "^2.0.7",
     "font-awesome": "^4.7.0",
     "highlightjs": "^9.16.2",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "marked": "^0.8.0",
     "ng-tags-input": "^3.2.0",
     "ngclipboard": "^2.0.0",
