@@ -13,7 +13,7 @@
     "bootstrap": "^4.4.1",
     "clipboard": "^2.0.4",
     "codemirror": "^5.51.0",
-    "dompurify": "^2.0.7",
+    "dompurify": "^2.0.17",
     "font-awesome": "^4.7.0",
     "highlightjs": "^9.16.2",
     "jquery": "^3.4.1",
