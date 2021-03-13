@@ -35,7 +35,7 @@ var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications'
   $locationProvider.html5Mode(true);
 }])
 
-.run(function($rootScope) {
+.run(['$rootScope', function($rootScope) {
   $rootScope.notifications = [];
-})
+}])
 ;

@@ -36,7 +36,7 @@ var codeMirror = function($timeout){
 
         });
 
-        for (line in current) {
+        for (let line in current) {
           let info = editor.lineInfo(current[line]);
           editor.setGutterMarker(current[line], "breakpoints", info.gutterMarkers ? null : function() {
             let marker = document.createElement("div");
