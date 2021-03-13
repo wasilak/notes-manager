@@ -37,12 +37,12 @@
 
     <div class="row" ng-if="$ctrl.note.success">
       <div class="col-sm-12" ng-cloak>
-        <tags-input 
+        <tags-input
             ng-model="$ctrl.note.response.tags"
             use-strings="true"
             spellcheck="false"
             >
-          <auto-complete 
+          <auto-complete
             source="$ctrl.loadItems($query)"
             load-on-down-arrow="true"
             select-first-match="false"
@@ -56,10 +56,17 @@
 
     <div class="row noteArea" ng-if="$ctrl.note.success">
       <div class="col-sm-6" ng-cloak>
-        <code-editor syntax="markdown" ng-model="$ctrl.note.response.content" ng-model-options="{ debounce: 250 }" class="bordered" line-numbers="false"></code-editor>
+        <code-editor syntax="markdown" ng-model="$ctrl.note.response.content" ng-model-options="{ debounce: 250 }" class="bordered" line-numbers="true" break-points="$ctrl.breakpoints"></code-editor>
       </div>
       <div class="col-sm-6 outputText" ng-cloak>
         <div class="outputText" ng-bind-html="$ctrl.outputText"></div>
+      </div>
+    </div>
+    <div class="row" ng-if="$ctrl.note.success" ng-show="$ctrl.lintResult">
+      <div class="col-sm-6" ng-cloak>
+        <div class="alert alert-warning" role="alert">
+          <span ng-bind-html="$ctrl.lintResult"></span>
+        </div>
       </div>
     </div>
     <div class="row" ng-if="$ctrl.note.success" ng-show="$ctrl.errorMessage">

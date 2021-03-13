@@ -5,7 +5,7 @@ var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications'
 
 .config([function() {
   var renderer = new marked.Renderer();
-  
+
   // opening links in new tab (default link renderer override)
   renderer.link = function(href, title, text) {
     var link = marked.Renderer.prototype.link.call(this, href, title, text);

@@ -65,7 +65,7 @@ tags-input .tags .tag-item .remove-button {
 }
 
 tags-input .tags .tag-item .remove-button:hover {
- color: #fff; 
+ color: #fff;
 }
 
 .tagBadge {
@@ -122,3 +122,6 @@ blockquote {
   max-width: 100%;
   display: block;
 }
+
+.breakpoints {width: .8em;}
+.breakpoint { color: #822; }

@@ -10,11 +10,12 @@ var codeMirror = function($timeout){
       lineNumbers: "=",
       autoCloseBrackets: "=",
       matchBrackets: "=",
-      ngModel: "="
+      ngModel: "=",
+      breakPoints: "="
     },
     template: '<div class="code-editor"></div>',
     link: function(scope, element, attrs, ngModelCtrl, transclude) {
-      var editor = CodeMirror(element[0], {
+      let editor = CodeMirror(element[0], {
         mode: scope.syntax || "javascript",
         theme: scope.theme || "default",
         autoCloseBrackets: scope.autoCloseBrackets || true,
@@ -22,7 +23,28 @@ var codeMirror = function($timeout){
         lineNumbers: scope.lineNumbers === true ? true : false,
         extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"},
         lineWrapping: true,
-        continueLineComment: true
+        continueLineComment: true,
+        gutters: ["CodeMirror-linenumbers", "breakpoints"]
+      });
+
+      scope.breakpoints = [];
+
+      scope.$watch('breakPoints', function(current, original) {
+
+        editor.eachLine(function(line) {
+          editor.setGutterMarker(line.lineNo(), "breakpoints", null);
+
+        });
+
+        for (line in current) {
+          let info = editor.lineInfo(current[line]);
+          editor.setGutterMarker(current[line], "breakpoints", info.gutterMarkers ? null : function() {
+            let marker = document.createElement("div");
+            marker.style.color = "#822";
+            marker.innerHTML = "●";
+            return marker;
+          }());
+        }
       });
 
       if(ngModelCtrl) {
@@ -46,6 +68,8 @@ var codeMirror = function($timeout){
 
             editor.on('change', function(){
               ngModelCtrl.$setViewValue(editor.getValue());
+
+
             });
           });
         }

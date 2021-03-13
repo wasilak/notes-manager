@@ -2,7 +2,7 @@
 /* jshint -W117 */
 "use strict";
 
-angular.module("app").component("note", 
+angular.module("app").component("note",
   {
     bindings: {
       note: '<'
@@ -47,16 +47,41 @@ angular.module("app").component("note",
         return ApiService.getTags(query);
       };
 
+      vm.breakpoints = [];
+
       $scope.$watch('$ctrl.note.response', function(current, original) {
         vm.errorMessage = false;
         $rootScope.$state.current.data.title = current.title + " [[edit]]";
+        vm.breakpoints = [];
         try {
 
           // making a copy of original model in order to detect changes and to be able to enable/disable save button
           if (!vm.noteOriginal) {
             vm.noteOriginal = JSON.parse(JSON.stringify(vm.note));
           }
-          vm.outputText = marked(current.content);
+          // vm.outputText = marked(current.content);
+          let markdownlintOptions = {
+            "config": {
+              "MD041": false,
+              "MD013": false,
+              "MD034": false,
+              // "MD031": false,
+              // "MD032": false
+            },
+            "strings": {
+              "content": current.content
+            }
+          }
+
+          let lintResult = markdownlint.sync(markdownlintOptions)
+
+          vm.lintResult = lintResult.toString().replace(/(?:\r\n|\r|\n)/g, '<br>');
+          vm.outputText =  marked.parse(current.content);
+
+          for (let id in lintResult.content) {
+            vm.breakpoints.push(lintResult.content[id].lineNumber - 1);
+          }
+
         } catch (err) {
           vm.errorMessage = err.message;
         }
