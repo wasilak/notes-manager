@@ -14,7 +14,7 @@ def get_file(logger, storage_root, doc_uuid, image_url):
         logger.info("%s => %s" % (image_url["url"], temp.name))
     except Exception as e:
         logger.exception(e)
-        return '', True
+        return '', '', True
 
     return temp.name, hash_file(temp.name), False
 

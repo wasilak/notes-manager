@@ -47,8 +47,7 @@ class Db:
 
         docs = list(self.db.notes.find(search_params, other_params).sort(sort_params))
 
-        for doc in docs:
-            doc = self.parse_item(doc)
+        docs = list(map(lambda doc: self.parse_item(doc), docs))
 
         return docs
 
@@ -68,7 +67,7 @@ class Db:
         del(data["id"])
         self.db.notes.replace_one({"_id": data["_id"]}, data)
 
-        data = self.parse_item(data)
+        self.parse_item(data)
 
     def delete(self, id):
         doc = self.get(id)
