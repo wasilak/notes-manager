@@ -1,6 +1,6 @@
 FROM python:3.9-alpine as builder
 
-RUN apk --update --no-cache add yarn
+RUN apk --update --no-cache add yarn cargo build-base
 WORKDIR /app
 COPY ./app /app
 ENV PATH="/root/.local/bin:${PATH}"
