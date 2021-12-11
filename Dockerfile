@@ -1,13 +1,6 @@
-# building stage
-FROM python:3-slim as builder
-RUN apt-get update \
-  && apt-get install build-essential curl gnupg -y \
-  && apt-get clean
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update \
-  && apt-get install yarn -y \
-  && apt-get clean
+FROM python:3.9-alpine as builder
+
+RUN apk --update --no-cache add yarn
 WORKDIR /app
 COPY ./app /app
 ENV PATH="/root/.local/bin:${PATH}"
@@ -15,12 +8,12 @@ RUN pip install --user -r requirements.txt
 RUN yarn install
 
 # production stage
-FROM python:3-slim as app
+FROM python:3.9-alpine as app
 COPY --from=builder /root/.local /root/.local
 COPY --from=builder /app/ /app/
-RUN apt-get update \
-  && apt-get install curl -y \
-  && apt-get clean
+
+RUN apk --update --no-cache add curl
+
 ENV PATH="/root/.local/bin:${PATH}"
 WORKDIR /app
 EXPOSE 5000
