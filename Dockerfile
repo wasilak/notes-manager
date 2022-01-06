@@ -1,18 +1,24 @@
-FROM quay.io/wasilak/python:3-alpine as builder
+FROM quay.io/wasilak/python:3-slim as builder
 
-RUN apk --update --no-cache add yarn cargo build-base
+RUN apt-get update && apt-get install -y curl gnupg2 build-essential
+
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+RUN apt-get update && apt-get install -y yarn
+
 WORKDIR /app
 COPY ./app /app
 ENV PATH="/root/.local/bin:${PATH}"
-RUN pip install --user -r requirements.txt
+RUN pip install --user -U -r requirements.txt
 RUN yarn install
 
 # production stage
-FROM quay.io/wasilak/python:3-alpine as app
+FROM quay.io/wasilak/python:3-slim as app
 COPY --from=builder /root/.local /root/.local
 COPY --from=builder /app/ /app/
 
-RUN apk --update --no-cache add curl
+RUN apt-get update && apt-get install -y curl
 
 ENV PATH="/root/.local/bin:${PATH}"
 WORKDIR /app
