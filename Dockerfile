@@ -1,4 +1,4 @@
-FROM quay.io/wasilak/alpine:3 as builder
+FROM quay.io/wasilak/python:3-alpine as builder
 
 RUN apk --update --no-cache add yarn cargo build-base
 WORKDIR /app
@@ -8,7 +8,7 @@ RUN pip install --user -r requirements.txt
 RUN yarn install
 
 # production stage
-FROM quay.io/wasilak/alpine:3 as app
+FROM quay.io/wasilak/python:3-alpine as app
 COPY --from=builder /root/.local /root/.local
 COPY --from=builder /app/ /app/
 
