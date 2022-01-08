@@ -1,6 +1,6 @@
 fastapi[all]
 python-dotenv
-elasticsearch==7.10.1
+elasticsearch
 tinydb
 elasticsearch-dsl
 requests
