@@ -1,7 +1,7 @@
 /* jslint node: true */
 "use strict";
 
-angular.module("app").component("new", 
+angular.module("app").component("new",
   {
     controller: function ($scope, $rootScope, $stateParams, ApiService, $state) {
       var vm = this;
@@ -20,27 +20,27 @@ angular.module("app").component("new",
         }
       };
 
-      vm.createNote = function() {
+      vm.createNote = function () {
         vm.loader = true;
-        ApiService.createNote(vm.note).then(function(result) {
+        ApiService.createNote(vm.note).then(function (result) {
           $rootScope.notifications.push('Note created');
           vm.loader = false;
-          $state.go('list_note', {uuid: result.response.id}, {reload: true});
+          $state.go('list_note', { uuid: result.response.id }, { reload: true });
         });
       };
 
-      vm.createButtonDisabled = function() {
+      vm.createButtonDisabled = function () {
         return vm.note.response.content.length == 0 || vm.note.response.title.length == 0;
       };
 
-      vm.loadItems = function(query) {
+      vm.loadItems = function (query) {
         return ApiService.getTags(query);
       };
 
-      $scope.$watch('$ctrl.note', function(current, original) {
+      $scope.$watch('$ctrl.note', function (current, original) {
         vm.errorMessage = false;
         try {
-          vm.outputText = marked(current.response.content);
+          vm.outputText = marked.parse(current.response.content);
         } catch (err) {
           vm.errorMessage = err.message;
         }

@@ -14,26 +14,26 @@ angular.module("app").component("noteRendered",
 
       vm.loader = false;
 
-      $scope.$watch('$ctrl.note.response', function(current, original) {
+      $scope.$watch('$ctrl.note.response', function (current, original) {
         $rootScope.$state.current.data.title = current.title;
         vm.errorMessage = false;
         try {
-          vm.outputText = marked(current.content);
+          vm.outputText = marked.parse(current.content);
         } catch (err) {
           vm.errorMessage = err.message;
         }
       });
 
-      vm.deleteNote = function() {
+      vm.deleteNote = function () {
         var confirmed = confirm("Are you sure?");
 
         vm.loader = true;
 
         if (confirmed) {
-          ApiService.deleteNote(vm.note.response.id).then(function(result) {
-              vm.loader = false;
-              $rootScope.notifications.push('Note deleted');
-              $state.go('list', {}, {reload: true});
+          ApiService.deleteNote(vm.note.response.id).then(function (result) {
+            vm.loader = false;
+            $rootScope.notifications.push('Note deleted');
+            $state.go('list', {}, { reload: true });
           });
         } else {
           vm.loader = false;

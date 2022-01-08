@@ -34,12 +34,12 @@ templates = Jinja2Templates(directory="templates")
 
 
 class Note(BaseModel):
-    id: str = None
+    id: str = ""
     content: str
     title: str
-    created: int = None
-    updated: int = None
-    _score: int = None
+    created: int = 0
+    updated: int = 0
+    _score: int = 0
     tags: List[str] = []
 
 
@@ -109,12 +109,12 @@ async def api_list(tags: str = '', filter: str = '', sort: str = ''):
         if db_conn_err_persisting:
             return {"error": db_conn_err_persisting}
 
-    if len(tags) > 0:
-        tags = tags.strip().split(",")
-    else:
-        tags = []
+    cur_tags = []
 
-    notes = db.list(filter.lower(), sort, tags)
+    if len(tags) > 0:
+        cur_tags = tags.strip().split(",")
+
+    notes = db.list(filter.lower(), sort, cur_tags)
 
     return notes
 
@@ -205,6 +205,8 @@ async def api_tags(response: Response, query: str = ''):
     # filtering tags
     if len(query) > 0:
         tags = list(filter(lambda tag: query.lower() in tag.lower(), tags))
+
+    tags = list(filter(lambda tag: tag != None, tags))
 
     tags.sort()
 
