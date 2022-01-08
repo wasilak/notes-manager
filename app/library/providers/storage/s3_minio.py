@@ -1,7 +1,6 @@
 import os
 import logging
 from minio import Minio
-from minio.deleteobjects import DeleteObject
 from .common import get_file, create_path
 from datetime import timedelta
 
@@ -16,6 +15,8 @@ class Storage():
         if not os.path.exists(self.storage_root):
             os.makedirs(self.storage_root, exist_ok=True)
 
+        self.logger = logging.getLogger("uvicorn.error")
+
         self.client = Minio(
             os.getenv("MINIO_ADDRESS", ""),
             access_key=os.getenv("MINIO_ACCESS_KEY", ""),
@@ -28,9 +29,7 @@ class Storage():
         if not found:
             self.client.make_bucket(self.bucket_name)
         else:
-            print("Bucket {} already exists".format(self.bucket_name))
-
-        self.logger = logging.getLogger("api")
+            self.logger.info("Bucket {} already exists".format(self.bucket_name))
 
     def get_files(self, doc_uuid, image_urls):
         for item in image_urls:
@@ -50,9 +49,9 @@ class Storage():
     def cleanup(self, doc_uuid):
         # Remove a prefix recursively.
         delete_object_list = map(lambda x: DeleteObject(x.object_name), self.client.list_objects(self.bucket_name, "%s/" % (doc_uuid), recursive=True))
-        errors = self.client.remove_objects(self.bucket_name, delete_object_list)
+        errors = self.client.remove_objects("my-bucket", delete_object_list)
         for error in errors:
-            print("error occured when deleting object", error)
+            self.logger.error("error occured when deleting object", error)
 
     def get_object(self, filename, expiration=20):
         # response = self.client.fget_object(self.bucket_name, filename, filename)

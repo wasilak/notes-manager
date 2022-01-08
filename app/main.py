@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime
 from fastapi import FastAPI, BackgroundTasks
-import logging
+from fastapi.logger import logger
 import re
 import importlib
 
@@ -31,8 +31,6 @@ app.mount("/node_modules", StaticFiles(directory="node_modules"), name="node_mod
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
-
-logger = logging.getLogger("api")
 
 
 class Note(BaseModel):
@@ -68,6 +66,7 @@ def connection():
     try:
         db.setup()
     except Exception as e:
+        print(e)
         return str(e)
 
     return False

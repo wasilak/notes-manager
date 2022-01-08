@@ -1,18 +1,41 @@
 import os
 from bson.objectid import ObjectId
-from pymongo import MongoClient
+import pymongo
+import logging
+from urllib import parse
 
 
 class Db:
 
     def setup(self):
         uri = "mongodb://%s:%s@%s" % (
-            os.getenv("MONGO_USER", 'user'),
-            os.getenv("MONGO_PASS", 'pass'),
+            parse.quote_plus(os.getenv("MONGO_USER", 'user')),
+            parse.quote_plus(os.getenv("MONGO_PASS", 'pass')),
             os.getenv("MONGO_HOST", "localhost:27017")
         )
-        self.client = MongoClient(uri)
+
+        self.client = pymongo.MongoClient(uri)
         self.db = self.client.notes
+
+        self.setup_indices()
+
+        self.logger = logging.getLogger("uvicorn.error")
+
+    def setup_indices(self):
+        cur_indices = list(self.db.notes.list_indexes())
+
+        text_index_name = "content_text_title_text"
+
+        text_index_created = False
+
+        for index in cur_indices:
+            if index["name"] == text_index_name:
+                text_index_created = True
+
+        if not text_index_created:
+            self.logger.info("Creating text index")
+            self.db.notes.create_index([('content', 'text'), ('title', 'text')])
+
 
     def parse_item(self, doc):
         if "_id" in doc:
@@ -31,19 +54,23 @@ class Db:
         other_params = {}
         sort_params = []
 
+
         if len(tags) > 0:
             search_params["tags"] = {"$all": tags}
 
         if len(filter) > 0:
             search_params["$text"] = {"$search": filter}
-
-        other_params["score"] = {"$meta": "textScore"}
-        sort_params.append(('score', {'$meta': 'textScore'}))
+            other_params["score"] = {"$meta": "textScore"}
+            sort_params.append(('score', {'$meta': 'textScore'}))
 
         if len(sort) > 0:
             sort_tmp = sort.split(":")
             sort_order = 1 if sort_tmp[1] == "asc" else -1
             sort_params.append((sort_tmp[0], sort_order))
+
+        if len(sort_params) == 0:
+            # workaround to make searches without sort work
+            sort_params.append(("$natural", pymongo.ASCENDING))
 
         docs = list(self.db.notes.find(search_params, other_params).sort(sort_params))
 
