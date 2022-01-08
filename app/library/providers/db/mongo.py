@@ -17,9 +17,10 @@ class Db:
         self.client = pymongo.MongoClient(uri)
         self.db = self.client.notes
 
+        self.logger = logging.getLogger("uvicorn.error")
+
         self.setup_indices()
 
-        self.logger = logging.getLogger("uvicorn.error")
 
     def setup_indices(self):
         cur_indices = list(self.db.notes.list_indexes())
