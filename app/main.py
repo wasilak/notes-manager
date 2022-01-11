@@ -34,12 +34,12 @@ templates = Jinja2Templates(directory="templates")
 
 
 class Note(BaseModel):
-    id: str = ""
+    id: str = None
     content: str
     title: str
-    created: int = 0
-    updated: int = 0
-    _score: int = 0
+    created: int = None
+    updated: int = None
+    _score: int = None
     tags: List[str] = []
 
 
