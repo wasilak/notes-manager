@@ -202,11 +202,11 @@ async def api_tags(response: Response, query: str = ''):
     # list(set()) removes duplicates from list
     tags = list(set(db.tags()))
 
+    tags = list(filter(lambda tag: tag != None, tags))
+
     # filtering tags
     if len(query) > 0:
         tags = list(filter(lambda tag: query.lower() in tag.lower(), tags))
-
-    tags = list(filter(lambda tag: tag != None, tags))
 
     tags.sort()
 
