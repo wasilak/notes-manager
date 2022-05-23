@@ -64,10 +64,10 @@ clipboard@^2.0.8:
     select "^1.1.2"
     tiny-emitter "^2.0.0"
 
-codemirror@^5.65.0:
-  version "5.65.0"
-  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.65.0.tgz#50344359393579f526ca53797e510ff75477117f"
-  integrity sha512-gWEnHKEcz1Hyz7fsQWpK7P0sPI2/kSkRX2tc7DFA6TmZuDN75x/1ejnH/Pn8adYKrLEA1V2ww6L00GudHZbSKw==
+codemirror@^5.65.4:
+  version "5.65.4"
+  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.65.4.tgz#384c257f27d1d06f44311722c98ad802cce3984e"
+  integrity sha512-tytrSm5Rh52b6j36cbDXN+FHwHCl9aroY4BrDZB2NFFL3Wjfq9nuYVLFFhaOYOczKAg3JXTr8BuT8LcE5QY4Iw==
 
 delegate@^3.1.2:
   version "3.2.0"
