@@ -101,10 +101,10 @@ jquery@^3.6.0:
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
   integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
 
-marked@^4.0.9:
-  version "4.0.9"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-4.0.9.tgz#96862d67bd31b4770917f01c93e1d9b3cc73ed96"
-  integrity sha512-HmoFvQwFLxNESeGupeOC+6CLb5WzcCWQmqvVetsErmrI3vrZ6gBumty5IP0ynLPR0zYSoVY7ITC1GffsYIGkog==
+marked@^4.0.18:
+  version "4.0.18"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-4.0.18.tgz#cd0ac54b2e5610cfb90e8fd46ccaa8292c9ed569"
+  integrity sha512-wbLDJ7Zh0sqA0Vdg6aqlbT+yPxqLblpAZh1mK2+AO2twQkPywvvqQNfEPVwSSRjZ7dZcdeVBIAgiO7MMp3Dszw==
 
 ng-tags-input@^3.2.0:
   version "3.2.0"
