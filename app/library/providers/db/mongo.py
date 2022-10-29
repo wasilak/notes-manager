@@ -8,11 +8,15 @@ from urllib import parse
 class Db:
 
     def setup(self):
-        uri = "mongodb://%s:%s@%s" % (
-            parse.quote_plus(os.getenv("MONGO_USER", 'user')),
-            parse.quote_plus(os.getenv("MONGO_PASS", 'pass')),
-            os.getenv("MONGO_HOST", "localhost:27017")
-        )
+
+        if len(os.getenv("MONGO_CONNECTION_STRING")) > 0:
+            uri = os.getenv("MONGO_CONNECTION_STRING")
+        else:
+            uri = "mongodb://%s:%s@%s" % (
+                parse.quote_plus(os.getenv("MONGO_USER", 'user')),
+                parse.quote_plus(os.getenv("MONGO_PASS", 'pass')),
+                os.getenv("MONGO_HOST", "localhost:27017")
+            )
 
         self.client = pymongo.MongoClient(uri)
         self.db = self.client.notes
