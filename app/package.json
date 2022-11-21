@@ -17,7 +17,7 @@
     "font-awesome": "^4.7.0",
     "highlightjs": "^9.16.2",
     "jquery": "^3.6.0",
-    "marked": "^4.0.9",
+    "marked": "^4.2.3",
     "ng-tags-input": "^3.2.0",
     "ngclipboard": "^2.0.0",
     "popper.js": "^1.16.1"
