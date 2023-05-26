@@ -55,7 +55,7 @@ storage = Storage()
 
 if "local" == storage_provider:
     app.mount("/storage", StaticFiles(directory="storage"), name="storage")
-if  storage_provider in ["s3", "s3_minio"]:
+if storage_provider in ["s3", "s3_minio"]:
     @app.get("/storage/{path:path}")
     async def storage_endpoint(request: Request, path: str = ''):
         presigned_url = storage.get_object(path)

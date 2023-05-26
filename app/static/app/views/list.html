@@ -65,7 +65,7 @@
       </form>
 
       <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12 listColumn">
           <div class="list-group scrollable-list" ng-cloak>
             <a ng-repeat="note in $ctrl.list.response" 
               class="list-group-item"
@@ -85,7 +85,7 @@
         
       </div>
     </div>
-  <div class="col-sm-8">
+  <div class="col-sm-8 contentColumn">
     <div ui-view="content" ng-cloak></div>
   </div>
 </div>
