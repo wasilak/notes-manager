@@ -1,27 +1,11 @@
-FROM quay.io/wasilak/python:3-slim as builder
-
-RUN apt-get update && apt-get install -y curl gnupg2 build-essential
-
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-
-RUN apt-get update && apt-get install -y yarn
-
-WORKDIR /app
-COPY ./app /app
-ENV PATH="/root/.local/bin:${PATH}"
-RUN pip install --user -U -r requirements.txt
-RUN yarn install
-
-# production stage
-FROM quay.io/wasilak/python:3-slim as app
-COPY --from=builder /root/.local /root/.local
-COPY --from=builder /app/ /app/
+FROM quay.io/wasilak/python:3-slim
 
 RUN apt-get update && apt-get install -y curl
 
-ENV PATH="/root/.local/bin:${PATH}"
 WORKDIR /app
+COPY ./app /app
+RUN pip install --user -U -r requirements.txt
+
 EXPOSE 5000
 HEALTHCHECK --interval=5s --timeout=1s CMD curl -f http://localhost:5000/health || exit 1
 CMD ["uvicorn", "main:app", "--host=0.0.0.0", "--port=5000", "--log-level=info"]

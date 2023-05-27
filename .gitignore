@@ -276,3 +276,5 @@ app/db.json
 .tags
 
 app/storage/*
+
+.vscode/

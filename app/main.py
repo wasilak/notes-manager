@@ -26,8 +26,6 @@ app = FastAPI(
     version=package_json["version"],
 )
 
-app.mount("/node_modules", StaticFiles(directory="node_modules"), name="node_modules")
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
