@@ -39,12 +39,24 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
         }
       }
     })
+    .state('cheatsheet', {
+      parent: 'parent',
+      url: '/cheatsheet',
+      data: {
+        title: 'Markdown cheatsheet',
+      },
+      views: {
+        'note@parent': {
+          component: 'cheatsheet'
+        }
+      }
+    })
     .state('note', {
       parent: 'parent',
       url: '/note/:uuid',
       data: {},
       resolve: {
-        note: function(ApiService, $transition$) {
+        note: function (ApiService, $transition$) {
           return ApiService.getNote($transition$.params().uuid);
         }
       },
@@ -59,7 +71,7 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
       url: 'list/:uuid',
       data: {},
       resolve: {
-        note: function(ApiService, $transition$) {
+        note: function (ApiService, $transition$) {
           return ApiService.getNote($transition$.params().uuid);
         }
 
