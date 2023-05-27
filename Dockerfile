@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y curl
 
 WORKDIR /app
 COPY ./app /app
-RUN pip install --user -U -r requirements.txt
+RUN pip install -r requirements.txt
 
 EXPOSE 5000
 HEALTHCHECK --interval=5s --timeout=1s CMD curl -f http://localhost:5000/health || exit 1
