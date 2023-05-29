@@ -1,6 +1,6 @@
 fastapi[all]==0.95.2
 python-dotenv==1.0.0
-elasticsearch==7.17.9
+elasticsearch==8.8.0
 tinydb==4.7.1
 elasticsearch-dsl==7.4.1
 requests==2.31.0
