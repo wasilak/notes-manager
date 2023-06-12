@@ -1,4 +1,4 @@
-fastapi[all]==0.96.0
+fastapi[all]==0.97.0
 python-dotenv==1.0.0
 elasticsearch==7.17.9
 tinydb==4.7.1
