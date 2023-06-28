@@ -6,6 +6,6 @@ elasticsearch-dsl==7.4.1
 requests==2.31.0
 pymongo==4.3.3
 six==1.16.0
-boto3==1.26.150
+boto3==1.26.162
 botocore==1.29.150
 minio==7.1.15
