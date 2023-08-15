@@ -24,8 +24,34 @@ angular.module("app").component("note",
         });
       };
 
+      vm.aiReWriteNote = function () {
+        vm.loader = true;
+        ApiService.aiReWriteNote(vm.noteOriginal).then(function (result) {
+          console.log(result)
+          if (result.response.rewritten.error) {
+            vm.note = vm.noteOriginal
+            $rootScope.notifications.push('AIRewrite error: ' + result.response.rewritten.error);
+          } else {
+            vm.note.response.title = result.response.rewritten.title;
+            vm.note.response.content = result.response.rewritten.content;
+            vm.note.response.tags = result.response.rewritten.tags;
+          }
+          vm.loader = false;
+        });
+      };
+
+      vm.restoreOriginal = function () {
+        vm.loader = true;
+        vm.note = JSON.parse(JSON.stringify(vm.noteOriginal));
+        vm.loader = false;
+      };
+
       vm.saveButtonDisabled = function () {
         return angular.equals(vm.note, vm.noteOriginal);
+      };
+
+      vm.aiRewriteButtonDisabled = function () {
+        return vm.note.response.content.length == 0;
       };
 
       vm.deleteNote = function () {

@@ -9,3 +9,4 @@ six==1.16.0
 boto3==1.26.150
 botocore==1.29.150
 minio==7.1.15
+openai

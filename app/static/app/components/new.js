@@ -33,8 +33,27 @@ angular.module("app").component("new",
         return vm.note.response.content.length == 0 || vm.note.response.title.length == 0;
       };
 
+      vm.aiRewriteButtonDisabled = function () {
+        return vm.note.response.content.length == 0;
+      };
+
       vm.loadItems = function (query) {
         return ApiService.getTags(query);
+      };
+
+      vm.aiReWriteNote = function () {
+        vm.loader = true;
+        ApiService.aiReWriteNote(vm.note).then(function (result) {
+          console.log(result)
+          if (result.response.rewritten.error) {
+            $rootScope.notifications.push('AIRewrite error: ' + result.response.rewritten.error);
+          } else {
+            vm.note.response.title = result.response.rewritten.title;
+            vm.note.response.content = result.response.rewritten.content;
+            vm.note.response.tags = result.response.rewritten.tags;
+          }
+          vm.loader = false;
+        });
       };
 
       $scope.$watch('$ctrl.note', function (current, original) {
