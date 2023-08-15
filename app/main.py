@@ -32,13 +32,13 @@ templates = Jinja2Templates(directory="templates")
 
 
 class Note(BaseModel):
-    id: str = None
+    id: str | None = None
     content: str
     title: str
-    created: int = None
-    updated: int = None
-    _score: int = None
-    tags: List[str] = []
+    created: int | None = None
+    updated: int | None = None
+    _score: int | None = None
+    tags: List[str] | None = []
 
 
 db_provider = os.getenv("DB_PROVIDER", "file")
