@@ -1,11 +1,12 @@
-FROM quay.io/wasilak/python:3-slim
+FROM quay.io/wasilak/golang:1.21-alpine as builder
 
-RUN apt-get update && apt-get install -y curl
+ADD . /app
+WORKDIR /app/
+RUN mkdir -p ./dist
+RUN go build -o ./dist/notes-manager
 
-WORKDIR /app
-COPY ./app /app
-RUN pip install -r requirements.txt
+FROM quay.io/wasilak/alpine:3
 
-EXPOSE 5000
-HEALTHCHECK --interval=5s --timeout=1s CMD curl -f http://localhost:5000/health || exit 1
-CMD ["uvicorn", "main:app", "--host=0.0.0.0", "--port=5000", "--log-level=info"]
+COPY --from=builder /app/dist/notes-manager /notes-manager
+
+CMD ["/notes-manager"]

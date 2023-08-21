@@ -270,11 +270,11 @@ GitHub.sublime-settings
 
 # End of https://www.gitignore.io/api/node,macos,python,angular,sublimetext
 
-app/data
-app/db.json
+data
+db.json
 
 .tags
 
-app/storage/*
+storage/*
 
 .vscode/

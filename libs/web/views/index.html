@@ -1,9 +1,7 @@
 <html ng-app="app">
 
     <head>
-        {% raw %}
-        <title>{{$state.current.data.title}} :: {{APP_SETTINGS.name}}</title>
-        {% endraw %}
+        <title>{{"{{"}}$state.current.data.title{{"}}"}} :: {{"{{"}}APP_SETTINGS.name{{"}}"}}</title>
 
         <meta charset="utf-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -45,26 +43,23 @@
     </head>
 
     <body>
-        {% raw %}
         <growl-notifications></growl-notifications ng-cloak>
 
         <div ng-repeat="(id, notification) in notifications track by id" ng-cloak>
             <growl-notification ttl="2000">
-                {{notification}}
+                {{"{{"}}notification{{"}}"}}
             </growl-notification>
         </div>
 
         <div class="container-fluid" ui-view></div>
 
-        {% endraw %}
-
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-12 bg-light d-inline">
                     <p class="text-center">
-                        <a ng-href="https://github.com/wasilak/notes-manager/tree/{{app_version}}"
+                        <a ng-href="https://github.com/wasilak/notes-manager/tree/{{"{{"}}app_version{{"}}"}}"
                             target="_blank">wasilak/notes-manager
-                            v{{app_version}}</a>
+                            v{{"{{"}}app_version{{"}}"}}</a>
                     </p>
                 </div>
             </div>

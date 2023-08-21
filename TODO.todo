@@ -1,0 +1,5 @@
+todo:
+☐ conversion api endpoint, e.g.: mongo -> badger
+☐ badger db
+☐ what about Bleve search?
+☐ https://github.com/uber-go/automaxprocs

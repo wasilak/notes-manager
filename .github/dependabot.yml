@@ -6,13 +6,11 @@ updates:
       interval: "daily"
 
   - package-ecosystem: "npm"
-    # Files stored in `app` directory
-    directory: "/app"
+    directory: "/"
     schedule:
       interval: "daily"
 
-  - package-ecosystem: "pip"
-    # Files stored in `app` directory
-    directory: "/app"
+  - package-ecosystem: "gomod"
+    directory: "/"
     schedule:
       interval: "daily"
