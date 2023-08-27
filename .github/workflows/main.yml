@@ -43,7 +43,7 @@ jobs:
       - name: Build executable
         run: |
           mkdir ./dist
-          go build -o ./dist/notes-manager
+          go build -ldflags "-X github.com/wasilak/notes-manager/libs/common.Version=${{  github.ref_name }}" -o ./dist/notes-manager
         env:
           GOOS: ${{ matrix.os }}
           GOARCH: ${{ matrix.arch }}

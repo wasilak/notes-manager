@@ -20,8 +20,7 @@ func health(c echo.Context) error {
 }
 
 func index(c echo.Context) error {
-	appVersion := common.GetAppVersion()
-	return c.Render(http.StatusOK, "index.html", map[string]interface{}{"app_version": appVersion})
+	return c.Render(http.StatusOK, "index.html", map[string]interface{}{"app_version": common.Version})
 }
 
 func storageEndpoint(c echo.Context) error {

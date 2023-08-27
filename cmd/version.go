@@ -9,8 +9,6 @@ import (
 	"github.com/wasilak/notes-manager/libs/common"
 )
 
-var version string
-
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version number of " + libs.AppName,
@@ -27,6 +25,6 @@ var versionCmd = &cobra.Command{
 
 func versionFunc() error {
 	buildInfo, _ := debug.ReadBuildInfo()
-	fmt.Printf("%s\nVersion %s (GO %s)\n", libs.AppName, version, buildInfo.GoVersion)
+	fmt.Printf("%s\nVersion %s (GO %s)\n", libs.AppName, common.Version, buildInfo.GoVersion)
 	return nil
 }
