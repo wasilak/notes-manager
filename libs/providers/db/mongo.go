@@ -136,7 +136,7 @@ func (d *MongoDB) List(filter, sort string, tags []string) ([]Note, error) {
 	}
 	defer cur.Close(common.CTX)
 
-	var docs []Note
+	docs := []Note{}
 	for cur.Next(common.CTX) {
 		var doc Note
 		if err := cur.Decode(&doc); err != nil {
@@ -216,7 +216,7 @@ func (d *MongoDB) Tags() ([]string, error) {
 		return nil, err
 	}
 
-	var tags []string
+	tags := []string{}
 
 	for _, tag := range cur {
 		if tag != nil && len(tag.(string)) > 0 {
