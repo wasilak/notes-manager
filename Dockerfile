@@ -1,5 +1,5 @@
-ARG VERSION=main
 FROM quay.io/wasilak/golang:1.21-alpine as builder
+ARG VERSION=main
 
 ADD . /app
 WORKDIR /app/
