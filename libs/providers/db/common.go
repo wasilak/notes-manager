@@ -24,7 +24,6 @@ type Note struct {
 	Title    string             `bson:"title" json:"title"`
 	Created  int                `bson:"created" json:"created,omitempty"`
 	Updated  int                `bson:"updated" json:"updated,omitempty"`
-	Score    int                `bson:"_score" json:"_score,omitempty"`
 	Tags     []string           `bson:"tags" json:"tags,omitempty"`
 	Response *Response          `bson:"api_response" json:"api_response,omitempty"`
 	Error    string             `bson:"error" json:"error,omitempty"`
