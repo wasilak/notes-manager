@@ -10,13 +10,14 @@ require (
 	github.com/sashabaranov/go-openai v1.14.2
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.16.0
-	github.com/wasilak/loggergo v0.0.11
+	github.com/wasilak/loggergo v0.0.12
 	go.mongodb.org/mongo-driver v1.12.1
 )
 
 require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/golang-cz/devslog v0.0.3 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.3.0 // indirect
