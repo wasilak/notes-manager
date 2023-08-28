@@ -49,10 +49,6 @@
 
             sort by:
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" ng-model="$ctrl.sort" ng-change="$ctrl.setSort()" id="sortOptions_score" value="">
-              <label class="form-check-label" for="sortOptions_score">score</label>
-            </div>
-            <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" ng-model="$ctrl.sort" ng-change="$ctrl.setSort()" id="sortOptions_updated_desc" value="updated:desc">
               <label class="form-check-label" for="sortOptions_updated_desc">updated:desc</label>
             </div>
@@ -70,7 +66,7 @@
             <a ng-repeat="note in $ctrl.list.response" 
               class="list-group-item"
               ui-sref-active="active"
-              ui-sref="list_note({uuid: note.id})">{{ note.title }} <abbr class="pull-right" data-toggle="collapse" data-target="#collapse_{{note.id}}" ng-if="note._score" title="Score explanation">score: {{ note._score | number:2 }}</abbr class="initialism">
+              ui-sref="list_note({uuid: note.id})">{{ note.title }}
               
               <p><span ng-repeat="tag in note.tags" class="badge badge-info tagBadge">{{tag}}</span></p>
 

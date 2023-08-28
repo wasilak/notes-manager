@@ -1,7 +1,7 @@
 /* jslint node: true */
 "use strict";
 
-angular.module("app").component("list", 
+angular.module("app").component("list",
   {
     controller: function ListCtrl($rootScope, ApiService, $scope) {
       var vm = this;
@@ -14,47 +14,42 @@ angular.module("app").component("list",
 
       vm.tags = [];
 
-      $rootScope.$on('currentNote', function(event, note) {
+      $rootScope.$on('currentNote', function (event, note) {
         vm.note = note;
       });
 
-      vm.updateList = function() {
-        ApiService.getList(vm.listFilter, vm.sort, vm.tags).then(function(result) {
+      vm.updateList = function () {
+        ApiService.getList(vm.listFilter, vm.sort, vm.tags).then(function (result) {
           vm.list = result;
         });
       };
 
-      vm.setSort = function() {
+      vm.setSort = function () {
         vm.updateList();
       };
 
-      vm.clearSearch = function() {
+      vm.clearSearch = function () {
         vm.listFilter = "";
         vm.search();
       };
 
-      vm.search = function() {
-        if (vm.listFilter == "" && vm.tags.length == 0) {
-          vm.sort = "updated:desc";
-        } else {
-          vm.sort = "";
-        }
+      vm.search = function () {
         vm.updateList();
       };
 
-      vm.loadItems = function(query) {
+      vm.loadItems = function (query) {
         return ApiService.getTags(query);
       };
 
-      
-      $scope.$watch('$ctrl.tags', function(current, original) {
+
+      $scope.$watch('$ctrl.tags', function (current, original) {
         vm.search();
       });
-      
+
       vm.loadItems();
-      
+
       vm.listFilter = "";
 
     },
     templateUrl: "/static/app/views/list.html"
-});
+  });

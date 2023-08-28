@@ -99,8 +99,9 @@ func deleteEmpty(s []string) []string {
 
 func (d *MongoDB) List(filter, sort string, tags []string) ([]Note, error) {
 	searchParams := bson.M{}
-	otherParams := bson.M{}
 	sortParams := bson.D{}
+
+	var opts *options.FindOptions
 
 	tags = deleteEmpty(tags)
 
@@ -108,27 +109,31 @@ func (d *MongoDB) List(filter, sort string, tags []string) ([]Note, error) {
 		searchParams["tags"] = bson.M{"$all": tags}
 	}
 
-	if len(filter) > 0 {
-		searchParams["$text"] = bson.M{"$search": filter}
-		otherParams["score"] = bson.M{"$meta": "textScore"}
-		sortParams = append(sortParams, bson.E{Key: "score", Value: bson.M{"$meta": "textScore"}})
+	filterElements := deleteEmpty(strings.Split(filter, " "))
+	if len(filterElements) > 0 {
+		orQuery := make([]bson.M, 0)
+		for _, v := range filterElements {
+			orQuery = append(orQuery, bson.M{"title": bson.M{"$regex": v, "$options": "i"}})
+			orQuery = append(orQuery, bson.M{"content": bson.M{"$regex": v, "$options": "i"}})
+		}
+		searchParams["$or"] = orQuery
 	}
+
+	sortField := "updated"
+	sortOrder := -1
 
 	if len(sort) > 0 {
 		sortTmp := strings.Split(sort, ":")
-		sortOrder := 1
+		sortField = sortTmp[0]
+		sortOrder = 1
 		if sortTmp[1] == "desc" {
 			sortOrder = -1
 		}
-		sortParams = append(sortParams, bson.E{Key: sortTmp[0], Value: sortOrder})
 	}
 
-	if len(sortParams) == 0 {
-		// Workaround to make searches without sort work
-		sortParams = append(sortParams, bson.E{Key: "$natural", Value: 1})
-	}
+	sortParams = append(sortParams, bson.E{Key: sortField, Value: sortOrder})
 
-	opts := options.Find().SetSort(sortParams)
+	opts = options.Find().SetSort(sortParams)
 
 	cur, err := d.db.Collection("notes").Find(common.CTX, searchParams, opts)
 	if err != nil {

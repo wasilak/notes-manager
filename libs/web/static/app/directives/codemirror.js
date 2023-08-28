@@ -1,4 +1,4 @@
-var codeMirror = function($timeout){
+var codeMirror = function ($timeout) {
   return {
     restrict: "E",
     replace: true,
@@ -14,14 +14,14 @@ var codeMirror = function($timeout){
       breakPoints: "="
     },
     template: '<div class="code-editor"></div>',
-    link: function(scope, element, attrs, ngModelCtrl, transclude) {
+    link: function (scope, element, attrs, ngModelCtrl, transclude) {
       let editor = CodeMirror(element[0], {
         mode: scope.syntax || "javascript",
         theme: scope.theme || "default",
         autoCloseBrackets: scope.autoCloseBrackets || true,
         matchBrackets: scope.matchBrackets || true,
         lineNumbers: scope.lineNumbers === true ? true : false,
-        extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"},
+        extraKeys: { "Enter": "newlineAndIndentContinueMarkdownList" },
         lineWrapping: true,
         continueLineComment: true,
         gutters: ["CodeMirror-linenumbers", "breakpoints"]
@@ -29,16 +29,16 @@ var codeMirror = function($timeout){
 
       scope.breakpoints = [];
 
-      scope.$watch('breakPoints', function(current, original) {
+      scope.$watch('breakPoints', function (current, original) {
 
-        editor.eachLine(function(line) {
+        editor.eachLine(function (line) {
           editor.setGutterMarker(line.lineNo(), "breakpoints", null);
 
         });
 
         for (let line in current) {
           let info = editor.lineInfo(current[line]);
-          editor.setGutterMarker(current[line], "breakpoints", info.gutterMarkers ? null : function() {
+          editor.setGutterMarker(current[line], "breakpoints", info.gutterMarkers ? null : function () {
             let marker = document.createElement("div");
             marker.style.color = "#822";
             marker.innerHTML = "●";
@@ -47,26 +47,26 @@ var codeMirror = function($timeout){
         }
       });
 
-      if(ngModelCtrl) {
-        $timeout(function(){
-          ngModelCtrl.$render = function() {
+      if (ngModelCtrl) {
+        $timeout(function () {
+          ngModelCtrl.$render = function () {
             editor.setValue(ngModelCtrl.$viewValue);
           };
         });
       }
 
-      transclude(function(clonedEl){
-//            var initialText = clonedEl.text();
+      transclude(function (clonedEl) {
+        //var initialText = clonedEl.text();
         var initialText = scope.ngModel;
         editor.setValue(initialText);
 
-        if(ngModelCtrl){
-          $timeout(function(){
-            if(initialText && !ngModelCtrl.$viewValue){
+        if (ngModelCtrl) {
+          $timeout(function () {
+            if (initialText && !ngModelCtrl.$viewValue) {
               ngModelCtrl.$setViewValue(initialText);
             }
 
-            editor.on('change', function(){
+            editor.on('change', function () {
               ngModelCtrl.$setViewValue(editor.getValue());
 
 
@@ -75,7 +75,7 @@ var codeMirror = function($timeout){
         }
       });
 
-      scope.$on('$destroy', function(){
+      scope.$on('$destroy', function () {
         editor.off('change');
       });
     }
