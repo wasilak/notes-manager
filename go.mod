@@ -5,7 +5,7 @@ go 1.21.0
 require (
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.11.1
-	github.com/minio/minio-go/v7 v7.0.62
+	github.com/minio/minio-go/v7 v7.0.63
 	github.com/samber/slog-echo v1.1.0
 	github.com/sashabaranov/go-openai v1.14.2
 	github.com/spf13/cobra v1.7.0
