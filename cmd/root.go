@@ -27,7 +27,17 @@ var (
 			cmd.SetContext(common.CTX)
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			loggergo.LoggerInit(viper.GetString("loglevel"), viper.GetString("logformat"))
+
+			loggerConfig := loggergo.LoggerGoConfig{
+				Level:  viper.GetString("loglevel"),
+				Format: viper.GetString("logformat"),
+			}
+
+			_, err := loggergo.LoggerInit(loggerConfig)
+			if err != nil {
+				slog.ErrorContext(common.CTX, err.Error())
+				os.Exit(1)
+			}
 
 			slog.DebugContext(common.CTX, fmt.Sprintf("%+v", viper.AllSettings()))
 
