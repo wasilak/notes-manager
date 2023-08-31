@@ -12,6 +12,16 @@ var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications'
       return link.replace("<a", "<a target='_blank' ");
     };
 
+    renderer.listitem = function (text, task, checked) {
+      if (task && checked) {
+        return '<li class="todo_checkbox"><i class="fa fa-square-check" aria-hidden="true"></i>' + text + '</li>\n';
+      } else if (task && !checked) {
+        return '<li class="todo_checkbox"><i class="fa fa-square" aria-hidden="true"></i>' + text + '</li>\n';
+      } else {
+        return '<li>' + text + '</li>\n';
+      }
+    };
+
     marked.setOptions({
       renderer: renderer,
       gfm: true,

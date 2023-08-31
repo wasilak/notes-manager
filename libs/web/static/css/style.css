@@ -146,3 +146,8 @@ blockquote {
   overflow: scroll;
   height: 70vh;
 }
+
+li.todo_checkbox {
+  list-style-type: none;
+  margin-left: -32;
+}
