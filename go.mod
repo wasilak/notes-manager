@@ -6,7 +6,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.11.1
 	github.com/minio/minio-go/v7 v7.0.63
-	github.com/samber/slog-echo v1.2.1
+	github.com/samber/slog-echo v1.3.0
 	github.com/sashabaranov/go-openai v1.14.2
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.16.0
