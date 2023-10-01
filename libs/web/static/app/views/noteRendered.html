@@ -46,5 +46,50 @@
 <script>
   $(function () {
     $('[data-toggle="tooltip"]').tooltip();
+
+    guidGenerator = function() {
+        var S4 = function() {
+          return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        };
+        return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+    };
+
+    $('pre').each(function() {
+        $(this).attr("id", guidGenerator());
+
+        if (navigator.clipboard) {
+          let button = $('<button/>', {
+                html: '<i class="fa fa-clipboard"></i>',
+          });
+
+          button.addClass("btn");
+          button.addClass("float-right");
+
+          button.attr('ngclipboard', '')
+          button.attr('data-clipboard-target', $(this).attr("id"));
+
+          $(this).before(button);
+
+          button.on("click", function() {
+            let targetID = $(this).attr("data-clipboard-target");
+            let code = $("#" + targetID);
+            let text = code.text();
+
+            navigator.clipboard.writeText(text);
+
+            /*
+            // visual feedback that task is completed
+            button.innerText = "Code Copied";
+
+            setTimeout(() => {
+                button.innerText = copyButtonLabel;
+            }, 700);
+            */
+          });
+
+        }
+    });
+
   });
+
 </script>
