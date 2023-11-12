@@ -41,7 +41,7 @@ var codeMirror = function ($timeout) {
           editor.setGutterMarker(current[line], "breakpoints", info.gutterMarkers ? null : function () {
             let marker = document.createElement("div");
             marker.style.color = "#822";
-            marker.innerHTML = "●";
+            marker.textContent = "●";
             return marker;
           }());
         }

@@ -51,7 +51,7 @@ angular.module("app").component("note",
       };
 
       vm.aiRewriteButtonDisabled = function () {
-        return vm.note.response.content.length == 0;
+        return vm.note.response.content.length === 0;
       };
 
       vm.deleteNote = function () {
@@ -101,7 +101,7 @@ angular.module("app").component("note",
 
           let lintResult = markdownlint.sync(markdownlintOptions)
 
-          vm.lintResult = lintResult.toString().replace(/(?:\r\n|\r|\n)/g, '<br>');
+          vm.lintResult = lintResult.toString().replace(/\r\n|\r|\n/g, '<br>');
           vm.outputText = marked.parse(current.content);
 
           for (let id in lintResult.content) {
