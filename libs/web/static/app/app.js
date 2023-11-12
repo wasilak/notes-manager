@@ -1,6 +1,11 @@
 /* jslint node: true */
+/* global angular */
+/* global marked */
+/* global markedHighlight */
+/* global hljs */
 "use strict";
 
+// eslint-disable-next-line no-unused-vars
 var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications', 'ngTagsInput', 'ngclipboard'])
 
   .config([function () {

@@ -1,3 +1,6 @@
+/* global angular */
+/* global CodeMirror */
+
 var codeMirror = function ($timeout) {
   return {
     restrict: "E",
@@ -14,6 +17,8 @@ var codeMirror = function ($timeout) {
       breakPoints: "="
     },
     template: '<div class="code-editor"></div>',
+
+    // eslint-disable-next-line no-unused-vars
     link: function (scope, element, attrs, ngModelCtrl, transclude) {
       let editor = CodeMirror(element[0], {
         mode: scope.syntax || "javascript",
@@ -29,6 +34,7 @@ var codeMirror = function ($timeout) {
 
       scope.breakpoints = [];
 
+      // eslint-disable-next-line no-unused-vars
       scope.$watch('breakPoints', function (current, original) {
 
         editor.eachLine(function (line) {
@@ -55,6 +61,7 @@ var codeMirror = function ($timeout) {
         });
       }
 
+      // eslint-disable-next-line no-unused-vars
       transclude(function (clonedEl) {
         //var initialText = clonedEl.text();
         var initialText = scope.ngModel;

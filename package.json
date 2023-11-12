@@ -3,6 +3,8 @@
   "description": "Notes managing app",
   "repository": "https://github.com/wasilak/notes-manager.git",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "eslint": "^8.53.0"
+  },
   "devDependencies": {}
 }

@@ -1,4 +1,5 @@
 /* jslint node: true */
+/* global angular */
 "use strict";
 
 angular.module("app").component("list",
@@ -41,7 +42,7 @@ angular.module("app").component("list",
         return ApiService.getTags(query);
       };
 
-
+      // eslint-disable-next-line no-unused-vars
       $scope.$watch('$ctrl.tags', function (current, original) {
         vm.search();
       });

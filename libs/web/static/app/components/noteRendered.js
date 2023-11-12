@@ -1,5 +1,7 @@
 /* jslint node: true */
 /* jshint -W117 */
+/* global angular */
+/* global marked */
 "use strict";
 
 angular.module("app").component("noteRendered",
@@ -14,6 +16,7 @@ angular.module("app").component("noteRendered",
 
       vm.loader = false;
 
+      // eslint-disable-next-line no-unused-vars
       $scope.$watch('$ctrl.note.response', function (current, original) {
         $rootScope.$state.current.data.title = current.title;
         vm.errorMessage = false;
@@ -30,6 +33,8 @@ angular.module("app").component("noteRendered",
         vm.loader = true;
 
         if (confirmed) {
+
+          // eslint-disable-next-line no-unused-vars
           ApiService.deleteNote(vm.note.response.id).then(function (result) {
             vm.loader = false;
             $rootScope.notifications.push('Note deleted');

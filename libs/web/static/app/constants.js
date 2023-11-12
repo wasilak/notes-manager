@@ -1,3 +1,5 @@
+/* global angular */
+
 angular.module("app").constant("APP_SETTINGS", {
   name: "Notes Manager"
 })

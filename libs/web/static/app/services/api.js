@@ -1,3 +1,6 @@
+/* global angular */
+
+// eslint-disable-next-line no-unused-vars
 function ApiService($http, API, $rootScope, APP_SETTINGS) {
   var getNote = function (uuid) {
 

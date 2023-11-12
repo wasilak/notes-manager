@@ -1,5 +1,9 @@
 /* jslint node: true */
 /* jshint -W117 */
+/* global angular */
+/* global marked */
+/* global markdownlint */
+
 "use strict";
 
 angular.module("app").component("note",
@@ -59,6 +63,8 @@ angular.module("app").component("note",
 
         if (confirmed) {
           vm.loader = true;
+
+          // eslint-disable-next-line no-unused-vars
           ApiService.deleteNote(vm.note.response.id).then(function (result) {
             $rootScope.notifications.push('Note deleted');
             vm.loader = false;
@@ -75,6 +81,7 @@ angular.module("app").component("note",
 
       vm.breakpoints = [];
 
+      // eslint-disable-next-line no-unused-vars
       $scope.$watch('$ctrl.note.response', function (current, original) {
         vm.errorMessage = false;
         $rootScope.$state.current.data.title = current.title + " [[edit]]";

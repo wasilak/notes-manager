@@ -1,4 +1,7 @@
 /* jslint node: true */
+/* global angular */
+/* global marked */
+
 "use strict";
 
 angular.module("app").component("new",
@@ -56,6 +59,7 @@ angular.module("app").component("new",
         });
       };
 
+      // eslint-disable-next-line no-unused-vars
       $scope.$watch('$ctrl.note', function (current, original) {
         vm.errorMessage = false;
         try {

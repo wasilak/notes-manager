@@ -1,3 +1,5 @@
+/* global angular */
+
 /** Application config */
 function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvider) {
   // ui.router
