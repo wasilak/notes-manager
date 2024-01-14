@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"time"
@@ -19,7 +20,9 @@ type S3MinioStorage struct {
 	Client      *minio.Client
 }
 
-func NewS3MinioStorage() (*S3MinioStorage, error) {
+func NewS3MinioStorage(ctx context.Context) (*S3MinioStorage, error) {
+	ctx, span := common.Tracer.Start(ctx, "NewS3MinioStorage")
+
 	// Initialize MinIO client
 	endpoint := os.Getenv("MINIO_ADDRESS")
 	accessKey := os.Getenv("MINIO_ACCESS_KEY")
@@ -27,6 +30,7 @@ func NewS3MinioStorage() (*S3MinioStorage, error) {
 	region := os.Getenv("MINIO_REGION_NAME")
 	bucketName := os.Getenv("S3_BUCKET")
 
+	_, spaMinioNew := common.Tracer.Start(ctx, "minio.New")
 	client, err := minio.New(endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(accessKey, secretKey, ""),
 		Region: region,
@@ -35,6 +39,7 @@ func NewS3MinioStorage() (*S3MinioStorage, error) {
 	if err != nil {
 		return nil, err
 	}
+	spaMinioNew.End()
 
 	appRoot, _ := os.Getwd()
 	storageRoot := fmt.Sprintf("%s/storage", appRoot)
@@ -46,60 +51,77 @@ func NewS3MinioStorage() (*S3MinioStorage, error) {
 		Client:      client,
 	}
 
+	span.End()
 	return storage, nil
 }
 
-func (s *S3MinioStorage) GetFiles(docUUID string, imageUrls []ImageInfo) ([]ImageInfo, error) {
+func (s *S3MinioStorage) GetFiles(ctx context.Context, docUUID string, imageUrls []ImageInfo) ([]ImageInfo, error) {
+	ctx, span := common.Tracer.Start(ctx, "GetFiles")
+
 	var modifiedUrls []ImageInfo
 
 	for _, item := range imageUrls {
-		CreatePath(s.StorageRoot, docUUID)
-		localPath, fileHash, err := GetFile(s.StorageRoot, docUUID, item)
+		ctx, spanImageUrlFile := common.Tracer.Start(ctx, "ImageUrlFile")
+		CreatePath(ctx, s.StorageRoot, docUUID)
+		localPath, fileHash, err := GetFile(ctx, s.StorageRoot, docUUID, item)
 		if err != nil {
 			continue
 		}
 
 		filename := fmt.Sprintf("%s/storage/images/%s.%s", docUUID, fileHash, item.Original.Extension)
 
-		_, err = s.Client.FPutObject(common.CTX, s.BucketName, filename, localPath, minio.PutObjectOptions{})
+		_, err = s.Client.FPutObject(ctx, s.BucketName, filename, localPath, minio.PutObjectOptions{})
 		if err != nil {
-			slog.InfoContext(common.CTX, "Error uploading object:", err)
+			slog.InfoContext(ctx, "Error uploading object:", err)
 			continue
 		}
 
 		item.Replacement = fmt.Sprintf("/storage/%s", filename)
 
 		modifiedUrls = append(modifiedUrls, item)
+		spanImageUrlFile.End()
 	}
+
+	span.End()
 
 	return modifiedUrls, nil
 }
 
-func (s *S3MinioStorage) Cleanup(docUUID string) error {
-	objectsCh := s.Client.ListObjects(common.CTX, s.BucketName, minio.ListObjectsOptions{
+func (s *S3MinioStorage) Cleanup(ctx context.Context, docUUID string) error {
+	ctx, span := common.Tracer.Start(ctx, "Cleanup")
+
+	ctx, spanListObjects := common.Tracer.Start(ctx, "client.ListObjects")
+	objectsCh := s.Client.ListObjects(ctx, s.BucketName, minio.ListObjectsOptions{
 		Prefix:    fmt.Sprintf("%s/", docUUID),
 		Recursive: true,
 	})
+	spanListObjects.End()
 
 	for object := range objectsCh {
 		if object.Err != nil {
-			slog.InfoContext(common.CTX, "Error listing object:", object.Err)
+			slog.InfoContext(ctx, "Error listing object:", object.Err)
 			continue
 		}
-		err := s.Client.RemoveObject(common.CTX, s.BucketName, object.Key, minio.RemoveObjectOptions{})
+
+		ctx, spanRemoveObjects := common.Tracer.Start(ctx, "client.RemoveObjects")
+		err := s.Client.RemoveObject(ctx, s.BucketName, object.Key, minio.RemoveObjectOptions{})
 		if err != nil {
-			slog.InfoContext(common.CTX, "Error deleting object:", object.Err)
+			slog.InfoContext(ctx, "Error deleting object:", object.Err)
 		}
+		spanRemoveObjects.End()
 	}
 
+	span.End()
 	return nil
 }
 
-func (s *S3MinioStorage) GetObject(filename string, expiration int) (string, error) {
-	presignedURL, err := s.Client.PresignedGetObject(common.CTX, s.BucketName, filename, time.Duration(expiration)*time.Hour, nil)
+func (s *S3MinioStorage) GetObject(ctx context.Context, filename string, expiration int) (string, error) {
+	ctx, span := common.Tracer.Start(ctx, "GetObject")
+	presignedURL, err := s.Client.PresignedGetObject(ctx, s.BucketName, filename, time.Duration(expiration)*time.Hour, nil)
 	if err != nil {
-		slog.InfoContext(common.CTX, "Error generating presigned URL:", err)
+		slog.InfoContext(ctx, "Error generating presigned URL:", err)
 		return "", err
 	}
+	span.End()
 	return presignedURL.String(), nil
 }

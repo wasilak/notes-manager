@@ -24,6 +24,7 @@ exclude_dir = [
     "static/favicon",
     "storage",
     "app/storage",
+    "node_modules",
 ]
 # Watch these directories if you specified.
 include_dir = []

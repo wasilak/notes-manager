@@ -1,18 +1,23 @@
 package web
 
 import (
+	"context"
 	"embed"
 	"io"
 	"io/fs"
 	"log/slog"
 	"net/http"
+	"os"
 	"text/template"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	slogecho "github.com/samber/slog-echo"
 	"github.com/spf13/viper"
+	"github.com/wasilak/notes-manager/libs/common"
 	"github.com/wasilak/notes-manager/libs/providers/storage"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho"
+	"go.opentelemetry.io/otel/metric"
 )
 
 //go:embed views/*
@@ -47,8 +52,8 @@ func getEmbededAssets(static embed.FS) http.FileSystem {
 	return http.FS(fsys)
 }
 
-func getPresignedURL(path string) (string, error) {
-	url, err := storage.Storage.GetObject(path, 1)
+func getPresignedURL(ctx context.Context, path string) (string, error) {
+	url, err := storage.Storage.GetObject(ctx, path, 1)
 	if err != nil {
 		return "", err
 	}
@@ -56,7 +61,9 @@ func getPresignedURL(path string) (string, error) {
 	return url, nil
 }
 
-func Init() {
+func Init(ctx context.Context) {
+	ctx, span := common.Tracer.Start(ctx, "WebInit")
+
 	e := echo.New()
 	e.Use(middleware.Recover())
 
@@ -67,15 +74,24 @@ func Init() {
 
 	e.HideBanner = true
 
+	ctx, spanTemplates := common.Tracer.Start(ctx, "Templates")
 	t := &Template{
 		templates: template.Must(template.ParseFS(getEmbededViews(views), "*.html")),
 	}
+	spanTemplates.End()
 
 	e.Renderer = t
 
+	if viper.GetBool("otelEnabled§") {
+		e.Use(otelecho.Middleware(os.Getenv("OTEL_SERVICE_NAME")))
+	}
+
+	ctx, spanAssets := common.Tracer.Start(ctx, "Assets")
 	assetHandler := http.FileServer(getEmbededAssets(static))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", assetHandler)))
+	spanAssets.End()
 
+	ctx, spanPaths := common.Tracer.Start(ctx, "Paths")
 	e.GET("/storage/:path", storageEndpoint)
 
 	e.GET("/api/list/", apiList)
@@ -90,6 +106,24 @@ func Init() {
 	e.GET("/health", health)
 	e.GET("/:path", index)
 	e.GET("/", index)
+	spanPaths.End()
 
+	// Create an instance on a meter for the given instrumentation scope
+	meter := common.MeterProvider.Meter(
+		"github.com/wasilak/notes-manager",
+		metric.WithInstrumentationVersion(common.GetVersion()),
+	)
+
+	var err error
+	RequestCount, err = meter.Int64Counter(
+		"notesmanager_request_count",
+		metric.WithDescription("Incoming request count"),
+		metric.WithUnit("request"),
+	)
+	if err != nil {
+		slog.ErrorContext(ctx, err.Error())
+	}
+
+	span.End()
 	e.Logger.Fatal(e.Start(viper.GetString("listen")))
 }

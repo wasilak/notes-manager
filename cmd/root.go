@@ -15,11 +15,13 @@ import (
 	"github.com/wasilak/notes-manager/libs/providers/db"
 	"github.com/wasilak/notes-manager/libs/providers/storage"
 	"github.com/wasilak/notes-manager/libs/web"
+	otelgometrics "github.com/wasilak/otelgo/metrics"
+	otelgotracer "github.com/wasilak/otelgo/tracing"
+	"go.opentelemetry.io/otel"
+	sdk "go.opentelemetry.io/otel/sdk/metric"
 )
 
 var (
-	err error
-
 	rootCmd = &cobra.Command{
 		Use:   "notes-manager",
 		Short: "Notes Mana",
@@ -27,33 +29,65 @@ var (
 			cmd.SetContext(common.CTX)
 		},
 		Run: func(cmd *cobra.Command, args []string) {
+			common.Tracer = otel.Tracer(os.Getenv("OTEL_SERVICE_NAME"))
+			common.MeterProvider = sdk.NewMeterProvider()
+
+			ctx := common.CTX
+
+			if viper.GetBool("otelEnabled") {
+				otelGoTracingConfig := otelgotracer.OtelGoTracingConfig{
+					HostMetricsEnabled: true,
+				}
+				ctx, _, err := otelgotracer.Init(ctx, otelGoTracingConfig)
+				if err != nil {
+					slog.ErrorContext(ctx, err.Error())
+					os.Exit(1)
+				}
+
+				otelGoMetricsConfig := otelgometrics.OtelGoMetricsConfig{}
+
+				var errMetrics error
+				ctx, common.MeterProvider, errMetrics = otelgometrics.Init(ctx, otelGoMetricsConfig)
+				if errMetrics != nil {
+					slog.ErrorContext(ctx, errMetrics.Error())
+					os.Exit(1)
+				}
+			}
+
+			ctx, span := common.Tracer.Start(ctx, "rootCmd")
 
 			loggerConfig := loggergo.LoggerGoConfig{
 				Level:  viper.GetString("loglevel"),
 				Format: viper.GetString("logformat"),
 			}
 
+			ctx, spanLoggerGo := common.Tracer.Start(ctx, "loggergo.LoggerInit")
 			_, err := loggergo.LoggerInit(loggerConfig)
 			if err != nil {
-				slog.ErrorContext(common.CTX, err.Error())
+				slog.ErrorContext(ctx, err.Error())
 				os.Exit(1)
 			}
+			spanLoggerGo.End()
 
-			slog.DebugContext(common.CTX, fmt.Sprintf("%+v", viper.AllSettings()))
+			slog.DebugContext(ctx, fmt.Sprintf("%+v", viper.AllSettings()))
 
-			db.DB, err = db.NewMongoDB()
+			db.DB, err = db.NewMongoDB(ctx)
 			if err != nil {
-				slog.ErrorContext(common.CTX, "Error initializing database:", err)
+				slog.ErrorContext(ctx, "Error initializing database:", err)
 				panic(err)
 			}
 
-			storage.Storage, err = storage.NewS3MinioStorage()
+			ctx, spanNewS3MinioStorage := common.Tracer.Start(ctx, "NewS3MinioStorage")
+			storage.Storage, err = storage.NewS3MinioStorage(ctx)
 			if err != nil {
-				slog.ErrorContext(common.CTX, "Error initializing storage:", err)
+				slog.ErrorContext(ctx, "Error initializing storage:", err)
 				panic(err)
 			}
+			spanNewS3MinioStorage.End()
 
-			web.Init()
+			span.End()
+
+			web.Init(ctx)
 		},
 	}
 )
@@ -70,7 +104,7 @@ func init() {
 
 	cobra.OnInitialize(libs.InitConfig)
 
-	rootCmd.PersistentFlags().StringVar(&libs.CfgFile, "config", "", "config file (default is $HOME/."+libs.AppName+"/config.yml)")
+	rootCmd.PersistentFlags().StringVar(&libs.CfgFile, "config", "", "config file (default is $HOME/."+common.AppName+"/config.yml)")
 	rootCmd.PersistentFlags().StringVar(&libs.Listen, "listen", "127.0.0.1:3000", "listen address")
 
 	viper.BindPFlag("listen", rootCmd.PersistentFlags().Lookup("listen"))

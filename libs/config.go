@@ -8,10 +8,10 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/wasilak/notes-manager/libs/common"
 )
 
 var (
-	AppName = "notesmanager"
 	CfgFile string
 	Listen  string
 )
@@ -19,7 +19,7 @@ var (
 func InitConfig() {
 	godotenv.Load()
 
-	viper.SetEnvPrefix(AppName)
+	viper.SetEnvPrefix(common.AppName)
 
 	viper.SetDefault("loglevel", "info")
 	viper.SetDefault("logformat", "plain")
@@ -33,7 +33,7 @@ func InitConfig() {
 		cobra.CheckErr(err)
 
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(AppName)
+		viper.SetConfigName(common.AppName)
 		viper.AddConfigPath(home)
 		viper.AddConfigPath("./")
 	}

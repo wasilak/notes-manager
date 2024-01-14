@@ -1,0 +1,31 @@
+receivers:
+  otlp: # the OTLP receiver the app is sending metrics to
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+
+exporters:
+  otlphttp/jaeger:
+    endpoint: http://jaeger:4318
+
+  prometheusremotewrite/vmagent:
+    endpoint: "http://vmagent:8429/api/v1/write"
+    resource_to_telemetry_conversion:
+      enabled: true # Convert resource attributes to metric labels
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      # processors: [batch]
+      exporters: [prometheusremotewrite/vmagent]
+
+    traces:
+      receivers: [otlp]
+      # processors: [batch]
+      exporters: [otlphttp/jaeger]

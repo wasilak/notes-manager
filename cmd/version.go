@@ -2,16 +2,14 @@ package cmd
 
 import (
 	"fmt"
-	"runtime/debug"
 
 	"github.com/spf13/cobra"
-	"github.com/wasilak/notes-manager/libs"
 	"github.com/wasilak/notes-manager/libs/common"
 )
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Print the version number of " + libs.AppName,
+	Short: "Print the version number of " + common.AppName,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmd.SetContext(common.CTX)
 	},
@@ -24,7 +22,7 @@ var versionCmd = &cobra.Command{
 }
 
 func versionFunc() error {
-	buildInfo, _ := debug.ReadBuildInfo()
-	fmt.Printf("%s\nVersion %s (GO %s)\n", libs.AppName, common.Version, buildInfo.GoVersion)
+
+	fmt.Printf("%s\nVersion %s (GO %s)\n", common.AppName, common.Version, common.GetVersion())
 	return nil
 }

@@ -18,7 +18,8 @@ type NoteAIResponse struct {
 	Tags    []string `bson:"tags" json:"tags,omitempty"`
 }
 
-func GetAIResponseInstruct(note db.Note) (db.Note, error) {
+func GetAIResponseInstruct(ctx context.Context, note db.Note) (db.Note, error) {
+	ctx, span := common.Tracer.Start(ctx, "GetAIResponseInstruct")
 	chatRequest := fmt.Sprintf(`Rewrite this article in more descriptive and human friendly way with examples using markdown: %s. Content must be in markdown.
 	Write title and tags to generated article. Do not use markdown for title and tags.
 	Format response as valid RFC8259 compliant JSON document with 'content', 'title' and 'tags' fields.
@@ -44,19 +45,23 @@ func GetAIResponseInstruct(note db.Note) (db.Note, error) {
 
 	c := openai.NewClient(os.Getenv("OPENAI_API_KEY"))
 
+	ctx, spanCreateCompletion := common.Tracer.Start(ctx, "CreateCompletion")
 	response, err := c.CreateCompletion(context.TODO(), req)
 	if err != nil {
 		return db.Note{}, err
 	}
+	spanCreateCompletion.End()
 
 	chatResponse := response.Choices[0].Text
 
+	ctx, spanUnmarshal := common.Tracer.Start(ctx, "Unmarshal")
 	var AIResponse NoteAIResponse
 	err = json.Unmarshal([]byte(chatResponse), &AIResponse)
 	if err != nil {
-		slog.ErrorContext(common.CTX, "Error decoding OpenAI response.", err)
+		slog.ErrorContext(ctx, "Error decoding OpenAI response.", err)
 		return note, err
 	}
+	spanUnmarshal.End()
 
 	containsAIGenerated := false
 	for _, tag := range AIResponse.Tags {
@@ -74,10 +79,12 @@ func GetAIResponseInstruct(note db.Note) (db.Note, error) {
 	note.Content = AIResponse.Content
 	note.Tags = AIResponse.Tags
 
+	span.End()
 	return note, nil
 }
 
-func GetAIResponse(note db.Note) (db.Note, error) {
+func GetAIResponse(ctx context.Context, note db.Note) (db.Note, error) {
+	ctx, span := common.Tracer.Start(ctx, "GetAIResponse")
 	b, err := json.MarshalIndent(note, "", "  ")
 	if err != nil {
 		return note, err
@@ -112,15 +119,17 @@ func GetAIResponse(note db.Note) (db.Note, error) {
 		Stream: false,
 	}
 
-	response, err := c.CreateChatCompletion(common.CTX, req)
+	ctx, spanCreateChatCompletion := common.Tracer.Start(ctx, "CreateChatCompletion")
+	response, err := c.CreateChatCompletion(ctx, req)
 	if err != nil {
-		slog.ErrorContext(common.CTX, "ChatCompletion error: %v\n", err)
+		slog.ErrorContext(ctx, "ChatCompletion error: %v\n", err)
 		return note, err
 	}
+	spanCreateChatCompletion.End()
 
 	chatResponse := response.Choices[0].Message.Content
 
-	slog.DebugContext(common.CTX, "AI response", chatResponse)
+	slog.DebugContext(ctx, "AI response", "chatResponse", chatResponse)
 	// prefix := "```json"
 	// suffix := "```"
 
@@ -132,12 +141,14 @@ func GetAIResponse(note db.Note) (db.Note, error) {
 	// 	chatResponse = chatResponse[:len(chatResponse)-len(suffix)]
 	// }
 
+	ctx, spanUnmarshal := common.Tracer.Start(ctx, "Unmarshal")
 	var AIResponse NoteAIResponse
 	err = json.Unmarshal([]byte(chatResponse), &AIResponse)
 	if err != nil {
-		slog.ErrorContext(common.CTX, "Error decoding OpenAI response.", err)
+		slog.ErrorContext(ctx, "Error decoding OpenAI response.", err)
 		return note, err
 	}
+	spanUnmarshal.End()
 
 	containsAIGenerated := false
 	for _, tag := range AIResponse.Tags {
@@ -155,5 +166,6 @@ func GetAIResponse(note db.Note) (db.Note, error) {
 	note.Content = AIResponse.Content
 	note.Tags = AIResponse.Tags
 
+	span.End()
 	return note, nil
 }

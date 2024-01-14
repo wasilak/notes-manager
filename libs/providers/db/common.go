@@ -1,16 +1,20 @@
 package db
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"context"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 var DB NotesDatabase
 
 type NotesDatabase interface {
-	List(filter, sort string, tags []string) ([]Note, error)
-	Get(id string) (Note, error)
-	Create(data Note) (Note, error)
-	Update(data Note) error
-	Delete(id string) (Note, error)
-	Tags() ([]string, error)
+	List(ctx context.Context, filter, sort string, tags []string) ([]Note, error)
+	Get(ctx context.Context, id string) (Note, error)
+	Create(ctx context.Context, data Note) (Note, error)
+	Update(ctx context.Context, data Note) error
+	Delete(ctx context.Context, id string) (Note, error)
+	Tags(ctx context.Context) ([]string, error)
 }
 
 type Response struct {

@@ -1,0 +1,32 @@
+version: "3.6"
+services:
+  victoriametrics:
+    image: victoriametrics/victoria-metrics
+    command: ["-promscrape.config=/prometheus.yml"]
+    volumes:
+      - ./victoriametrics.yml:/prometheus.yml
+    ports:
+      - 8428:8428
+  
+  vmagent:
+    image: victoriametrics/vmagent
+    command: ["-remoteWrite.url=http://victoriametrics:8428/api/v1/write"]
+    ports:
+      - 8429:8429
+
+  otel_collector:
+    image: otel/opentelemetry-collector:0.92.0
+    command: [ "--config=/etc/otel-collector.yml" ]
+    volumes:
+      - ./otel-collector.yml:/etc/otel-collector.yml
+    ports:
+      - 4317:4317 
+      - 4318:4318
+      - 55679:55679
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.53
+    ports:
+      # - 4317:4317 
+      # - 4318:4318 
+      - 16686:16686

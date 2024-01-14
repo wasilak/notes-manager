@@ -13,54 +13,76 @@ import (
 	"github.com/wasilak/notes-manager/libs/openai"
 	"github.com/wasilak/notes-manager/libs/providers/db"
 	"github.com/wasilak/notes-manager/libs/providers/storage"
+	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/semconv/v1.13.0/httpconv"
 )
 
 func health(c echo.Context) error {
+	_, span := common.Tracer.Start(c.Request().Context(), "RouteHealth")
+
+	// Record measurements
+	attrs := httpconv.ServerRequest("", c.Request())
+	RequestCount.Add(c.Request().Context(), 1, metric.WithAttributes(attrs...))
+
+	span.End()
 	return c.JSON(http.StatusOK, map[string]interface{}{"status": "OK"})
 }
 
 func index(c echo.Context) error {
+	_, span := common.Tracer.Start(c.Request().Context(), "RouteIndex")
+	span.End()
 	return c.Render(http.StatusOK, "index.html", map[string]interface{}{"app_version": common.Version})
 }
 
 func storageEndpoint(c echo.Context) error {
-	presignedURL, err := getPresignedURL(c.Param("path"))
+	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteStorageEndpoint")
+	presignedURL, err := getPresignedURL(ctx, c.Param("path"))
 	if err != nil {
+		span.End()
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{"status": "Error", "error": err})
 	}
+	span.End()
 	return c.Redirect(http.StatusSeeOther, presignedURL)
 }
 
 func apiList(c echo.Context) error {
+	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiList")
 
 	filter := c.QueryParam("filter")
 	sort := c.QueryParam("sort")
 	tags := c.QueryParam("tags")
 
-	notes, err := db.DB.List(strings.ToLower(filter), strings.ToLower(sort), strings.Split(tags, ","))
+	notes, err := db.DB.List(ctx, strings.ToLower(filter), strings.ToLower(sort), strings.Split(tags, ","))
 	if err != nil {
+		span.End()
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{"status": "Error", "error": err})
 	}
 
+	span.End()
 	return c.JSON(http.StatusOK, notes)
 }
 
 func apiNote(c echo.Context) error {
+	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiNote")
 	uuid := c.Param("uuid")
 
-	note, err := db.DB.Get(uuid)
+	note, err := db.DB.Get(ctx, uuid)
 	if err != nil {
-		slog.ErrorContext(common.CTX, err.Error())
+		slog.ErrorContext(ctx, err.Error())
+		span.End()
 		return c.JSON(http.StatusNotFound, note)
 	}
 
+	span.End()
 	return c.JSON(http.StatusOK, note)
 }
 
 func apiNoteUpdate(c echo.Context) error {
+	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiNoteUpdate")
 	var note db.Note
 
 	if err := c.Bind(&note); err != nil {
+		span.End()
 		return err
 	}
 
@@ -70,34 +92,41 @@ func apiNoteUpdate(c echo.Context) error {
 	note.Updated = int(unixTimestamp)
 
 	if viper.GetString("STORAGE_PROVIDER") != "none" {
-		go storage.StorageGetFiles(storage.Storage, db.DB, note)
+		go storage.StorageGetFiles(ctx, storage.Storage, db.DB, note)
 	}
 
-	db.DB.Update(note)
+	db.DB.Update(ctx, note)
 
+	span.End()
 	return c.JSON(http.StatusOK, note)
 }
 
 func apiNoteDelete(c echo.Context) error {
+	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiNoteDelete")
 	uuid := c.Param("uuid")
 
 	if viper.GetString("STORAGE_PROVIDER") != "none" {
-		go storage.Storage.Cleanup(uuid)
+		go storage.Storage.Cleanup(ctx, uuid)
+		span.End()
 	}
 
-	note, err := db.DB.Delete(uuid)
+	note, err := db.DB.Delete(ctx, uuid)
 	if err != nil {
-		slog.ErrorContext(common.CTX, err.Error())
+		slog.ErrorContext(ctx, err.Error())
+		span.End()
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
+	span.End()
 	return c.JSON(http.StatusOK, note)
 }
 
 func apiNoteNew(c echo.Context) error {
+	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiNoteNew")
 	var note db.Note
 
 	if err := c.Bind(&note); err != nil {
+		span.End()
 		return err
 	}
 
@@ -107,9 +136,10 @@ func apiNoteNew(c echo.Context) error {
 	note.Created = int(unixTimestamp)
 	note.Updated = int(unixTimestamp)
 
-	createdNote, err := db.DB.Create(note)
+	createdNote, err := db.DB.Create(ctx, note)
 	if err != nil {
-		slog.ErrorContext(common.CTX, err.Error())
+		slog.ErrorContext(ctx, err.Error())
+		span.End()
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
@@ -117,13 +147,15 @@ func apiNoteNew(c echo.Context) error {
 	// # and afterwards images will have to be parsed and downloaded
 	// # and note itself - updated.
 	if viper.GetString("STORAGE_PROVIDER") != "none" {
-		go storage.StorageGetFiles(storage.Storage, db.DB, createdNote)
+		go storage.StorageGetFiles(ctx, storage.Storage, db.DB, createdNote)
 	}
 
+	span.End()
 	return c.JSON(http.StatusOK, createdNote)
 }
 
 func apiAIRewrite(c echo.Context) error {
+	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiAIRewrite")
 
 	var note db.Note
 
@@ -131,9 +163,10 @@ func apiAIRewrite(c echo.Context) error {
 		return err
 	}
 
-	updatedNote, err := openai.GetAIResponse(note)
+	updatedNote, err := openai.GetAIResponse(ctx, note)
 	if err != nil {
-		slog.ErrorContext(common.CTX, err.Error())
+		slog.ErrorContext(ctx, err.Error())
+		span.End()
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
@@ -142,15 +175,18 @@ func apiAIRewrite(c echo.Context) error {
 		"rewritten": updatedNote,
 	}
 
+	span.End()
 	return c.JSON(http.StatusOK, response)
 }
 
 func apiTags(c echo.Context) error {
+	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiTags")
 	filter := c.QueryParam("query")
 
-	tags, err := db.DB.Tags()
+	tags, err := db.DB.Tags(ctx)
 	if err != nil {
-		slog.ErrorContext(common.CTX, err.Error())
+		slog.ErrorContext(ctx, err.Error())
+		span.End()
 		return c.JSON(http.StatusInternalServerError, tags)
 	}
 
@@ -159,7 +195,9 @@ func apiTags(c echo.Context) error {
 		if strings.Contains(v, filter) {
 			filteredTags = append(filteredTags, v)
 		}
+
 	}
 
+	span.End()
 	return c.JSON(http.StatusOK, filteredTags)
 }

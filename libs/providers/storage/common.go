@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"crypto/sha1"
 	"fmt"
 	"io"
@@ -29,73 +30,87 @@ type ImageInfo struct {
 }
 
 type NotesStorage interface {
-	GetFiles(docUUID string, imageUrls []ImageInfo) ([]ImageInfo, error)
-	Cleanup(docUUID string) error
-	GetObject(filename string, expiration int) (string, error)
+	GetFiles(ctx context.Context, docUUID string, imageUrls []ImageInfo) ([]ImageInfo, error)
+	Cleanup(ctx context.Context, docUUID string) error
+	GetObject(ctx context.Context, filename string, expiration int) (string, error)
 }
 
-func GetFile(storageRoot, docUUID string, imageInfo ImageInfo) (string, string, error) {
+func GetFile(ctx context.Context, storageRoot, docUUID string, imageInfo ImageInfo) (string, string, error) {
+	ctx, span := common.Tracer.Start(ctx, "GetFile")
+
+	ctx, spanHttpGet := common.Tracer.Start(ctx, "http.Get")
 	resp, err := http.Get(imageInfo.Original.URL)
 	if err != nil {
-		slog.ErrorContext(common.CTX, "Error fetching image:", err.Error())
+		slog.ErrorContext(ctx, "Error fetching image", "error", err.Error())
 		return "", "", err
 	}
 	defer resp.Body.Close()
+	spanHttpGet.End()
 
+	ctx, spanCreateTemp := common.Tracer.Start(ctx, "CreateTemp")
 	tempFile, err := os.CreateTemp(filepath.Join(storageRoot, docUUID, "images", "tmp"), fmt.Sprintf("*.%s", imageInfo.Original.Extension))
 	if err != nil {
-		slog.ErrorContext(common.CTX, "Error creating temporary file:", err.Error())
+		slog.ErrorContext(ctx, "Error creating temporary file", "error", err.Error())
 		return "", "", err
 	}
 	defer tempFile.Close()
 
 	_, err = io.Copy(tempFile, resp.Body)
 	if err != nil {
-		slog.ErrorContext(common.CTX, "Error copying content to temporary file:", err.Error())
+		slog.ErrorContext(ctx, "Error copying content to temporary file", "error", err.Error())
 		return "", "", err
 	}
+	spanCreateTemp.End()
 
-	slog.DebugContext(common.CTX, fmt.Sprintf("%s => %s\n", imageInfo.Original.URL, tempFile.Name()))
+	slog.DebugContext(ctx, fmt.Sprintf("%s => %s\n", imageInfo.Original.URL, tempFile.Name()))
 
-	return tempFile.Name(), HashFile(tempFile.Name()), nil
+	span.End()
+	return tempFile.Name(), HashFile(ctx, tempFile.Name()), nil
 }
 
-func CreatePath(storageRoot, docUUID string) {
+func CreatePath(ctx context.Context, storageRoot, docUUID string) {
+	ctx, spanCreatePath := common.Tracer.Start(ctx, "CreatePath")
 	directory := filepath.Join(storageRoot, docUUID, "images", "tmp")
 	err := os.MkdirAll(directory, os.ModePerm)
 	if err != nil {
-		slog.ErrorContext(common.CTX, "Error creating directory:", err)
+		slog.ErrorContext(ctx, "Error creating directory:", err)
 	}
+	spanCreatePath.End()
 }
 
-func HashFile(filename string) string {
+func HashFile(ctx context.Context, filename string) string {
+	ctx, spanHashFile := common.Tracer.Start(ctx, "HashFile")
 	file, err := os.Open(filename)
 	if err != nil {
-		slog.ErrorContext(common.CTX, "Error opening file for hashing:", err)
+		slog.ErrorContext(ctx, "Error opening file for hashing:", err)
 		return ""
 	}
 	defer file.Close()
 
 	hash := sha1.New()
 	if _, err := io.Copy(hash, file); err != nil {
-		slog.ErrorContext(common.CTX, "Error copying content for hashing:", err)
+		slog.ErrorContext(ctx, "Error copying content for hashing:", err)
 		return ""
 	}
 
+	spanHashFile.End()
 	return fmt.Sprintf("%x", hash.Sum(nil))
 }
 
-func StorageGetFiles(storage NotesStorage, db db.NotesDatabase, note db.Note) {
-	imageUrls := GetAllImageUrls(note.Content)
-	imageUrls, err := storage.GetFiles(note.ID.Hex(), imageUrls)
+func StorageGetFiles(ctx context.Context, storage NotesStorage, db db.NotesDatabase, note db.Note) {
+	ctx, spanStorageGetFiles := common.Tracer.Start(ctx, "StorageGetFiles")
+	imageUrls := GetAllImageUrls(ctx, note.Content)
+	imageUrls, err := storage.GetFiles(ctx, note.ID.Hex(), imageUrls)
 	if err != nil {
-		slog.ErrorContext(common.CTX, err.Error())
+		slog.ErrorContext(ctx, err.Error())
 	}
-	note.Content = ReplaceUrls(note.Content, imageUrls)
-	db.Update(note)
+	note.Content = ReplaceUrls(ctx, note.Content, imageUrls)
+	db.Update(ctx, note)
+	spanStorageGetFiles.End()
 }
 
-func GetAllImageUrls(content string) []ImageInfo {
+func GetAllImageUrls(ctx context.Context, content string) []ImageInfo {
+	_, span := common.Tracer.Start(ctx, "GetAllImageUrls")
 	pattern := regexp.MustCompile(`(https?:[\/\.\w\s\-\*]*\.(jpg|gif|png|jpeg|webp|svg))`)
 	matches := pattern.FindAllStringSubmatch(content, -1)
 
@@ -121,12 +136,16 @@ func GetAllImageUrls(content string) []ImageInfo {
 		}
 	}
 
+	span.End()
+
 	return result
 }
 
-func ReplaceUrls(content string, imageUrls []ImageInfo) string {
+func ReplaceUrls(ctx context.Context, content string, imageUrls []ImageInfo) string {
+	_, span := common.Tracer.Start(ctx, "ReplaceUrls")
 	for _, item := range imageUrls {
 		content = strings.ReplaceAll(content, item.Original.URL, item.Replacement)
 	}
+	span.End()
 	return content
 }
