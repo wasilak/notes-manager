@@ -17,8 +17,6 @@ import (
 	"github.com/wasilak/notes-manager/libs/web"
 	otelgometrics "github.com/wasilak/otelgo/metrics"
 	otelgotracer "github.com/wasilak/otelgo/tracing"
-	"go.opentelemetry.io/otel"
-	sdk "go.opentelemetry.io/otel/sdk/metric"
 )
 
 var (
@@ -29,9 +27,6 @@ var (
 			cmd.SetContext(common.CTX)
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			common.Tracer = otel.Tracer(os.Getenv("OTEL_SERVICE_NAME"))
-			common.MeterProvider = sdk.NewMeterProvider()
-
 			ctx := common.CTX
 
 			if viper.GetBool("otelEnabled") {
@@ -87,7 +82,7 @@ var (
 
 			span.End()
 
-			web.Init(ctx)
+			web.Init()
 		},
 	}
 )

@@ -2,18 +2,19 @@ package common
 
 import (
 	"context"
+	"os"
 	"runtime/debug"
 
-	"go.opentelemetry.io/otel/sdk/metric"
-	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel"
+	sdk "go.opentelemetry.io/otel/sdk/metric"
 )
 
 var (
 	Version       string
 	CTX           context.Context
 	AppName       = "notesmanager"
-	Tracer        trace.Tracer
-	MeterProvider *metric.MeterProvider
+	Tracer        = otel.Tracer(os.Getenv("OTEL_SERVICE_NAME"))
+	MeterProvider = sdk.NewMeterProvider()
 )
 
 func GetVersion() string {

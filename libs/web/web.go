@@ -61,10 +61,16 @@ func getPresignedURL(ctx context.Context, path string) (string, error) {
 	return url, nil
 }
 
-func Init(ctx context.Context) {
+func Init() {
+	ctx := context.Background()
 	ctx, span := common.Tracer.Start(ctx, "WebInit")
 
 	e := echo.New()
+
+	if viper.GetBool("otelEnabled§") {
+		e.Use(otelecho.Middleware(os.Getenv("OTEL_SERVICE_NAME")))
+	}
+
 	e.Use(middleware.Recover())
 
 	e.Use(middleware.Gzip())
@@ -81,10 +87,6 @@ func Init(ctx context.Context) {
 	spanTemplates.End()
 
 	e.Renderer = t
-
-	if viper.GetBool("otelEnabled§") {
-		e.Use(otelecho.Middleware(os.Getenv("OTEL_SERVICE_NAME")))
-	}
 
 	ctx, spanAssets := common.Tracer.Start(ctx, "Assets")
 	assetHandler := http.FileServer(getEmbededAssets(static))
