@@ -82,7 +82,7 @@ var (
 
 			span.End()
 
-			web.Init()
+			web.Init(ctx)
 		},
 	}
 )
