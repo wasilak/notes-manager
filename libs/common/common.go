@@ -13,7 +13,8 @@ var (
 	Version       string
 	CTX           context.Context
 	AppName       = "notesmanager"
-	Tracer        = otel.Tracer(os.Getenv("OTEL_SERVICE_NAME"))
+	TracerCmd     = otel.Tracer(os.Getenv("OTEL_SERVICE_NAME"))
+	TracerWeb     = otel.Tracer(os.Getenv("OTEL_SERVICE_NAME"))
 	MeterProvider = sdk.NewMeterProvider()
 )
 
