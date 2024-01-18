@@ -1,0 +1,40 @@
+---
+global:
+  checkNewVersion: true
+
+entrypoints:
+  http:
+    address: ":80"
+
+api:
+  insecure: true
+
+providers:
+  file:
+    filename: /etc/traefik/traefik.yml
+    watch: false
+
+http:
+  routers:
+    notes:
+      rule: "Host(`localhost`)"
+      service: notes
+      entryPoints:
+        - http
+
+  services:
+    notes:
+      loadBalancer:
+        servers:
+          - url: http://app:3000
+
+log:
+  level: INFO
+  # level: DEBUG
+  format: json
+
+tracing:
+  serviceName: traefik-gw
+  openTelemetry:
+    address: otel_collector:4318
+    insecure: true

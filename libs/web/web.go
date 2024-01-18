@@ -9,6 +9,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"strings"
 	"text/template"
 
 	"github.com/labstack/echo/v4"
@@ -67,8 +68,10 @@ func Init(ctx context.Context) {
 
 	e := echo.New()
 
-	if viper.GetBool("otelEnabled§") {
-		e.Use(otelecho.Middleware(os.Getenv("OTEL_SERVICE_NAME")))
+	if viper.GetBool("otelEnabled") {
+		e.Use(otelecho.Middleware(os.Getenv("OTEL_SERVICE_NAME"), otelecho.WithSkipper(func(c echo.Context) bool {
+			return strings.Contains(c.Path(), "static")
+		})))
 	}
 
 	e.Use(middleware.Recover())
@@ -76,7 +79,6 @@ func Init(ctx context.Context) {
 	e.Use(middleware.Gzip())
 
 	e.Use(slogecho.New(slog.Default()))
-	e.Use(middleware.Recover())
 
 	e.HideBanner = true
 

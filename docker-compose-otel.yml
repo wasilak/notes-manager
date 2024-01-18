@@ -1,5 +1,19 @@
 version: "3.6"
 services:
+  app:
+    image: quay.io/wasilak/golang:1.21.6-alpine
+    command: ["go", "run", ".", "--listen", "0.0.0.0:3000"]
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - 3000:3000
+    environment:
+      OTEL_SERVICE_NAME: notes
+      NOTESMANAGER_OTELENABLED: "true"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel_collector:4318"
+    restart: unless-stopped
+
   victoriametrics:
     image: victoriametrics/victoria-metrics
     command: ["-promscrape.config=/prometheus.yml"]
@@ -30,3 +44,11 @@ services:
       # - 4317:4317 
       # - 4318:4318 
       - 16686:16686
+
+  traefik:
+    image: traefik:v3.0.0-beta5
+    ports:
+      - 8090:80
+      - 8080:8080
+    volumes:
+      - ./traefik.yml:/etc/traefik/traefik.yml

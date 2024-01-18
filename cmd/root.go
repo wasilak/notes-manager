@@ -22,7 +22,7 @@ import (
 var (
 	rootCmd = &cobra.Command{
 		Use:   "notes-manager",
-		Short: "Notes Mana",
+		Short: "Notes Manager",
 		PreRun: func(cmd *cobra.Command, args []string) {
 			cmd.SetContext(common.CTX)
 		},
