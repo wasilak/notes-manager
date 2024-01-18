@@ -21,7 +21,7 @@ type S3MinioStorage struct {
 }
 
 func NewS3MinioStorage(ctx context.Context) (*S3MinioStorage, error) {
-	ctx, span := common.TracerWeb.Start(ctx, "NewS3MinioStorage")
+	ctx, span := common.Tracer.Start(ctx, "NewS3MinioStorage")
 
 	// Initialize MinIO client
 	endpoint := os.Getenv("MINIO_ADDRESS")
@@ -30,7 +30,7 @@ func NewS3MinioStorage(ctx context.Context) (*S3MinioStorage, error) {
 	region := os.Getenv("MINIO_REGION_NAME")
 	bucketName := os.Getenv("S3_BUCKET")
 
-	_, spaMinioNew := common.TracerWeb.Start(ctx, "minio.New")
+	_, spaMinioNew := common.Tracer.Start(ctx, "minio.New")
 	client, err := minio.New(endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(accessKey, secretKey, ""),
 		Region: region,
@@ -56,12 +56,12 @@ func NewS3MinioStorage(ctx context.Context) (*S3MinioStorage, error) {
 }
 
 func (s *S3MinioStorage) GetFiles(ctx context.Context, docUUID string, imageUrls []ImageInfo) ([]ImageInfo, error) {
-	ctx, span := common.TracerWeb.Start(ctx, "GetFiles")
+	ctx, span := common.Tracer.Start(ctx, "GetFiles")
 
 	var modifiedUrls []ImageInfo
 
 	for _, item := range imageUrls {
-		ctx, spanImageUrlFile := common.TracerWeb.Start(ctx, "ImageUrlFile")
+		ctx, spanImageUrlFile := common.Tracer.Start(ctx, "ImageUrlFile")
 		CreatePath(ctx, s.StorageRoot, docUUID)
 		localPath, fileHash, err := GetFile(ctx, s.StorageRoot, docUUID, item)
 		if err != nil {
@@ -88,9 +88,9 @@ func (s *S3MinioStorage) GetFiles(ctx context.Context, docUUID string, imageUrls
 }
 
 func (s *S3MinioStorage) Cleanup(ctx context.Context, docUUID string) error {
-	ctx, span := common.TracerWeb.Start(ctx, "Cleanup")
+	ctx, span := common.Tracer.Start(ctx, "Cleanup")
 
-	ctx, spanListObjects := common.TracerWeb.Start(ctx, "client.ListObjects")
+	ctx, spanListObjects := common.Tracer.Start(ctx, "client.ListObjects")
 	objectsCh := s.Client.ListObjects(ctx, s.BucketName, minio.ListObjectsOptions{
 		Prefix:    fmt.Sprintf("%s/", docUUID),
 		Recursive: true,
@@ -103,7 +103,7 @@ func (s *S3MinioStorage) Cleanup(ctx context.Context, docUUID string) error {
 			continue
 		}
 
-		ctx, spanRemoveObjects := common.TracerWeb.Start(ctx, "client.RemoveObjects")
+		ctx, spanRemoveObjects := common.Tracer.Start(ctx, "client.RemoveObjects")
 		err := s.Client.RemoveObject(ctx, s.BucketName, object.Key, minio.RemoveObjectOptions{})
 		if err != nil {
 			slog.InfoContext(ctx, "Error deleting object:", object.Err)
@@ -116,7 +116,7 @@ func (s *S3MinioStorage) Cleanup(ctx context.Context, docUUID string) error {
 }
 
 func (s *S3MinioStorage) GetObject(ctx context.Context, filename string, expiration int) (string, error) {
-	ctx, span := common.TracerWeb.Start(ctx, "GetObject")
+	ctx, span := common.Tracer.Start(ctx, "GetObject")
 	presignedURL, err := s.Client.PresignedGetObject(ctx, s.BucketName, filename, time.Duration(expiration)*time.Hour, nil)
 	if err != nil {
 		slog.InfoContext(ctx, "Error generating presigned URL:", err)
