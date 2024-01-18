@@ -67,7 +67,7 @@ func getPresignedURL(ctx context.Context, path string) (string, error) {
 func Init(ctx context.Context) {
 	if viper.GetBool("otelEnabled") {
 		otelGoTracingConfig := otelgotracer.OtelGoTracingConfig{
-			HostMetricsEnabled: true,
+			HostMetricsEnabled: false,
 		}
 
 		_, _, err := otelgotracer.Init(ctx, otelGoTracingConfig)
@@ -90,7 +90,7 @@ func Init(ctx context.Context) {
 
 	e := echo.New()
 
-	if viper.GetBool("otelEnabled§") {
+	if viper.GetBool("otelEnabled") {
 		e.Use(otelecho.Middleware(os.Getenv("OTEL_SERVICE_NAME")))
 	}
 
@@ -99,7 +99,6 @@ func Init(ctx context.Context) {
 	e.Use(middleware.Gzip())
 
 	e.Use(slogecho.New(slog.Default()))
-	e.Use(middleware.Recover())
 
 	e.HideBanner = true
 
