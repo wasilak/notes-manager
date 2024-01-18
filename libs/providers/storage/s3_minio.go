@@ -21,7 +21,7 @@ type S3MinioStorage struct {
 }
 
 func NewS3MinioStorage(ctx context.Context) (*S3MinioStorage, error) {
-	ctx, span := common.TracerCmd.Start(ctx, "NewS3MinioStorage")
+	ctx, span := common.TracerWeb.Start(ctx, "NewS3MinioStorage")
 
 	// Initialize MinIO client
 	endpoint := os.Getenv("MINIO_ADDRESS")
@@ -30,7 +30,7 @@ func NewS3MinioStorage(ctx context.Context) (*S3MinioStorage, error) {
 	region := os.Getenv("MINIO_REGION_NAME")
 	bucketName := os.Getenv("S3_BUCKET")
 
-	_, spaMinioNew := common.TracerCmd.Start(ctx, "minio.New")
+	_, spaMinioNew := common.TracerWeb.Start(ctx, "minio.New")
 	client, err := minio.New(endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(accessKey, secretKey, ""),
 		Region: region,

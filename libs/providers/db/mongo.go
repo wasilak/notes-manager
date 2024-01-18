@@ -21,7 +21,7 @@ type MongoDB struct {
 }
 
 func NewMongoDB(ctx context.Context) (*MongoDB, error) {
-	ctx, span := common.TracerCmd.Start(ctx, "NewMongoDB")
+	ctx, span := common.TracerWeb.Start(ctx, "NewMongoDB")
 	mongoDB := &MongoDB{}
 	err := mongoDB.setup(ctx)
 	if err != nil {
@@ -32,7 +32,7 @@ func NewMongoDB(ctx context.Context) (*MongoDB, error) {
 }
 
 func (d *MongoDB) setup(ctx context.Context) error {
-	ctx, span := common.TracerCmd.Start(ctx, "setup")
+	ctx, span := common.TracerWeb.Start(ctx, "setup")
 	mongoConnectionString := os.Getenv("MONGO_CONNECTION_STRING")
 	if mongoConnectionString == "" {
 		mongoConnectionString = "mongodb://" + os.Getenv("MONGO_USER") + ":" + os.Getenv("MONGO_PASS") + "@" + os.Getenv("MONGO_HOST")
@@ -41,7 +41,7 @@ func (d *MongoDB) setup(ctx context.Context) error {
 	ctxCancel, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 
-	ctx, spanClient := common.TracerCmd.Start(ctx, "client")
+	ctx, spanClient := common.TracerWeb.Start(ctx, "client")
 	client, err := mongo.Connect(ctxCancel, options.Client().ApplyURI(mongoConnectionString))
 	if err != nil {
 		span.End()
@@ -51,7 +51,7 @@ func (d *MongoDB) setup(ctx context.Context) error {
 
 	d.client = client
 
-	ctx, spanDatabase := common.TracerCmd.Start(ctx, "database")
+	ctx, spanDatabase := common.TracerWeb.Start(ctx, "database")
 	d.db = client.Database("notes")
 	spanDatabase.End()
 
@@ -61,7 +61,7 @@ func (d *MongoDB) setup(ctx context.Context) error {
 }
 
 func (d *MongoDB) setupIndices(ctx context.Context) {
-	ctx, span := common.TracerCmd.Start(ctx, "setupIndices")
+	ctx, span := common.TracerWeb.Start(ctx, "setupIndices")
 	curIndices, err := d.db.Collection("notes").Indexes().List(ctx)
 	if err != nil {
 		slog.ErrorContext(ctx, err.Error())

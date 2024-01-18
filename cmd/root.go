@@ -15,8 +15,8 @@ import (
 	"github.com/wasilak/notes-manager/libs/providers/db"
 	"github.com/wasilak/notes-manager/libs/providers/storage"
 	"github.com/wasilak/notes-manager/libs/web"
-	otelgometrics "github.com/wasilak/otelgo/metrics"
-	otelgotracer "github.com/wasilak/otelgo/tracing"
+	// otelgometrics "github.com/wasilak/otelgo/metrics"
+	// otelgotracer "github.com/wasilak/otelgo/tracing"
 )
 
 var (
@@ -30,41 +30,41 @@ var (
 
 			ctx := cmd.Context()
 
-			if viper.GetBool("otelEnabled") {
-				otelGoTracingConfig := otelgotracer.OtelGoTracingConfig{
-					HostMetricsEnabled: true,
-				}
+			// if viper.GetBool("otelEnabled") {
+			// 	otelGoTracingConfig := otelgotracer.OtelGoTracingConfig{
+			// 		HostMetricsEnabled: true,
+			// 	}
 
-				_, _, err := otelgotracer.Init(ctx, otelGoTracingConfig)
-				if err != nil {
-					slog.ErrorContext(ctx, err.Error())
-					os.Exit(1)
-				}
+			// 	_, _, err := otelgotracer.Init(ctx, otelGoTracingConfig)
+			// 	if err != nil {
+			// 		slog.ErrorContext(ctx, err.Error())
+			// 		os.Exit(1)
+			// 	}
 
-				otelGoMetricsConfig := otelgometrics.OtelGoMetricsConfig{}
+			// 	otelGoMetricsConfig := otelgometrics.OtelGoMetricsConfig{}
 
-				var errMetrics error
-				_, common.MeterProvider, errMetrics = otelgometrics.Init(ctx, otelGoMetricsConfig)
-				if errMetrics != nil {
-					slog.ErrorContext(ctx, errMetrics.Error())
-					os.Exit(1)
-				}
-			}
+			// 	var errMetrics error
+			// 	_, common.MeterProvider, errMetrics = otelgometrics.Init(ctx, otelGoMetricsConfig)
+			// 	if errMetrics != nil {
+			// 		slog.ErrorContext(ctx, errMetrics.Error())
+			// 		os.Exit(1)
+			// 	}
+			// }
 
-			ctx, span := common.TracerCmd.Start(ctx, "rootCmd")
+			// ctx, span := common.TracerCmd.Start(ctx, "rootCmd")
 
 			loggerConfig := loggergo.LoggerGoConfig{
 				Level:  viper.GetString("loglevel"),
 				Format: viper.GetString("logformat"),
 			}
 
-			ctx, spanLoggerGo := common.TracerCmd.Start(ctx, "loggergo.LoggerInit")
+			// ctx, spanLoggerGo := common.TracerCmd.Start(ctx, "loggergo.LoggerInit")
 			_, err := loggergo.LoggerInit(loggerConfig)
 			if err != nil {
 				slog.ErrorContext(ctx, err.Error())
 				os.Exit(1)
 			}
-			spanLoggerGo.End()
+			// spanLoggerGo.End()
 
 			slog.DebugContext(ctx, fmt.Sprintf("%+v", viper.AllSettings()))
 
@@ -74,15 +74,15 @@ var (
 				panic(err)
 			}
 
-			ctx, spanNewS3MinioStorage := common.TracerCmd.Start(ctx, "NewS3MinioStorage")
+			// ctx, spanNewS3MinioStorage := common.TracerCmd.Start(ctx, "NewS3MinioStorage")
 			storage.Storage, err = storage.NewS3MinioStorage(ctx)
 			if err != nil {
 				slog.ErrorContext(ctx, "Error initializing storage:", err)
 				panic(err)
 			}
-			spanNewS3MinioStorage.End()
+			// spanNewS3MinioStorage.End()
 
-			span.End()
+			// span.End()
 
 			web.Init(ctx)
 		},

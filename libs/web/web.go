@@ -17,6 +17,8 @@ import (
 	"github.com/spf13/viper"
 	"github.com/wasilak/notes-manager/libs/common"
 	"github.com/wasilak/notes-manager/libs/providers/storage"
+	otelgometrics "github.com/wasilak/otelgo/metrics"
+	otelgotracer "github.com/wasilak/otelgo/tracing"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho"
 	"go.opentelemetry.io/otel/metric"
 )
@@ -63,7 +65,28 @@ func getPresignedURL(ctx context.Context, path string) (string, error) {
 }
 
 func Init(ctx context.Context) {
-	ctx, span := common.TracerCmd.Start(ctx, "WebInit")
+	if viper.GetBool("otelEnabled") {
+		otelGoTracingConfig := otelgotracer.OtelGoTracingConfig{
+			HostMetricsEnabled: true,
+		}
+
+		_, _, err := otelgotracer.Init(ctx, otelGoTracingConfig)
+		if err != nil {
+			slog.ErrorContext(ctx, err.Error())
+			os.Exit(1)
+		}
+
+		otelGoMetricsConfig := otelgometrics.OtelGoMetricsConfig{}
+
+		var errMetrics error
+		_, common.MeterProvider, errMetrics = otelgometrics.Init(ctx, otelGoMetricsConfig)
+		if errMetrics != nil {
+			slog.ErrorContext(ctx, errMetrics.Error())
+			os.Exit(1)
+		}
+	}
+
+	// ctx, span := common.TracerWeb.Start(ctx, "WebInit")
 
 	e := echo.New()
 
@@ -80,20 +103,20 @@ func Init(ctx context.Context) {
 
 	e.HideBanner = true
 
-	ctx, spanTemplates := common.TracerCmd.Start(ctx, "Templates")
+	// ctx, spanTemplates := common.TracerWeb.Start(ctx, "Templates")
 	t := &Template{
 		templates: template.Must(template.ParseFS(getEmbededViews(views), "*.html")),
 	}
-	spanTemplates.End()
+	// spanTemplates.End()
 
 	e.Renderer = t
 
-	ctx, spanAssets := common.TracerCmd.Start(ctx, "Assets")
+	// ctx, spanAssets := common.TracerWeb.Start(ctx, "Assets")
 	assetHandler := http.FileServer(getEmbededAssets(static))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", assetHandler)))
-	spanAssets.End()
+	// spanAssets.End()
 
-	ctx, spanPaths := common.TracerCmd.Start(ctx, "Paths")
+	// ctx, spanPaths := common.TracerWeb.Start(ctx, "Paths")
 	e.GET("/storage/:path", storageEndpoint)
 
 	e.GET("/api/list/", apiList)
@@ -108,7 +131,7 @@ func Init(ctx context.Context) {
 	e.GET("/health", health)
 	e.GET("/:path", index)
 	e.GET("/", index)
-	spanPaths.End()
+	// spanPaths.End()
 
 	// Create an instance on a meter for the given instrumentation scope
 	meter := common.MeterProvider.Meter(
@@ -126,6 +149,6 @@ func Init(ctx context.Context) {
 		slog.ErrorContext(ctx, err.Error())
 	}
 
-	span.End()
+	// span.End()
 	e.Logger.Fatal(e.Start(viper.GetString("listen")))
 }
