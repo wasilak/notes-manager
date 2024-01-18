@@ -27,13 +27,15 @@ var (
 			cmd.SetContext(common.CTX)
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			ctx := common.CTX
+
+			ctx := cmd.Context()
 
 			if viper.GetBool("otelEnabled") {
 				otelGoTracingConfig := otelgotracer.OtelGoTracingConfig{
 					HostMetricsEnabled: true,
 				}
-				ctx, _, err := otelgotracer.Init(ctx, otelGoTracingConfig)
+
+				_, _, err := otelgotracer.Init(ctx, otelGoTracingConfig)
 				if err != nil {
 					slog.ErrorContext(ctx, err.Error())
 					os.Exit(1)
@@ -42,7 +44,7 @@ var (
 				otelGoMetricsConfig := otelgometrics.OtelGoMetricsConfig{}
 
 				var errMetrics error
-				ctx, common.MeterProvider, errMetrics = otelgometrics.Init(ctx, otelGoMetricsConfig)
+				_, common.MeterProvider, errMetrics = otelgometrics.Init(ctx, otelGoMetricsConfig)
 				if errMetrics != nil {
 					slog.ErrorContext(ctx, errMetrics.Error())
 					os.Exit(1)
