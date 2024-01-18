@@ -31,7 +31,7 @@ var (
 
 			if viper.GetBool("otelEnabled") {
 				otelGoTracingConfig := otelgotracer.OtelGoTracingConfig{
-					HostMetricsEnabled: false,
+					HostMetricsEnabled: true,
 				}
 				ctx, _, err := otelgotracer.Init(ctx, otelGoTracingConfig)
 				if err != nil {
