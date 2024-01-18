@@ -19,7 +19,7 @@ type NoteAIResponse struct {
 }
 
 func GetAIResponseInstruct(ctx context.Context, note db.Note) (db.Note, error) {
-	ctx, span := common.Tracer.Start(ctx, "GetAIResponseInstruct")
+	ctx, span := common.TracerWeb.Start(ctx, "GetAIResponseInstruct")
 	chatRequest := fmt.Sprintf(`Rewrite this article in more descriptive and human friendly way with examples using markdown: %s. Content must be in markdown.
 	Write title and tags to generated article. Do not use markdown for title and tags.
 	Format response as valid RFC8259 compliant JSON document with 'content', 'title' and 'tags' fields.
@@ -45,7 +45,7 @@ func GetAIResponseInstruct(ctx context.Context, note db.Note) (db.Note, error) {
 
 	c := openai.NewClient(os.Getenv("OPENAI_API_KEY"))
 
-	ctx, spanCreateCompletion := common.Tracer.Start(ctx, "CreateCompletion")
+	ctx, spanCreateCompletion := common.TracerWeb.Start(ctx, "CreateCompletion")
 	response, err := c.CreateCompletion(context.TODO(), req)
 	if err != nil {
 		return db.Note{}, err
@@ -54,7 +54,7 @@ func GetAIResponseInstruct(ctx context.Context, note db.Note) (db.Note, error) {
 
 	chatResponse := response.Choices[0].Text
 
-	ctx, spanUnmarshal := common.Tracer.Start(ctx, "Unmarshal")
+	ctx, spanUnmarshal := common.TracerWeb.Start(ctx, "Unmarshal")
 	var AIResponse NoteAIResponse
 	err = json.Unmarshal([]byte(chatResponse), &AIResponse)
 	if err != nil {
@@ -84,7 +84,7 @@ func GetAIResponseInstruct(ctx context.Context, note db.Note) (db.Note, error) {
 }
 
 func GetAIResponse(ctx context.Context, note db.Note) (db.Note, error) {
-	ctx, span := common.Tracer.Start(ctx, "GetAIResponse")
+	ctx, span := common.TracerWeb.Start(ctx, "GetAIResponse")
 	b, err := json.MarshalIndent(note, "", "  ")
 	if err != nil {
 		return note, err
@@ -119,7 +119,7 @@ func GetAIResponse(ctx context.Context, note db.Note) (db.Note, error) {
 		Stream: false,
 	}
 
-	ctx, spanCreateChatCompletion := common.Tracer.Start(ctx, "CreateChatCompletion")
+	ctx, spanCreateChatCompletion := common.TracerWeb.Start(ctx, "CreateChatCompletion")
 	response, err := c.CreateChatCompletion(ctx, req)
 	if err != nil {
 		slog.ErrorContext(ctx, "ChatCompletion error: %v\n", err)
@@ -141,7 +141,7 @@ func GetAIResponse(ctx context.Context, note db.Note) (db.Note, error) {
 	// 	chatResponse = chatResponse[:len(chatResponse)-len(suffix)]
 	// }
 
-	ctx, spanUnmarshal := common.Tracer.Start(ctx, "Unmarshal")
+	ctx, spanUnmarshal := common.TracerWeb.Start(ctx, "Unmarshal")
 	var AIResponse NoteAIResponse
 	err = json.Unmarshal([]byte(chatResponse), &AIResponse)
 	if err != nil {

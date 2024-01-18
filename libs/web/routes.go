@@ -18,7 +18,7 @@ import (
 )
 
 func health(c echo.Context) error {
-	_, span := common.Tracer.Start(c.Request().Context(), "RouteHealth")
+	_, span := common.TracerWeb.Start(c.Request().Context(), "RouteHealth")
 
 	// Record measurements
 	attrsServer := httpconv.ServerRequest("", c.Request())
@@ -30,13 +30,13 @@ func health(c echo.Context) error {
 }
 
 func index(c echo.Context) error {
-	_, span := common.Tracer.Start(c.Request().Context(), "RouteIndex")
+	_, span := common.TracerWeb.Start(c.Request().Context(), "RouteIndex")
 	span.End()
 	return c.Render(http.StatusOK, "index.html", map[string]interface{}{"app_version": common.Version})
 }
 
 func storageEndpoint(c echo.Context) error {
-	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteStorageEndpoint")
+	ctx, span := common.TracerWeb.Start(c.Request().Context(), "RouteStorageEndpoint")
 	presignedURL, err := getPresignedURL(ctx, c.Param("path"))
 	if err != nil {
 		span.End()
@@ -47,7 +47,7 @@ func storageEndpoint(c echo.Context) error {
 }
 
 func apiList(c echo.Context) error {
-	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiList")
+	ctx, span := common.TracerWeb.Start(c.Request().Context(), "RouteApiList")
 
 	filter := c.QueryParam("filter")
 	sort := c.QueryParam("sort")
@@ -64,7 +64,7 @@ func apiList(c echo.Context) error {
 }
 
 func apiNote(c echo.Context) error {
-	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiNote")
+	ctx, span := common.TracerWeb.Start(c.Request().Context(), "RouteApiNote")
 	uuid := c.Param("uuid")
 
 	note, err := db.DB.Get(ctx, uuid)
@@ -79,7 +79,7 @@ func apiNote(c echo.Context) error {
 }
 
 func apiNoteUpdate(c echo.Context) error {
-	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiNoteUpdate")
+	ctx, span := common.TracerWeb.Start(c.Request().Context(), "RouteApiNoteUpdate")
 	var note db.Note
 
 	if err := c.Bind(&note); err != nil {
@@ -103,7 +103,7 @@ func apiNoteUpdate(c echo.Context) error {
 }
 
 func apiNoteDelete(c echo.Context) error {
-	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiNoteDelete")
+	ctx, span := common.TracerWeb.Start(c.Request().Context(), "RouteApiNoteDelete")
 	uuid := c.Param("uuid")
 
 	if viper.GetString("STORAGE_PROVIDER") != "none" {
@@ -123,7 +123,7 @@ func apiNoteDelete(c echo.Context) error {
 }
 
 func apiNoteNew(c echo.Context) error {
-	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiNoteNew")
+	ctx, span := common.TracerWeb.Start(c.Request().Context(), "RouteApiNoteNew")
 	var note db.Note
 
 	if err := c.Bind(&note); err != nil {
@@ -156,7 +156,7 @@ func apiNoteNew(c echo.Context) error {
 }
 
 func apiAIRewrite(c echo.Context) error {
-	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiAIRewrite")
+	ctx, span := common.TracerWeb.Start(c.Request().Context(), "RouteApiAIRewrite")
 
 	var note db.Note
 
@@ -181,7 +181,7 @@ func apiAIRewrite(c echo.Context) error {
 }
 
 func apiTags(c echo.Context) error {
-	ctx, span := common.Tracer.Start(c.Request().Context(), "RouteApiTags")
+	ctx, span := common.TracerWeb.Start(c.Request().Context(), "RouteApiTags")
 	filter := c.QueryParam("query")
 
 	tags, err := db.DB.Tags(ctx)

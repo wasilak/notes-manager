@@ -21,7 +21,7 @@ type MongoDB struct {
 }
 
 func NewMongoDB(ctx context.Context) (*MongoDB, error) {
-	ctx, span := common.Tracer.Start(ctx, "NewMongoDB")
+	ctx, span := common.TracerCmd.Start(ctx, "NewMongoDB")
 	mongoDB := &MongoDB{}
 	err := mongoDB.setup(ctx)
 	if err != nil {
@@ -32,7 +32,7 @@ func NewMongoDB(ctx context.Context) (*MongoDB, error) {
 }
 
 func (d *MongoDB) setup(ctx context.Context) error {
-	ctx, span := common.Tracer.Start(ctx, "setup")
+	ctx, span := common.TracerCmd.Start(ctx, "setup")
 	mongoConnectionString := os.Getenv("MONGO_CONNECTION_STRING")
 	if mongoConnectionString == "" {
 		mongoConnectionString = "mongodb://" + os.Getenv("MONGO_USER") + ":" + os.Getenv("MONGO_PASS") + "@" + os.Getenv("MONGO_HOST")
@@ -41,7 +41,7 @@ func (d *MongoDB) setup(ctx context.Context) error {
 	ctxCancel, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 
-	ctx, spanClient := common.Tracer.Start(ctx, "client")
+	ctx, spanClient := common.TracerCmd.Start(ctx, "client")
 	client, err := mongo.Connect(ctxCancel, options.Client().ApplyURI(mongoConnectionString))
 	if err != nil {
 		span.End()
@@ -51,7 +51,7 @@ func (d *MongoDB) setup(ctx context.Context) error {
 
 	d.client = client
 
-	ctx, spanDatabase := common.Tracer.Start(ctx, "database")
+	ctx, spanDatabase := common.TracerCmd.Start(ctx, "database")
 	d.db = client.Database("notes")
 	spanDatabase.End()
 
@@ -61,7 +61,7 @@ func (d *MongoDB) setup(ctx context.Context) error {
 }
 
 func (d *MongoDB) setupIndices(ctx context.Context) {
-	ctx, span := common.Tracer.Start(ctx, "setupIndices")
+	ctx, span := common.TracerCmd.Start(ctx, "setupIndices")
 	curIndices, err := d.db.Collection("notes").Indexes().List(ctx)
 	if err != nil {
 		slog.ErrorContext(ctx, err.Error())
@@ -109,7 +109,7 @@ func deleteEmpty(s []string) []string {
 }
 
 func (d *MongoDB) List(ctx context.Context, filter, sort string, tags []string) ([]Note, error) {
-	ctx, span := common.Tracer.Start(ctx, "List")
+	ctx, span := common.TracerWeb.Start(ctx, "List")
 	searchParams := bson.M{}
 	sortParams := bson.D{}
 
@@ -169,7 +169,7 @@ func (d *MongoDB) List(ctx context.Context, filter, sort string, tags []string) 
 }
 
 func (d *MongoDB) Get(ctx context.Context, id string) (Note, error) {
-	ctx, span := common.Tracer.Start(ctx, "Get")
+	ctx, span := common.TracerWeb.Start(ctx, "Get")
 	var note Note
 
 	objectID, err := primitive.ObjectIDFromHex(id)
@@ -187,7 +187,7 @@ func (d *MongoDB) Get(ctx context.Context, id string) (Note, error) {
 }
 
 func (d *MongoDB) Create(ctx context.Context, data Note) (Note, error) {
-	ctx, span := common.Tracer.Start(ctx, "Create")
+	ctx, span := common.TracerWeb.Start(ctx, "Create")
 	data.ID = primitive.NewObjectID()
 
 	result, err := d.db.Collection("notes").InsertOne(ctx, data)
@@ -201,7 +201,7 @@ func (d *MongoDB) Create(ctx context.Context, data Note) (Note, error) {
 }
 
 func (d *MongoDB) Update(ctx context.Context, note Note) error {
-	ctx, span := common.Tracer.Start(ctx, "Update")
+	ctx, span := common.TracerWeb.Start(ctx, "Update")
 	filter := bson.M{"_id": note.ID}
 
 	replacement := NoteNoID{
@@ -223,7 +223,7 @@ func (d *MongoDB) Update(ctx context.Context, note Note) error {
 }
 
 func (d *MongoDB) Delete(ctx context.Context, id string) (Note, error) {
-	ctx, span := common.Tracer.Start(ctx, "Delete")
+	ctx, span := common.TracerWeb.Start(ctx, "Delete")
 	note, err := d.Get(ctx, id)
 	if err != nil {
 		return Note{}, err
@@ -242,16 +242,16 @@ func (d *MongoDB) Delete(ctx context.Context, id string) (Note, error) {
 }
 
 func (d *MongoDB) Tags(ctx context.Context) ([]string, error) {
-	ctx, span := common.Tracer.Start(ctx, "Tags")
+	ctx, span := common.TracerWeb.Start(ctx, "Tags")
 
-	ctx, spanTags := common.Tracer.Start(ctx, "getTags")
+	ctx, spanTags := common.TracerWeb.Start(ctx, "getTags")
 	cur, err := d.db.Collection("notes").Distinct(ctx, "tags", bson.M{})
 	if err != nil {
 		return nil, err
 	}
 	spanTags.End()
 
-	_, spanTagsConvert := common.Tracer.Start(ctx, "convertTags")
+	_, spanTagsConvert := common.TracerWeb.Start(ctx, "convertTags")
 	tags := []string{}
 
 	for _, tag := range cur {

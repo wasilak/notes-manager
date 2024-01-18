@@ -62,9 +62,8 @@ func getPresignedURL(ctx context.Context, path string) (string, error) {
 	return url, nil
 }
 
-func Init() {
-	ctx := context.Background()
-	ctx, span := common.Tracer.Start(ctx, "WebInit")
+func Init(ctx context.Context) {
+	ctx, span := common.TracerCmd.Start(ctx, "WebInit")
 
 	e := echo.New()
 
@@ -81,7 +80,7 @@ func Init() {
 
 	e.HideBanner = true
 
-	ctx, spanTemplates := common.Tracer.Start(ctx, "Templates")
+	ctx, spanTemplates := common.TracerCmd.Start(ctx, "Templates")
 	t := &Template{
 		templates: template.Must(template.ParseFS(getEmbededViews(views), "*.html")),
 	}
@@ -89,12 +88,12 @@ func Init() {
 
 	e.Renderer = t
 
-	ctx, spanAssets := common.Tracer.Start(ctx, "Assets")
+	ctx, spanAssets := common.TracerCmd.Start(ctx, "Assets")
 	assetHandler := http.FileServer(getEmbededAssets(static))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", assetHandler)))
 	spanAssets.End()
 
-	ctx, spanPaths := common.Tracer.Start(ctx, "Paths")
+	ctx, spanPaths := common.TracerCmd.Start(ctx, "Paths")
 	e.GET("/storage/:path", storageEndpoint)
 
 	e.GET("/api/list/", apiList)
