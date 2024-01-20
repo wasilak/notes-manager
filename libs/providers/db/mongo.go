@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 	"strings"
-	"time"
 
 	"log/slog"
 
@@ -13,6 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo"
 )
 
 type MongoDB struct {
@@ -38,11 +38,13 @@ func (d *MongoDB) setup(ctx context.Context) error {
 		mongoConnectionString = "mongodb://" + os.Getenv("MONGO_USER") + ":" + os.Getenv("MONGO_PASS") + "@" + os.Getenv("MONGO_HOST")
 	}
 
-	ctxCancel, cancel := context.WithTimeout(ctx, 10*time.Second)
-	defer cancel()
-
 	ctx, spanClient := common.TracerCmd.Start(ctx, "MongoDB_client")
-	client, err := mongo.Connect(ctxCancel, options.Client().ApplyURI(mongoConnectionString))
+
+	// connect to MongoDB
+	opts := options.Client()
+	opts.Monitor = otelmongo.NewMonitor()
+	opts.ApplyURI(mongoConnectionString)
+	client, err := mongo.Connect(ctx, opts)
 	if err != nil {
 		span.End()
 		return err

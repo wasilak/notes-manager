@@ -13,19 +13,36 @@ exporters:
   otlphttp/jaeger:
     endpoint: http://jaeger:4318
 
+  otlphttp/openobserve:
+    endpoint: http://openobserve:5080/api/default/
+    # traces_endpoint: http://openobserve:5080/api/default/traces
+    headers:
+      authorization: Basic cm9vdEBleGFtcGxlLmNvbTpuZmxYSWZVSU1KbFBmQ0NR # change it after re-initialising openobserve
+
   prometheusremotewrite/vmagent:
     endpoint: "http://vmagent:8429/api/v1/write"
     resource_to_telemetry_conversion:
       enabled: true # Convert resource attributes to metric labels
 
+connectors:
+  spanmetrics:
+
 service:
   pipelines:
     metrics:
-      receivers: [otlp]
+      receivers:
+        - otlp
+        - spanmetrics
       # processors: [batch]
-      exporters: [prometheusremotewrite/vmagent]
+      exporters:
+        - prometheusremotewrite/vmagent
+        - otlphttp/openobserve
 
     traces:
-      receivers: [otlp]
+      receivers:
+        - otlp
       # processors: [batch]
-      exporters: [otlphttp/jaeger]
+      exporters:
+        - otlphttp/jaeger
+        - otlphttp/openobserve
+        - spanmetrics
