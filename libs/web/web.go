@@ -119,13 +119,16 @@ func Init(ctx context.Context) {
 	)
 
 	var err error
-	RequestCount, err = meter.Int64Counter(
-		fmt.Sprintf("%s_request_count", os.Getenv("OTEL_SERVICE_NAME")),
-		metric.WithDescription("Incoming request count"),
-		metric.WithUnit("request"),
-	)
-	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
+
+	if os.Getenv("OTEL_SERVICE_NAME") != "" {
+		RequestCount, err = meter.Int64Counter(
+			fmt.Sprintf("%s_request_count", os.Getenv("OTEL_SERVICE_NAME")),
+			metric.WithDescription("Incoming request count"),
+			metric.WithUnit("request"),
+		)
+		if err != nil {
+			slog.ErrorContext(ctx, err.Error())
+		}
 	}
 
 	span.End()

@@ -32,7 +32,7 @@ func health(c echo.Context) error {
 func index(c echo.Context) error {
 	_, span := common.TracerWeb.Start(c.Request().Context(), "RouteIndex")
 	span.End()
-	return c.Render(http.StatusOK, "index.html", map[string]interface{}{"app_version": common.Version})
+	return c.Render(http.StatusOK, "index.html", map[string]interface{}{"app_version": common.GetVersion()})
 }
 
 func storageEndpoint(c echo.Context) error {

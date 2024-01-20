@@ -23,6 +23,9 @@ func InitConfig() {
 
 	viper.SetDefault("loglevel", "info")
 	viper.SetDefault("logformat", "plain")
+	viper.SetDefault("profilingEnabled", false)
+	viper.SetDefault("profilerApplicationName", common.AppName)
+	viper.SetDefault("profilerServerAddress", "")
 
 	if CfgFile != "" {
 		// Use config file from the flag.

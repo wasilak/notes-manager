@@ -17,6 +17,7 @@ import (
 	"github.com/wasilak/notes-manager/libs/web"
 	otelgometrics "github.com/wasilak/otelgo/metrics"
 	otelgotracer "github.com/wasilak/otelgo/tracing"
+	"github.com/wasilak/profilego"
 )
 
 var (
@@ -28,6 +29,20 @@ var (
 		},
 		Run: func(cmd *cobra.Command, args []string) {
 			ctx := cmd.Context()
+
+			if viper.GetBool("profilingEnabled") {
+				ProfileGoConfig := profilego.ProfileGoConfig{
+					ApplicationName: viper.GetString("profilerApplicationName"),
+					ServerAddress:   viper.GetString("profilerServerAddress"),
+					Tags:            map[string]string{"version": common.GetVersion()},
+				}
+
+				err := profilego.Init(ProfileGoConfig)
+				if err != nil {
+					slog.ErrorContext(ctx, err.Error())
+					os.Exit(1)
+				}
+			}
 
 			if viper.GetBool("otelEnabled") {
 				otelGoTracingConfig := otelgotracer.OtelGoTracingConfig{
