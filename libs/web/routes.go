@@ -13,18 +13,10 @@ import (
 	"github.com/wasilak/notes-manager/libs/openai"
 	"github.com/wasilak/notes-manager/libs/providers/db"
 	"github.com/wasilak/notes-manager/libs/providers/storage"
-	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/semconv/v1.13.0/httpconv"
 )
 
 func health(c echo.Context) error {
 	_, span := common.TracerWeb.Start(c.Request().Context(), "RouteHealth")
-
-	// Record measurements
-	attrsServer := httpconv.ServerRequest("", c.Request())
-	attrsClient := httpconv.ClientRequest(c.Request())
-	RequestCount.Add(c.Request().Context(), 1, metric.WithAttributes(attrsServer...), metric.WithAttributes(attrsClient...))
-
 	span.End()
 	return c.JSON(http.StatusOK, map[string]interface{}{"status": "OK"})
 }

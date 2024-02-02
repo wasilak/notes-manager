@@ -20,6 +20,7 @@ import (
 	"github.com/wasilak/notes-manager/libs/providers/storage"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho"
 	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/semconv/v1.13.0/httpconv"
 )
 
 //go:embed views/*
@@ -63,6 +64,15 @@ func getPresignedURL(ctx context.Context, path string) (string, error) {
 	return url, nil
 }
 
+func requestCountMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		attrsServer := httpconv.ServerRequest("", c.Request())
+		attrsClient := httpconv.ClientRequest(c.Request())
+		RequestCount.Add(c.Request().Context(), 1, metric.WithAttributes(attrsServer...), metric.WithAttributes(attrsClient...))
+		return next(c)
+	}
+}
+
 func Init(ctx context.Context) {
 	ctx, span := common.TracerCmd.Start(ctx, "WebInit")
 
@@ -94,6 +104,8 @@ func Init(ctx context.Context) {
 	assetHandler := http.FileServer(getEmbededAssets(static))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", assetHandler)))
 	spanAssets.End()
+
+	e.Use(requestCountMiddleware)
 
 	ctx, spanPaths := common.TracerCmd.Start(ctx, "Paths")
 	e.GET("/storage/:path", storageEndpoint)
