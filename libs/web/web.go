@@ -37,18 +37,20 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
-func getEmbededViews(views embed.FS) fs.FS {
+func getEmbededViews(ctx context.Context, views embed.FS) fs.FS {
 	fsys, err := fs.Sub(views, "views")
 	if err != nil {
+		common.HandleError(ctx, err)
 		panic(err)
 	}
 
 	return fsys
 }
 
-func getEmbededAssets(static embed.FS) http.FileSystem {
+func getEmbededAssets(ctx context.Context, static embed.FS) http.FileSystem {
 	fsys, err := fs.Sub(static, "static")
 	if err != nil {
+		common.HandleError(ctx, err)
 		panic(err)
 	}
 
@@ -58,6 +60,7 @@ func getEmbededAssets(static embed.FS) http.FileSystem {
 func getPresignedURL(ctx context.Context, path string) (string, error) {
 	url, err := storage.Storage.GetObject(ctx, path, 1)
 	if err != nil {
+		common.HandleError(ctx, err)
 		return "", err
 	}
 
@@ -94,14 +97,14 @@ func Init(ctx context.Context) {
 
 	ctx, spanTemplates := common.TracerCmd.Start(ctx, "Templates")
 	t := &Template{
-		templates: template.Must(template.ParseFS(getEmbededViews(views), "*.html")),
+		templates: template.Must(template.ParseFS(getEmbededViews(ctx, views), "*.html")),
 	}
 	spanTemplates.End()
 
 	e.Renderer = t
 
 	ctx, spanAssets := common.TracerCmd.Start(ctx, "Assets")
-	assetHandler := http.FileServer(getEmbededAssets(static))
+	assetHandler := http.FileServer(getEmbededAssets(ctx, static))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", assetHandler)))
 	spanAssets.End()
 
@@ -139,7 +142,7 @@ func Init(ctx context.Context) {
 			metric.WithUnit("request"),
 		)
 		if err != nil {
-			slog.ErrorContext(ctx, err.Error())
+			common.HandleError(ctx, err)
 		}
 	}
 

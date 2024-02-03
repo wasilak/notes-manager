@@ -6,7 +6,9 @@ import (
 	"runtime/debug"
 
 	"go.opentelemetry.io/otel"
-	sdk "go.opentelemetry.io/otel/sdk/metric"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/sdk/metric"
+	"go.opentelemetry.io/otel/trace"
 )
 
 var (
@@ -15,7 +17,7 @@ var (
 	AppName       = "notesmanager"
 	TracerCmd     = otel.Tracer(os.Getenv("OTEL_SERVICE_NAME"))
 	TracerWeb     = otel.Tracer(os.Getenv("OTEL_SERVICE_NAME"))
-	MeterProvider = sdk.NewMeterProvider()
+	MeterProvider = metric.NewMeterProvider()
 )
 
 func getGitRevision() string {
@@ -35,4 +37,10 @@ func GetVersion() string {
 	}
 
 	return getGitRevision()
+}
+
+func HandleError(ctx context.Context, err error) {
+	span := trace.SpanFromContext(ctx)
+	span.SetStatus(codes.Error, err.Error())
+	span.RecordError(err)
 }

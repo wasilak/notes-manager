@@ -20,6 +20,8 @@ type NoteAIResponse struct {
 
 func GetAIResponseInstruct(ctx context.Context, note db.Note) (db.Note, error) {
 	ctx, span := common.TracerWeb.Start(ctx, "GetAIResponseInstruct")
+	defer span.End()
+
 	chatRequest := fmt.Sprintf(`Rewrite this article in more descriptive and human friendly way with examples using markdown: %s. Content must be in markdown.
 	Write title and tags to generated article. Do not use markdown for title and tags.
 	Format response as valid RFC8259 compliant JSON document with 'content', 'title' and 'tags' fields.
@@ -48,6 +50,7 @@ func GetAIResponseInstruct(ctx context.Context, note db.Note) (db.Note, error) {
 	ctx, spanCreateCompletion := common.TracerWeb.Start(ctx, "CreateCompletion")
 	response, err := c.CreateCompletion(context.TODO(), req)
 	if err != nil {
+		common.HandleError(ctx, err)
 		return db.Note{}, err
 	}
 	spanCreateCompletion.End()
@@ -58,7 +61,7 @@ func GetAIResponseInstruct(ctx context.Context, note db.Note) (db.Note, error) {
 	var AIResponse NoteAIResponse
 	err = json.Unmarshal([]byte(chatResponse), &AIResponse)
 	if err != nil {
-		slog.ErrorContext(ctx, "Error decoding OpenAI response.", err)
+		common.HandleError(ctx, err)
 		return note, err
 	}
 	spanUnmarshal.End()
@@ -79,14 +82,16 @@ func GetAIResponseInstruct(ctx context.Context, note db.Note) (db.Note, error) {
 	note.Content = AIResponse.Content
 	note.Tags = AIResponse.Tags
 
-	span.End()
 	return note, nil
 }
 
 func GetAIResponse(ctx context.Context, note db.Note) (db.Note, error) {
 	ctx, span := common.TracerWeb.Start(ctx, "GetAIResponse")
+	defer span.End()
+
 	b, err := json.MarshalIndent(note, "", "  ")
 	if err != nil {
+		common.HandleError(ctx, err)
 		return note, err
 	}
 
@@ -122,7 +127,7 @@ func GetAIResponse(ctx context.Context, note db.Note) (db.Note, error) {
 	ctx, spanCreateChatCompletion := common.TracerWeb.Start(ctx, "CreateChatCompletion")
 	response, err := c.CreateChatCompletion(ctx, req)
 	if err != nil {
-		slog.ErrorContext(ctx, "ChatCompletion error: %v\n", err)
+		common.HandleError(ctx, err)
 		return note, err
 	}
 	spanCreateChatCompletion.End()
@@ -145,7 +150,7 @@ func GetAIResponse(ctx context.Context, note db.Note) (db.Note, error) {
 	var AIResponse NoteAIResponse
 	err = json.Unmarshal([]byte(chatResponse), &AIResponse)
 	if err != nil {
-		slog.ErrorContext(ctx, "Error decoding OpenAI response.", err)
+		common.HandleError(ctx, err)
 		return note, err
 	}
 	spanUnmarshal.End()
@@ -166,6 +171,5 @@ func GetAIResponse(ctx context.Context, note db.Note) (db.Note, error) {
 	note.Content = AIResponse.Content
 	note.Tags = AIResponse.Tags
 
-	span.End()
 	return note, nil
 }

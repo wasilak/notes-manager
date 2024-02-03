@@ -39,8 +39,8 @@ var (
 
 				err := profilego.Init(ProfileGoConfig)
 				if err != nil {
-					slog.ErrorContext(ctx, err.Error())
-					os.Exit(1)
+					common.HandleError(ctx, err)
+					panic(err)
 				}
 			}
 
@@ -51,21 +51,21 @@ var (
 				}
 				ctx, _, err := otelgotracer.Init(ctx, otelGoTracingConfig)
 				if err != nil {
-					slog.ErrorContext(ctx, err.Error())
-					os.Exit(1)
+					common.HandleError(ctx, err)
+					panic(err)
 				}
 
 				otelGoMetricsConfig := otelgometrics.OtelGoMetricsConfig{}
 
-				var errMetrics error
-				ctx, common.MeterProvider, errMetrics = otelgometrics.Init(ctx, otelGoMetricsConfig)
-				if errMetrics != nil {
-					slog.ErrorContext(ctx, errMetrics.Error())
-					os.Exit(1)
+				ctx, common.MeterProvider, err = otelgometrics.Init(ctx, otelGoMetricsConfig)
+				if err != nil {
+					common.HandleError(ctx, err)
+					panic(err)
 				}
 			}
 
 			ctx, span := common.TracerCmd.Start(ctx, "rootCmd")
+			defer span.End()
 
 			loggerConfig := loggergo.LoggerGoConfig{
 				Level:  viper.GetString("loglevel"),
@@ -75,8 +75,8 @@ var (
 			ctx, spanLoggerGo := common.TracerCmd.Start(ctx, "loggergo.LoggerInit")
 			_, err := loggergo.LoggerInit(loggerConfig)
 			if err != nil {
-				slog.ErrorContext(ctx, err.Error())
-				os.Exit(1)
+				common.HandleError(ctx, err)
+				panic(err)
 			}
 			spanLoggerGo.End()
 
@@ -84,19 +84,17 @@ var (
 
 			db.DB, err = db.NewMongoDB(ctx)
 			if err != nil {
-				slog.ErrorContext(ctx, "Error initializing database:", err)
+				common.HandleError(ctx, err)
 				panic(err)
 			}
 
 			ctx, spanNewS3MinioStorage := common.TracerCmd.Start(ctx, "NewS3MinioStorage")
 			storage.Storage, err = storage.NewS3MinioStorage(ctx)
 			if err != nil {
-				slog.ErrorContext(ctx, "Error initializing storage:", err)
+				common.HandleError(ctx, err)
 				panic(err)
 			}
 			spanNewS3MinioStorage.End()
-
-			span.End()
 
 			web.Init(ctx)
 		},
@@ -105,7 +103,7 @@ var (
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		slog.Error(err.Error())
 		os.Exit(1)
 	}
 }

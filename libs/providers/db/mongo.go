@@ -22,17 +22,21 @@ type MongoDB struct {
 
 func NewMongoDB(ctx context.Context) (*MongoDB, error) {
 	ctx, span := common.TracerCmd.Start(ctx, "MongoDB_NewMongoDB")
+	defer span.End()
+
 	mongoDB := &MongoDB{}
 	err := mongoDB.setup(ctx)
 	if err != nil {
+		common.HandleError(ctx, err)
 		return nil, err
 	}
-	span.End()
 	return mongoDB, nil
 }
 
 func (d *MongoDB) setup(ctx context.Context) error {
 	ctx, span := common.TracerCmd.Start(ctx, "MongoDB_setup")
+	defer span.End()
+
 	mongoConnectionString := os.Getenv("MONGO_CONNECTION_STRING")
 	if mongoConnectionString == "" {
 		mongoConnectionString = "mongodb://" + os.Getenv("MONGO_USER") + ":" + os.Getenv("MONGO_PASS") + "@" + os.Getenv("MONGO_HOST")
@@ -46,7 +50,7 @@ func (d *MongoDB) setup(ctx context.Context) error {
 	opts.ApplyURI(mongoConnectionString)
 	client, err := mongo.Connect(ctx, opts)
 	if err != nil {
-		span.End()
+		common.HandleError(ctx, err)
 		return err
 	}
 	spanClient.End()
@@ -57,16 +61,23 @@ func (d *MongoDB) setup(ctx context.Context) error {
 	d.db = client.Database("notes")
 	spanDatabase.End()
 
-	d.setupIndices(ctx)
-	span.End()
+	err = d.setupIndices(ctx)
+	if err != nil {
+		common.HandleError(ctx, err)
+		return err
+	}
+
 	return nil
 }
 
-func (d *MongoDB) setupIndices(ctx context.Context) {
+func (d *MongoDB) setupIndices(ctx context.Context) error {
 	ctx, span := common.TracerCmd.Start(ctx, "MongoDB_setupIndices")
+	defer span.End()
+
 	curIndices, err := d.db.Collection("notes").Indexes().List(ctx)
 	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
+		common.HandleError(ctx, err)
+		return err
 	}
 
 	textIndexName := "content_text_title_text"
@@ -76,7 +87,8 @@ func (d *MongoDB) setupIndices(ctx context.Context) {
 		var index bson.M
 		err := curIndices.Decode(&index)
 		if err != nil {
-			slog.ErrorContext(ctx, err.Error())
+			common.HandleError(ctx, err)
+			return err
 		}
 
 		if index["name"] == textIndexName {
@@ -86,7 +98,7 @@ func (d *MongoDB) setupIndices(ctx context.Context) {
 	}
 
 	if !textIndexCreated {
-		slog.InfoContext(ctx, "Creating text index")
+		slog.DebugContext(ctx, "Creating text index")
 		opts := options.Index().SetWeights(bson.M{"title": 10, "content": 1})
 		_, err := d.db.Collection("notes").Indexes().CreateOne(ctx,
 			mongo.IndexModel{
@@ -94,10 +106,11 @@ func (d *MongoDB) setupIndices(ctx context.Context) {
 				Options: opts,
 			})
 		if err != nil {
-			slog.ErrorContext(ctx, err.Error())
+			common.HandleError(ctx, err)
+			return err
 		}
 	}
-	span.End()
+	return nil
 }
 
 func deleteEmpty(s []string) []string {
@@ -112,6 +125,8 @@ func deleteEmpty(s []string) []string {
 
 func (d *MongoDB) List(ctx context.Context, filter, sort string, tags []string) ([]Note, error) {
 	ctx, span := common.TracerWeb.Start(ctx, "MongoDB_List")
+	defer span.End()
+
 	searchParams := bson.M{}
 	sortParams := bson.D{}
 
@@ -151,6 +166,7 @@ func (d *MongoDB) List(ctx context.Context, filter, sort string, tags []string) 
 
 	cur, err := d.db.Collection("notes").Find(ctx, searchParams, opts)
 	if err != nil {
+		common.HandleError(ctx, err)
 		return nil, err
 	}
 	defer cur.Close(ctx)
@@ -159,51 +175,55 @@ func (d *MongoDB) List(ctx context.Context, filter, sort string, tags []string) 
 	for cur.Next(ctx) {
 		var doc Note
 		if err := cur.Decode(&doc); err != nil {
-			slog.ErrorContext(ctx, err.Error())
+			common.HandleError(ctx, err)
 			return nil, err
 		}
 		docs = append(docs, doc)
 	}
-
-	span.End()
 
 	return docs, nil
 }
 
 func (d *MongoDB) Get(ctx context.Context, id string) (Note, error) {
 	ctx, span := common.TracerWeb.Start(ctx, "MongoDB_Get")
+	defer span.End()
+
 	var note Note
 
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
+		common.HandleError(ctx, err)
 		return Note{}, err
 	}
 
 	err = d.db.Collection("notes").FindOne(ctx, bson.M{"_id": objectID}).Decode(&note)
 	if err != nil {
+		common.HandleError(ctx, err)
 		return Note{}, err
 	}
 
-	span.End()
 	return note, nil
 }
 
 func (d *MongoDB) Create(ctx context.Context, data Note) (Note, error) {
 	ctx, span := common.TracerWeb.Start(ctx, "MongoDB_Create")
+	defer span.End()
+
 	data.ID = primitive.NewObjectID()
 
-	result, err := d.db.Collection("notes").InsertOne(ctx, data)
+	_, err := d.db.Collection("notes").InsertOne(ctx, data)
 	if err != nil {
-		slog.ErrorContext(ctx, "error", "result", result)
+		common.HandleError(ctx, err)
 		return Note{}, err
 	}
 
-	span.End()
 	return data, nil
 }
 
 func (d *MongoDB) Update(ctx context.Context, note Note) error {
 	ctx, span := common.TracerWeb.Start(ctx, "MongoDB_Update")
+	defer span.End()
+
 	filter := bson.M{"_id": note.ID}
 
 	replacement := NoteNoID{
@@ -214,41 +234,44 @@ func (d *MongoDB) Update(ctx context.Context, note Note) error {
 		Tags:    note.Tags,
 	}
 
-	result, err := d.db.Collection("notes").ReplaceOne(ctx, filter, replacement)
+	_, err := d.db.Collection("notes").ReplaceOne(ctx, filter, replacement)
 	if err != nil {
-		slog.ErrorContext(ctx, "error", "result", result)
-		slog.ErrorContext(ctx, err.Error())
+		common.HandleError(ctx, err)
+		common.HandleError(ctx, err)
 	}
 
-	span.End()
 	return err
 }
 
 func (d *MongoDB) Delete(ctx context.Context, id string) (Note, error) {
 	ctx, span := common.TracerWeb.Start(ctx, "MongoDB_Delete")
+	defer span.End()
+
 	note, err := d.Get(ctx, id)
 	if err != nil {
+		common.HandleError(ctx, err)
 		return Note{}, err
 	}
 
 	filter := bson.M{"_id": note.ID}
 
-	result, err := d.db.Collection("notes").DeleteOne(ctx, filter)
+	_, err = d.db.Collection("notes").DeleteOne(ctx, filter)
 	if err != nil {
-		slog.ErrorContext(ctx, "error", "result", result)
+		common.HandleError(ctx, err)
 		return Note{}, err
 	}
 
-	span.End()
 	return note, nil
 }
 
 func (d *MongoDB) Tags(ctx context.Context) ([]string, error) {
 	ctx, span := common.TracerWeb.Start(ctx, "MongoDB_Tags")
+	defer span.End()
 
 	ctx, spanTags := common.TracerWeb.Start(ctx, "MongoDB_getTags")
 	cur, err := d.db.Collection("notes").Distinct(ctx, "tags", bson.M{})
 	if err != nil {
+		common.HandleError(ctx, err)
 		return nil, err
 	}
 	spanTags.End()
@@ -263,6 +286,5 @@ func (d *MongoDB) Tags(ctx context.Context) ([]string, error) {
 	}
 	spanTagsConvert.End()
 
-	span.End()
 	return tags, nil
 }

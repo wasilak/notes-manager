@@ -41,7 +41,7 @@ func GetFile(ctx context.Context, storageRoot, docUUID string, imageInfo ImageIn
 	ctx, spanHttpGet := common.TracerWeb.Start(ctx, "http.Get")
 	resp, err := http.Get(imageInfo.Original.URL)
 	if err != nil {
-		slog.ErrorContext(ctx, "Error fetching image", "error", err.Error())
+		common.HandleError(ctx, err)
 		return "", "", err
 	}
 	defer resp.Body.Close()
@@ -50,67 +50,89 @@ func GetFile(ctx context.Context, storageRoot, docUUID string, imageInfo ImageIn
 	ctx, spanCreateTemp := common.TracerWeb.Start(ctx, "CreateTemp")
 	tempFile, err := os.CreateTemp(filepath.Join(storageRoot, docUUID, "images", "tmp"), fmt.Sprintf("*.%s", imageInfo.Original.Extension))
 	if err != nil {
-		slog.ErrorContext(ctx, "Error creating temporary file", "error", err.Error())
+		common.HandleError(ctx, err)
 		return "", "", err
 	}
 	defer tempFile.Close()
 
 	_, err = io.Copy(tempFile, resp.Body)
 	if err != nil {
-		slog.ErrorContext(ctx, "Error copying content to temporary file", "error", err.Error())
+		common.HandleError(ctx, err)
 		return "", "", err
 	}
 	spanCreateTemp.End()
 
 	slog.DebugContext(ctx, fmt.Sprintf("%s => %s\n", imageInfo.Original.URL, tempFile.Name()))
 
+	hashFile, err := HashFile(ctx, tempFile.Name())
+	if err != nil {
+		common.HandleError(ctx, err)
+		return "", "", err
+	}
+
 	span.End()
-	return tempFile.Name(), HashFile(ctx, tempFile.Name()), nil
+
+	return tempFile.Name(), hashFile, nil
 }
 
-func CreatePath(ctx context.Context, storageRoot, docUUID string) {
-	ctx, spanCreatePath := common.TracerWeb.Start(ctx, "CreatePath")
+func CreatePath(ctx context.Context, storageRoot, docUUID string) error {
+	ctx, span := common.TracerWeb.Start(ctx, "CreatePath")
+	defer span.End()
+
 	directory := filepath.Join(storageRoot, docUUID, "images", "tmp")
 	err := os.MkdirAll(directory, os.ModePerm)
 	if err != nil {
-		slog.ErrorContext(ctx, "Error creating directory:", err)
+		common.HandleError(ctx, err)
+		return err
 	}
-	spanCreatePath.End()
+
+	return nil
 }
 
-func HashFile(ctx context.Context, filename string) string {
-	ctx, spanHashFile := common.TracerWeb.Start(ctx, "HashFile")
+func HashFile(ctx context.Context, filename string) (string, error) {
+	ctx, span := common.TracerWeb.Start(ctx, "HashFile")
+	defer span.End()
+
 	file, err := os.Open(filename)
 	if err != nil {
-		slog.ErrorContext(ctx, "Error opening file for hashing:", err)
-		return ""
+		common.HandleError(ctx, err)
+		return "", err
 	}
 	defer file.Close()
 
 	hash := sha1.New()
 	if _, err := io.Copy(hash, file); err != nil {
-		slog.ErrorContext(ctx, "Error copying content for hashing:", err)
-		return ""
+		common.HandleError(ctx, err)
+		return "", err
 	}
-
-	spanHashFile.End()
-	return fmt.Sprintf("%x", hash.Sum(nil))
+	return fmt.Sprintf("%x", hash.Sum(nil)), nil
 }
 
-func StorageGetFiles(ctx context.Context, storage NotesStorage, db db.NotesDatabase, note db.Note) {
-	ctx, spanStorageGetFiles := common.TracerWeb.Start(ctx, "StorageGetFiles")
+func StorageGetFiles(ctx context.Context, storage NotesStorage, db db.NotesDatabase, note db.Note) error {
+	ctx, span := common.TracerWeb.Start(ctx, "StorageGetFiles")
+	defer span.End()
+
 	imageUrls := GetAllImageUrls(ctx, note.Content)
 	imageUrls, err := storage.GetFiles(ctx, note.ID.Hex(), imageUrls)
 	if err != nil {
-		slog.ErrorContext(ctx, err.Error())
+		common.HandleError(ctx, err)
+		return err
 	}
 	note.Content = ReplaceUrls(ctx, note.Content, imageUrls)
-	db.Update(ctx, note)
-	spanStorageGetFiles.End()
+
+	err = db.Update(ctx, note)
+	if err != nil {
+		common.HandleError(ctx, err)
+		return err
+	}
+
+	return nil
 }
 
 func GetAllImageUrls(ctx context.Context, content string) []ImageInfo {
 	_, span := common.TracerWeb.Start(ctx, "GetAllImageUrls")
+	defer span.End()
+
 	pattern := regexp.MustCompile(`(https?:[\/\.\w\s\-\*]*\.(jpg|gif|png|jpeg|webp|svg))`)
 	matches := pattern.FindAllStringSubmatch(content, -1)
 
@@ -136,16 +158,15 @@ func GetAllImageUrls(ctx context.Context, content string) []ImageInfo {
 		}
 	}
 
-	span.End()
-
 	return result
 }
 
 func ReplaceUrls(ctx context.Context, content string, imageUrls []ImageInfo) string {
 	_, span := common.TracerWeb.Start(ctx, "ReplaceUrls")
+	defer span.End()
+
 	for _, item := range imageUrls {
 		content = strings.ReplaceAll(content, item.Original.URL, item.Replacement)
 	}
-	span.End()
 	return content
 }
