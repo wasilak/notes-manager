@@ -83,7 +83,7 @@ func Init(ctx context.Context) {
 
 	if viper.GetBool("otelEnabled") {
 		e.Use(otelecho.Middleware(os.Getenv("OTEL_SERVICE_NAME"), otelecho.WithSkipper(func(c echo.Context) bool {
-			return strings.Contains(c.Path(), "static")
+			return strings.Contains(c.Path(), "static") || strings.Contains(c.Path(), "health")
 		})))
 	}
 
