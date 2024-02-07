@@ -18,8 +18,6 @@ import (
 	otelgometrics "github.com/wasilak/otelgo/metrics"
 	otelgotracer "github.com/wasilak/otelgo/tracing"
 	"github.com/wasilak/profilego"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/propagation"
 )
 
 var (
@@ -64,8 +62,6 @@ var (
 					common.HandleError(ctx, err)
 					panic(err)
 				}
-
-				otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 			}
 
 			ctx, span := common.TracerCmd.Start(ctx, "rootCmd")
