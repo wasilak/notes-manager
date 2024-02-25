@@ -145,6 +145,15 @@ func apiNoteNew(c echo.Context) error {
 	return c.JSON(http.StatusOK, createdNote)
 }
 
+func apiAIEnabled(c echo.Context) error {
+
+	response := map[string]interface{}{
+		"enabled": viper.GetBool("openAIEnabled"),
+	}
+
+	return c.JSON(http.StatusOK, response)
+}
+
 func apiAIRewrite(c echo.Context) error {
 	var note db.Note
 

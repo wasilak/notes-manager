@@ -46,7 +46,7 @@
         <growl-notifications></growl-notifications ng-cloak>
 
         <div ng-repeat="(id, notification) in notifications track by id" ng-cloak>
-            <growl-notification ttl="2000">
+            <growl-notification ttl="10000">
                 {{"{{"}}notification{{"}}"}}
             </growl-notification>
         </div>

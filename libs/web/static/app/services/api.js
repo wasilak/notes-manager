@@ -179,6 +179,36 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
     });
   };
 
+  var aiEnabled = function () {
+
+    var url = API.urls.aiEnabled;
+
+    return $http({
+      cache: false,
+      url: url,
+      method: 'GET',
+      headers: {
+        'Content-Type': "application/json"
+      }
+    })
+      .then(function (response) {
+        return {
+          response: response.data,
+          success: true
+        };
+      },
+        function (response) {
+          console.error('OpenAI state check failed!', response.data);
+          return {
+            success: false,
+            error: response.data.error,
+            status: response.status,
+            statusText: response.statusText
+          };
+        }
+      );
+  };
+
   var aiReWriteNote = function (note) {
 
     var url = API.urls.aiReWriteNote;
@@ -199,12 +229,9 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
         };
       },
         function (response) {
-          console.error('Saving note failed!');
           return {
             success: false,
-            error: response.data.error,
-            status: response.status,
-            statusText: response.statusText
+            response: response.data
           };
         }
       );
@@ -218,6 +245,7 @@ function ApiService($http, API, $rootScope, APP_SETTINGS) {
     getList: getList,
     getTags: getTags,
     aiReWriteNote: aiReWriteNote,
+    aiEnabled: aiEnabled,
   };
 }
 

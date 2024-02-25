@@ -9,7 +9,8 @@
 angular.module("app").component("note",
   {
     bindings: {
-      note: '<'
+      note: '<',
+      aiEnabled: '<'
     },
     controller: function ($scope, $rootScope, $stateParams, ApiService, $state) {
       var vm = this;
@@ -28,13 +29,21 @@ angular.module("app").component("note",
         });
       };
 
+      vm.aiEnabledCheck = function () {
+        vm.loader = true;
+        ApiService.aiEnabled().then(function (result) {
+          console.error(result);
+          return result.response.enabled
+        });
+      };
+
       vm.aiReWriteNote = function () {
         vm.loader = true;
         ApiService.aiReWriteNote(vm.noteOriginal).then(function (result) {
-          console.log(result)
-          if (result.response.rewritten.error) {
+          console.log(result);
+          if (!result.success) {
             vm.note = vm.noteOriginal
-            $rootScope.notifications.push('AIRewrite error: ' + result.response.rewritten.error);
+            $rootScope.notifications.push('AIRewrite error (' + result.response.code + '): ' + result.response.message);
           } else {
             vm.note.response.title = result.response.rewritten.title;
             vm.note.response.content = result.response.rewritten.content;
@@ -80,6 +89,11 @@ angular.module("app").component("note",
       };
 
       vm.breakpoints = [];
+
+      $scope.$watch('$ctrl.aiEnabled.response', function (current, original) {
+        console.log("vm.aiEnabled", vm.aiEnabled.response.enabled);
+        vm.isAiEnabled = vm.aiEnabled.response.enabled;
+      });
 
       // eslint-disable-next-line no-unused-vars
       $scope.$watch('$ctrl.note.response', function (current, original) {

@@ -26,6 +26,12 @@ func InitConfig() {
 	viper.SetDefault("profilingEnabled", false)
 	viper.SetDefault("profilerApplicationName", common.AppName)
 	viper.SetDefault("profilerServerAddress", "")
+	viper.SetDefault("openAIEnabled", false)
+
+	if len(os.Getenv("OPENAI_API_KEY")) > 0 {
+		viper.SetDefault("openAIEnabled", true)
+		viper.SetDefault("openAIAPIKey", os.Getenv("OPENAI_API_KEY"))
+	}
 
 	if CfgFile != "" {
 		// Use config file from the flag.

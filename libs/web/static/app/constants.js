@@ -9,6 +9,7 @@ angular.module("app").constant("APP_SETTINGS", {
       new: "/api/note/",
       list: "/api/list/",
       tags: "/api/tags/",
-      aiReWriteNote: "/api/ai/rewrite/"
+      aiReWriteNote: "/api/ai/rewrite/",
+      aiEnabled: "/api/ai/enabled/"
     }
   });

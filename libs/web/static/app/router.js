@@ -61,6 +61,9 @@ function config($httpProvider, $compileProvider, $stateProvider, $urlRouterProvi
       resolve: {
         note: function (ApiService, $transition$) {
           return ApiService.getNote($transition$.params().uuid);
+        },
+        aiEnabled: function (ApiService, $transition$) {
+          return ApiService.aiEnabled();
         }
       },
       views: {

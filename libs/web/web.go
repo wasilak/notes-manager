@@ -108,8 +108,6 @@ func Init(ctx context.Context) {
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", assetHandler)))
 	spanAssets.End()
 
-	e.Use(requestCountMiddleware)
-
 	ctx, spanPaths := common.TracerCmd.Start(ctx, "Paths")
 	e.GET("/storage/:path", storageEndpoint)
 
@@ -120,6 +118,7 @@ func Init(ctx context.Context) {
 	e.PUT("/api/note/", apiNoteNew)
 
 	e.POST("/api/ai/rewrite/", apiAIRewrite)
+	e.GET("/api/ai/enabled/", apiAIEnabled)
 
 	e.GET("/api/tags/", apiTags)
 	e.GET("/health", health)
@@ -144,6 +143,8 @@ func Init(ctx context.Context) {
 		if err != nil {
 			common.HandleError(ctx, err)
 		}
+
+		e.Use(requestCountMiddleware)
 	}
 
 	span.End()
