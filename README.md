@@ -1,4 +1,7 @@
 # Notes Manager
+
+![logo.jpg](https://raw.githubusercontent.com/wasilak/notes-manager/main/logo.jpg)
+
 [![Docker Repository on Quay](https://quay.io/repository/wasilak/notes-manager/status "Docker Repository on Quay")](https://quay.io/repository/wasilak/notes-manager) [![Maintainability](https://api.codeclimate.com/v1/badges/12f39774bcfc138889cb/maintainability)](https://codeclimate.com/github/wasilak/notes-manager/maintainability)
 
 - markdown (github flavored)
