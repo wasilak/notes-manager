@@ -12,7 +12,7 @@ require (
 	github.com/spf13/viper v1.18.2
 	github.com/wasilak/loggergo v1.0.5
 	github.com/wasilak/otelgo v1.0.9
-	github.com/wasilak/profilego v0.0.2
+	github.com/wasilak/profilego v1.0.3
 	go.mongodb.org/mongo-driver v1.15.0
 	go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.50.0
 	go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo v0.50.0

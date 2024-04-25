@@ -154,8 +154,8 @@ github.com/wasilak/loggergo v1.0.5 h1:ULu4Ud9KTNbQRVoP/Gaj7dlUntG19sUWN7HQ739dJc
 github.com/wasilak/loggergo v1.0.5/go.mod h1:ViXxVm+721rc8o8IjCKD7BB46kjyqwc8VSAHiZ1oP7o=
 github.com/wasilak/otelgo v1.0.9 h1:p4ng3TH7be63NC+EPqdO5m5BSOf1EqWl/iP81LM31XY=
 github.com/wasilak/otelgo v1.0.9/go.mod h1:HNq1uOEUZ3l5kwavntNDgD1M0pz6nSbkXcGyY4IPVTM=
-github.com/wasilak/profilego v0.0.2 h1:Q1d4wtnofd8o6u95jNvDskgt19prmAKA9S60NhVCZyw=
-github.com/wasilak/profilego v0.0.2/go.mod h1:FzSoQs3FnZrU0caTGOISMQPumYR1vncspp+b+Tp8kB0=
+github.com/wasilak/profilego v1.0.3 h1:3Gqyq09N3PQe2LuBh/D1ZwMn4JYrs8BUv7hnZLsfUhE=
+github.com/wasilak/profilego v1.0.3/go.mod h1:ZT13JDdPeWFGgCSXzZQ1hIRVQFD5N3UFbjocfGa9LaI=
 github.com/xdg-go/pbkdf2 v1.0.0 h1:Su7DPu48wXMwC3bs7MCNG+z4FhcyEuz5dlvchbq0B0c=
 github.com/xdg-go/pbkdf2 v1.0.0/go.mod h1:jrpuAogTd400dnrH08LKmI/xc1MbPOebTwRqcT5RDeI=
 github.com/xdg-go/scram v1.1.2 h1:FHX5I5B4i4hKRVRBCFRxq1iQRej7WO3hhBuJf+UUySY=
