@@ -11,7 +11,7 @@ require (
 	github.com/samber/slog-echo v1.14.1
 	github.com/sashabaranov/go-openai v1.24.1
 	github.com/spf13/cobra v1.8.0
-	github.com/spf13/viper v1.18.2
+	github.com/spf13/viper v1.19.0
 	github.com/wasilak/loggergo v1.0.6
 	github.com/wasilak/otelgo v1.0.10
 	github.com/wasilak/profilego v1.0.4
