@@ -17,14 +17,45 @@ var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications'
       return link.replace("<a", "<a target='_blank' ");
     };
 
-    renderer.listitem = function (text, task, checked) {
-      if (task && checked) {
-        return '<li class="todo_checkbox"><i class="fa fa-square-check" aria-hidden="true"></i>' + text + '</li>\n';
-      } else if (task && !checked) {
-        return '<li class="todo_checkbox"><i class="fa fa-square" aria-hidden="true"></i>' + text + '</li>\n';
-      } else {
-        return '<li>' + text + '</li>\n';
+    renderer.listitem = function (item) {
+
+      // original part of function - start
+      let itemBody = '';
+      if (item.task) {
+        const checkbox = this.checkbox({ checked: !!item.checked });
+        if (item.loose) {
+          if (item.tokens.length > 0 && item.tokens[0].type === 'paragraph') {
+            item.tokens[0].text = checkbox + ' ' + item.tokens[0].text;
+            if (item.tokens[0].tokens && item.tokens[0].tokens.length > 0 && item.tokens[0].tokens[0].type === 'text') {
+              item.tokens[0].tokens[0].text = checkbox + ' ' + item.tokens[0].tokens[0].text;
+            }
+          }
+          else {
+            item.tokens.unshift({
+              type: 'text',
+              raw: checkbox + ' ',
+              text: checkbox + ' '
+            });
+          }
+        }
+        else {
+          itemBody += checkbox + ' ';
+        }
       }
+      itemBody += this.parser.parse(item.tokens, !!item.loose);
+      // original part of function - end
+
+      // my modification - start
+      if (item.task) {
+        if (item.checked) {
+          return `<li class="todo_checkbox"><i class="fa fa-square-check" aria-hidden="true"></i>${itemBody}</li>\n`;
+        } else {
+          return `<li class="todo_checkbox"><i class="fa fa-square" aria-hidden="true"></i>${itemBody}</li>\n`;
+        }
+      }
+      // my modification - end
+
+      return `<li>${itemBody}</li>\n`;
     };
 
     marked.setOptions({

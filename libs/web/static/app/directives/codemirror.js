@@ -20,6 +20,15 @@ var codeMirror = function ($timeout) {
 
     // eslint-disable-next-line no-unused-vars
     link: function (scope, element, attrs, ngModelCtrl, transclude) {
+      let betterTab = function (cm) {
+        if (cm.somethingSelected()) {
+          cm.indentSelection("add");
+        } else {
+          cm.replaceSelection(cm.getOption("indentWithTabs") ? "\t" :
+            Array(cm.getOption("indentUnit") + 1).join(" "), "end", "+input");
+        }
+      };
+
       let editor = CodeMirror(element[0], {
         mode: scope.syntax || "javascript",
         theme: scope.theme || "default",
@@ -29,7 +38,8 @@ var codeMirror = function ($timeout) {
         extraKeys: { "Enter": "newlineAndIndentContinueMarkdownList" },
         lineWrapping: true,
         continueLineComment: true,
-        gutters: ["CodeMirror-linenumbers", "breakpoints"]
+        gutters: ["CodeMirror-linenumbers", "breakpoints"],
+        extraKeys: { Tab: betterTab }
       });
 
       scope.breakpoints = [];
