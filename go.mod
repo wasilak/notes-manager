@@ -11,7 +11,7 @@ require (
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 	github.com/wasilak/loggergo v1.0.10
-	github.com/wasilak/otelgo v1.0.11
+	github.com/wasilak/otelgo v1.0.15
 	github.com/wasilak/profilego v1.0.4
 	go.mongodb.org/mongo-driver v1.15.1
 	go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.52.0
