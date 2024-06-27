@@ -9,7 +9,7 @@ import (
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Print the version number of " + common.AppName,
+	Short: "Print the version number of " + common.GetAppName(),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmd.SetContext(common.CTX)
 	},
@@ -23,6 +23,6 @@ var versionCmd = &cobra.Command{
 
 func versionFunc() error {
 
-	fmt.Printf("%s\nVersion %s (GO %s)\n", common.AppName, common.Version, common.GetVersion())
+	fmt.Printf("%s\nVersion %s (GO %s)\n", common.GetAppName(), common.Version, common.GetVersion())
 	return nil
 }

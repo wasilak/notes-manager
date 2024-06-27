@@ -19,12 +19,12 @@ var (
 func InitConfig() {
 	godotenv.Load()
 
-	viper.SetEnvPrefix(common.AppName)
+	viper.SetEnvPrefix(common.GetAppName())
 
 	viper.SetDefault("loglevel", "info")
 	viper.SetDefault("logformat", "plain")
 	viper.SetDefault("profilingEnabled", false)
-	viper.SetDefault("profilerApplicationName", common.AppName)
+	viper.SetDefault("profilerApplicationName", common.GetAppName())
 	viper.SetDefault("profilerServerAddress", "")
 	viper.SetDefault("openAIEnabled", false)
 
@@ -42,7 +42,7 @@ func InitConfig() {
 		cobra.CheckErr(err)
 
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(common.AppName)
+		viper.SetConfigName(common.GetAppName())
 		viper.AddConfigPath(home)
 		viper.AddConfigPath("./")
 	}

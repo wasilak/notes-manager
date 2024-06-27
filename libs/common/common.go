@@ -14,9 +14,8 @@ import (
 var (
 	Version       string
 	CTX           context.Context
-	AppName       = "notesmanager"
-	TracerCmd     = otel.Tracer(os.Getenv("OTEL_SERVICE_NAME"))
-	TracerWeb     = otel.Tracer(os.Getenv("OTEL_SERVICE_NAME"))
+	TracerCmd     = otel.Tracer(GetAppName())
+	TracerWeb     = otel.Tracer(GetAppName())
 	MeterProvider = metric.NewMeterProvider()
 )
 
@@ -43,4 +42,15 @@ func HandleError(ctx context.Context, err error) {
 	span := trace.SpanFromContext(ctx)
 	span.SetStatus(codes.Error, err.Error())
 	span.RecordError(err)
+}
+
+func GetAppName() string {
+	appName := os.Getenv("OTEL_SERVICE_NAME")
+	if appName == "" {
+		appName = os.Getenv("APP_NAME")
+		if appName == "" {
+			appName = "notes-manager"
+		}
+	}
+	return appName
 }

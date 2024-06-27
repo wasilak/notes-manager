@@ -67,13 +67,19 @@ var (
 			ctx, span := common.TracerCmd.Start(ctx, "rootCmd")
 			defer span.End()
 
-			loggerConfig := loggergo.LoggerGoConfig{
-				Level:  viper.GetString("loglevel"),
-				Format: viper.GetString("logformat"),
+			loggerConfig := loggergo.Config{
+				Level:  loggergo.LogLevelFromString(viper.GetString("loglevel")),
+				Format: loggergo.LogFormatFromString(viper.GetString("logformat")),
+			}
+
+			if viper.GetBool("otelEnabled") {
+				loggerConfig.OtelServiceName = common.GetAppName()
+				loggerConfig.OtelLoggerName = "github.com/wasilak/go-hello-world"
+				loggerConfig.OtelTracingEnabled = false
 			}
 
 			ctx, spanLoggerGo := common.TracerCmd.Start(ctx, "loggergo.LoggerInit")
-			_, err := loggergo.LoggerInit(loggerConfig)
+			_, err := loggergo.LoggerInit(ctx, loggerConfig)
 			if err != nil {
 				common.HandleError(ctx, err)
 				panic(err)
@@ -113,7 +119,7 @@ func init() {
 
 	cobra.OnInitialize(libs.InitConfig)
 
-	rootCmd.PersistentFlags().StringVar(&libs.CfgFile, "config", "", "config file (default is $HOME/."+common.AppName+"/config.yml)")
+	rootCmd.PersistentFlags().StringVar(&libs.CfgFile, "config", "", "config file (default is $HOME/."+common.GetAppName()+"/config.yml)")
 	rootCmd.PersistentFlags().StringVar(&libs.Listen, "listen", "127.0.0.1:3000", "listen address")
 
 	viper.BindPFlag("listen", rootCmd.PersistentFlags().Lookup("listen"))
