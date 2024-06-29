@@ -48,9 +48,9 @@ var app = angular.module("app", ['ui.router', 'ngSanitize', 'growlNotifications'
       // my modification - start
       if (item.task) {
         if (item.checked) {
-          return `<li class="todo_checkbox"><i class="fa fa-square-check" aria-hidden="true"></i>${itemBody}</li>\n`;
+          return `<li class="todo_checkbox"><i class="bi bi-check2-circle" aria-hidden="true"></i>${itemBody}</li>\n`;
         } else {
-          return `<li class="todo_checkbox"><i class="fa fa-square" aria-hidden="true"></i>${itemBody}</li>\n`;
+          return `<li class="todo_checkbox"><i class="bi bi-circle" aria-hidden="true"></i>${itemBody}</li>\n`;
         }
       }
       // my modification - end

@@ -3,7 +3,7 @@
 
     <div class="row overlay" ng-if="$ctrl.loader">
       <div class="col-sm-12">
-        <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+        <span class="loader"><i style="font-size: 2rem" class="bi bi-arrow-repeat"></i></span>
       </div>
     </div>
 
@@ -23,15 +23,15 @@
       <div class="col-sm-12 col-md-3" ng-cloak>
         <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with button groups">
           <div class="btn-group mr-2" role="group">
-            <a ng-if="$ctrl.note.response.id" ui-sref-active="active" class="btn btn-secondary" ui-sref="list_note({uuid: $ctrl.note.response.id})" ui-sref-opts="{reload: true}">cancel</a>
-            <a ng-if="!$ctrl.note.response.id" ui-sref-active="active" class="btn btn-secondary" ui-sref="list()" ui-sref-opts="{reload: true}">cancel</a>
-            <button ng-disabled="$ctrl.saveButtonDisabled()" ng-if="$ctrl.note.response.id" type="button" class="btn btn-primary" ng-click="$ctrl.saveNote()"><i class="fa fa-floppy-disk"></i></button>
-            <button ng-if="$ctrl.isAiEnabled" ng-disabled="$ctrl.aiRewriteButtonDisabled()" type="button" class="btn btn-primary" ng-click="$ctrl.aiReWriteNote()"><i class="fa fa-robot"></i></button>
-            <button ng-disabled="$ctrl.saveButtonDisabled()" ng-if="$ctrl.note.response.id" type="button" class="btn btn-primary" ng-click="$ctrl.restoreOriginal()"><i class="fa fa-rotate-left"></i></button>
-            <button ng-disabled="$ctrl.createButtonDisabled()" ng-if="!$ctrl.note.response.id" type="button" class="btn btn-primary" ng-click="$ctrl.createNote()"><i class="fa fa-file-text"></i></button>
+            <a ng-if="$ctrl.note.response.id" ui-sref-active="active" class="btn btn-secondary" ui-sref="list_note({uuid: $ctrl.note.response.id})" ui-sref-opts="{reload: true}" data-toggle="tooltip" data-placement="bottom" title="Cancel edit">cancel</a>
+            <a ng-if="!$ctrl.note.response.id" ui-sref-active="active" class="btn btn-secondary" ui-sref="list()" ui-sref-opts="{reload: true}" data-toggle="tooltip" data-placement="bottom" title="Cancel create">cancel</a>
+            <button ng-disabled="$ctrl.saveButtonDisabled()" ng-if="$ctrl.note.response.id" type="button" class="btn btn-primary" ng-click="$ctrl.saveNote()"><i class="bi bi-save"></i></button>
+            <button ng-if="$ctrl.isAiEnabled" ng-disabled="$ctrl.aiRewriteButtonDisabled()" type="button" class="btn btn-primary" ng-click="$ctrl.aiReWriteNote()"><i class="bi bi-robot"></i></button>
+            <button ng-disabled="$ctrl.saveButtonDisabled()" ng-if="$ctrl.note.response.id" type="button" class="btn btn-primary" ng-click="$ctrl.restoreOriginal()"><i class="bi bi-arrow-counterclockwise"></i></button>
+            <button ng-disabled="$ctrl.createButtonDisabled()" ng-if="!$ctrl.note.response.id" type="button" class="btn btn-primary" ng-click="$ctrl.createNote()"><i class="bi bi-save"></i></button>
           </div>
           <div class="btn-group mr-2" role="group">
-            <button type="button" ng-click="$ctrl.deleteNote()" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+            <button ng-if="$ctrl.note.response.id" ng-click="$ctrl.deleteNote()" type="button" class="btn btn-danger"><i class="bi bi-x"></i></button>
           </div>
         </div>
       </div>
@@ -81,3 +81,14 @@
 
   </div>
 </div>
+<script>
+  $(function () {
+    $('body').on('DOMNodeInserted', '[data-toggle="tooltip"]', function () {
+          $(this).tooltip();
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+    
+  });
+
+</script>

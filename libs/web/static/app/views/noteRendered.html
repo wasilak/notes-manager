@@ -1,6 +1,6 @@
 <div class="row overlay" ng-if="$ctrl.loader">
   <div class="col-sm-12">
-    <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+    <span class="loader"><i style="font-size: 2rem" class="bi bi-arrow-repeat"></i></span>
   </div>
 </div>
 
@@ -17,11 +17,11 @@
       <div class="col-sm-12 col-md-3" ng-cloak>
         <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with button groups">
           <div class="btn-group mr-2" role="group">
-            <button class="btn btn-secondary"><i class="fa fa-clipboard" data-toggle="tooltip" data-placement="top" title="Click to copy link" ngclipboard data-clipboard-text="{{$ctrl.$state.href('list_note', {uuid: $ctrl.note.response.id}, {absolute: true})}}"></i></button>
-            <a ui-sref="note({uuid: $ctrl.note.response.id})" class="btn btn-primary"><i class="fa fa-pen"></i></a>
+            <button class="btn btn-secondary"><i class="bi bi-copy" data-toggle="tooltip" data-placement="top" title="Click to copy link" ngclipboard data-clipboard-text="{{$ctrl.$state.href('list_note', {uuid: $ctrl.note.response.id}, {absolute: true})}}"></i></button>
+            <a ui-sref="note({uuid: $ctrl.note.response.id})" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Edit note"><i class="bi bi-pencil-square"></i></i></a>
           </div>
           <div class="btn-group mr-2" role="group">
-            <button type="button" ng-click="$ctrl.deleteNote()" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+            <button type="button" ng-click="$ctrl.deleteNote()" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Delete note"><i class="bi bi-x"></i></button>
           </div>
         </div>
       </div>
@@ -45,8 +45,6 @@
 
 <script>
   $(function () {
-    $('[data-toggle="tooltip"]').tooltip();
-
     const resizeNoteContent = function() {
       const menuFooterHeight = 110;
       $('.contentColumn').height($(document).height() - menuFooterHeight);
@@ -70,7 +68,7 @@
 
         if (navigator.clipboard) {
           let button = $('<button/>', {
-                html: '<i class="fa fa-clipboard"></i>',
+                html: '<i class="bi bi-copy" data-toggle="tooltip" data-placement="top" title="Click to copy"></i>',
           });
 
           button.addClass("btn");
@@ -101,6 +99,7 @@
         }
     });
 
+    $('[data-toggle="tooltip"]').tooltip();
   });
 
 </script>
