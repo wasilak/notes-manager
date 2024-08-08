@@ -158,8 +158,8 @@ github.com/yusufpapurcu/wmi v1.2.4 h1:zFUKzehAFReQwLys1b/iSMl+JQGSCSjtVqQn9bBrPo
 github.com/yusufpapurcu/wmi v1.2.4/go.mod h1:SBZ9tNy3G9/m5Oi98Zks0QjeHVDvuK0qfxQmPyzfmi0=
 gitlab.com/greyxor/slogor v1.2.9 h1:PRc1qbP/2Hl1f88IrobZgN0L9iuKUBlnVGbFXGZjgeU=
 gitlab.com/greyxor/slogor v1.2.9/go.mod h1:wi8SVuG8DMbz9proNPxMZbmn4wMZb9R19vrf1RdvZYs=
-go.mongodb.org/mongo-driver v1.15.1 h1:l+RvoUOoMXFmADTLfYDm7On9dRm7p4T80/lEQM+r7HU=
-go.mongodb.org/mongo-driver v1.15.1/go.mod h1:Vzb0Mk/pa7e6cWw85R4F/endUC3u0U9jGcNU603k65c=
+go.mongodb.org/mongo-driver v1.16.1 h1:rIVLL3q0IHM39dvE+z2ulZLp9ENZKThVfuvN/IiN4l8=
+go.mongodb.org/mongo-driver v1.16.1/go.mod h1:oB6AhJQvFQL4LEHyXi6aJzQJtBiTQHiAd83l0GdFaiw=
 go.opentelemetry.io/contrib/bridges/otelslog v0.2.0 h1:8wisJ9dZUU1YZGJDsQgfCkexQ/zsZF1SZB6Z86j4WJA=
 go.opentelemetry.io/contrib/bridges/otelslog v0.2.0/go.mod h1:/fUobpnNkWPrkMb7HKL80Ewfkqzyko1KUUX0h7aNtxo=
 go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.52.0 h1:LzwBXd0Ue7aQZend+HsaDQOqMoxOPPuzErESqeoGuFg=
