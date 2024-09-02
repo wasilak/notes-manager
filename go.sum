@@ -100,8 +100,8 @@ github.com/samber/slog-echo v1.14.2 h1:eYwZc0mg8pOyHdD6Ch4CKrPvrBBfhYUBhuTk4OTIa
 github.com/samber/slog-echo v1.14.2/go.mod h1:i8QlNMhE0rVr+Mjj5ZIm6DMuTQ87euvAL2jRAd5HNVY=
 github.com/samber/slog-multi v1.1.0 h1:m5wfpXE8Qu2gCiR/JnhFGsLcWDOmTxnso32EMffVAY0=
 github.com/samber/slog-multi v1.1.0/go.mod h1:uLAvHpGqbYgX4FSL0p1ZwoLuveIAJvBECtE07XmYvFo=
-github.com/sashabaranov/go-openai v1.26.1 h1:B5plrmc/r7hKgYX69oT2VSt5w0O6u9BJYTjB8lNCesI=
-github.com/sashabaranov/go-openai v1.26.1/go.mod h1:lj5b/K+zjTSFxVLijLSTDZuP7adOgerWeFyZLUhAKRg=
+github.com/sashabaranov/go-openai v1.29.1 h1:AlB+vwpg1tibwr83OKXLsI4V1rnafVyTlw0BjR+6WUM=
+github.com/sashabaranov/go-openai v1.29.1/go.mod h1:lj5b/K+zjTSFxVLijLSTDZuP7adOgerWeFyZLUhAKRg=
 github.com/shirou/gopsutil/v3 v3.24.5 h1:i0t8kL+kQTvpAYToeuiVk3TgDeKOFioZO3Ztz/iZ9pI=
 github.com/shirou/gopsutil/v3 v3.24.5/go.mod h1:bsoOS1aStSs9ErQ1WWfxllSeS1K5D+U30r2NfcubMVk=
 github.com/shoenig/go-m1cpu v0.1.6 h1:nxdKQNcEB6vzgA2E2bvzKIYRuNj7XNJ4S/aRSwKzFtM=
