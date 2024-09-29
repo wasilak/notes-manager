@@ -31,7 +31,7 @@ var (
 			ctx := cmd.Context()
 
 			if viper.GetBool("profilingEnabled") {
-				ProfileGoConfig := profilego.ProfileGoConfig{
+				ProfileGoConfig := profilego.Config{
 					ApplicationName: viper.GetString("profilerApplicationName"),
 					ServerAddress:   viper.GetString("profilerServerAddress"),
 					Tags:            map[string]string{"version": common.GetVersion()},
@@ -45,7 +45,7 @@ var (
 			}
 
 			if viper.GetBool("otelEnabled") {
-				otelGoTracingConfig := otelgotracer.OtelGoTracingConfig{
+				otelGoTracingConfig := otelgotracer.Config{
 					HostMetricsEnabled:    true,
 					RuntimeMetricsEnabled: true,
 				}
