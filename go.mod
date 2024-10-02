@@ -13,7 +13,7 @@ require (
 	github.com/wasilak/loggergo v1.5.1
 	github.com/wasilak/otelgo v1.1.1
 	github.com/wasilak/profilego v1.0.8
-	go.mongodb.org/mongo-driver v1.17.0
+	go.mongodb.org/mongo-driver v1.17.1
 	go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.55.0
 	go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo v0.55.0
 	go.opentelemetry.io/otel v1.30.0
