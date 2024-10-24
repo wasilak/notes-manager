@@ -7,7 +7,7 @@ toolchain go1.23.2
 require (
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.12.0
-	github.com/minio/minio-go/v7 v7.0.78
+	github.com/minio/minio-go/v7 v7.0.79
 	github.com/samber/slog-echo v1.14.7
 	github.com/sashabaranov/go-openai v1.32.3
 	github.com/spf13/cobra v1.8.1
