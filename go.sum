@@ -162,6 +162,8 @@ go.opentelemetry.io/contrib/bridges/otelslog v0.6.0 h1:V/XtFJ8mMisAO2E0tXcgwi40w
 go.opentelemetry.io/contrib/bridges/otelslog v0.6.0/go.mod h1:g7kkoEznNXb0li+YvlwPWoqxTbpC3BtmZtZutB39G4M=
 go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.56.0 h1:INy+gB4Y1rE0gJNfjTgZBFVD4RuTV5NpRnafbwoeROU=
 go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.56.0/go.mod h1:ZXC8RPcIIJTidnOto6PE5w5vPwSg6XngjBLiWlX4n2Q=
+go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.57.0 h1:0q9nZfgQarTPiePf+H4GLNE/9w5yasXMsRFPvTTZI1Q=
+go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.57.0/go.mod h1:Fi8pgZRfhlYA6WEVVdeDdRigT/+y7YO8I0C3QXZg1QU=
 go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo v0.56.0 h1:0//muMFitgdYATXjORDlQ3Kh3lWXyOwtyspvVP7GYd0=
 go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo v0.56.0/go.mod h1:VIpwsfJrRcV92mFyqVSpopsvxIPfArkoYMi2tNCdkXI=
 go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo v0.57.0 h1:KonZRpkZyfWMS5afpQQvatl7orHBV7N9LonPBqqfckU=
