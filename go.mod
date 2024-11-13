@@ -12,7 +12,7 @@ require (
 	github.com/sashabaranov/go-openai v1.35.6
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
-	github.com/wasilak/loggergo v1.5.3
+	github.com/wasilak/loggergo v1.5.4
 	github.com/wasilak/otelgo v1.1.1
 	github.com/wasilak/profilego v1.0.8
 	go.mongodb.org/mongo-driver v1.17.1
@@ -77,7 +77,7 @@ require (
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
-	gitlab.com/greyxor/slogor v1.5.0 // indirect
+	gitlab.com/greyxor/slogor v1.5.1 // indirect
 	go.opentelemetry.io/contrib/bridges/otelslog v0.7.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/host v0.55.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/runtime v0.55.0 // indirect
