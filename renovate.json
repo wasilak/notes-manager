@@ -13,7 +13,7 @@
     "renovate::{{#if isVulnerabilityAlert}}vulnerability{{else}}not-vulnerability{{/if}}"
   ],
   "pinDigests": false,
-  "enabled": true,
+  "enabled": false,
   "separateMajorMinor": true,
   "automerge": true,
   "packageRules": [
