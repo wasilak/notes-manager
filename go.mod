@@ -6,7 +6,7 @@ toolchain go1.23.3
 
 require (
 	github.com/joho/godotenv v1.5.1
-	github.com/labstack/echo/v4 v4.12.0
+	github.com/labstack/echo/v4 v4.13.0
 	github.com/minio/minio-go/v7 v7.0.80
 	github.com/samber/slog-echo v1.14.7
 	github.com/sashabaranov/go-openai v1.35.6
@@ -35,7 +35,6 @@ require (
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/goccy/go-json v0.10.3 // indirect
 	github.com/golang-cz/devslog v0.0.11 // indirect
-	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/grafana/pyroscope-go v1.2.0 // indirect
