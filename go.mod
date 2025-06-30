@@ -1,8 +1,6 @@
 module github.com/wasilak/notes-manager
 
-go 1.23
-
-toolchain go1.23.3
+go 1.24
 
 require (
 	github.com/joho/godotenv v1.5.1
@@ -14,7 +12,7 @@ require (
 	github.com/spf13/viper v1.19.0
 	github.com/wasilak/loggergo v1.5.4
 	github.com/wasilak/otelgo v1.1.1
-	github.com/wasilak/profilego v1.0.8
+	github.com/wasilak/profilego v1.0.9
 	go.mongodb.org/mongo-driver v1.17.1
 	go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.57.0
 	go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo v0.57.0
