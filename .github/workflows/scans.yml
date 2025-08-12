@@ -24,7 +24,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install and run Spectral CI
         uses: spectralops/spectral-github-action@v5
@@ -49,7 +49,7 @@ jobs:
   #   steps:
   #     # Checkout the repository to the GitHub Actions runner
   #     - name: Checkout code
-  #       uses: actions/checkout@v4
+  #       uses: actions/checkout@v5
 
   #     # Execute Codacy Analysis CLI and generate a SARIF output with the security issues identified during the analysis
   #     - name: Run Codacy Analysis CLI
